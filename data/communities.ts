@@ -1709,6 +1709,624 @@ export const communities: Community[] = [
     ],
     nearby: ['dickson', 'burns', 'fairview'],
   },
+
+  // ─── TIER 3 — Nashville Core Neighborhoods ───────────────
+
+  {
+    slug: 'east-nashville',
+    name: 'East Nashville',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37206', '37216'],
+    tier: 3,
+    tagline: 'Nashville\'s creative heartbeat, five minutes from downtown.',
+    distanceFromNashville: '~5 min to downtown Nashville',
+    lat: 36.1866,
+    lng: -86.7447,
+    metaDescription:
+      'East Nashville homes for sale — Five Points, Lockeland Springs, Inglewood-adjacent. The neighborhood that defined Nashville\'s creative renaissance. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in East Nashville',
+        body: 'East Nashville is the neighborhood that put Nashville\'s cultural renaissance on the map. Five Points is the commercial heart — coffee shops, live music venues, restaurants, and bars clustered around a walkable intersection. The housing stock transitions from Victorian and Craftsman bungalows near Shelby Park to newer townhome infill further out. The vibe is creative, independent, and proud of it. East Nashville residents tend to know their neighbors, support local businesses, and care deeply about the neighborhood\'s identity.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'East Nashville sits directly across the Cumberland River from downtown, connected by the Woodland Street and Shelby Avenue bridges. The commute to downtown is 5-10 minutes. Gallatin Pike runs north into Madison and Hendersonville.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'The East Nashville market has appreciated dramatically over the past decade. Original bungalows and Victorians that sold for $150k in 2012 now command $500k-$800k+ depending on condition and proximity to Five Points. New construction townhomes range from $450k-$700k. The market rewards character and walkability.',
+      },
+      {
+        heading: 'Schools',
+        body: 'East Nashville is served by Metro Nashville Public Schools, including East Nashville Magnet High School (a selective magnet program). Lockeland Design Center Elementary is a sought-after option. Verify zone assignments with MNPS.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Shelby Park and Shelby Bottoms Greenway are the outdoor anchors — 960 acres of floodplain, trails, and river access within the neighborhood. The East Nashville Greenway connects to the city\'s broader trail system.',
+      },
+      {
+        heading: 'Why House Haven knows East Nashville',
+        body: 'We help buyers navigate East Nashville\'s micro-neighborhoods — the pricing difference between a street near Five Points and one near Gallatin Pike can be $100k for the same square footage. Understanding flood zone considerations along the Cumberland, teardown vs. renovation economics, and which blocks are still appreciating is what we bring.',
+      },
+    ],
+    nearby: ['inglewood', 'donelson', 'germantown'],
+  },
+  {
+    slug: 'germantown',
+    name: 'Germantown',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37208'],
+    tier: 3,
+    tagline: 'Nashville\'s oldest neighborhood, now its most walkable.',
+    distanceFromNashville: 'Adjacent to downtown Nashville',
+    lat: 36.1792,
+    lng: -86.7867,
+    metaDescription:
+      'Germantown Nashville homes for sale — historic neighborhood with walkability, restaurants, and Bicentennial Capitol Mall. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Germantown',
+        body: 'Germantown is Nashville\'s oldest neighborhood and arguably its most walkable. The brick row houses, Bicentennial Capitol Mall, and the restaurant scene along 4th Avenue and 5th Avenue create a distinctly urban lifestyle that feels more Brooklyn than Tennessee. The Farmers\' Market and Bicentennial Park anchor the south end. New condo and townhome development has transformed portions of the neighborhood while preserving the historic streetscape.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Germantown sits immediately north of the State Capitol, within walking or biking distance of downtown. Many residents walk to work. Salemtown and The Nations are adjacent to the west.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Germantown offers original Victorian cottages (some dating to the 1860s), renovated historic rowhouses, and modern condos and townhomes. Prices range from $400k for smaller units to $800k+ for single-family homes. Historic properties command premiums.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Metro Nashville Public Schools serves Germantown. The area is within the Hume-Fogg Academic Magnet district for high school. Verify current zone assignments with MNPS.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Bicentennial Capitol Mall State Park is the main green space — 19 acres of open park with a view of the Capitol. Nashville Farmers\' Market operates year-round at the park\'s edge.',
+      },
+      {
+        heading: 'Why House Haven knows Germantown',
+        body: 'We help Germantown buyers understand the historic overlay restrictions that affect renovations, the HOA structures in newer condo developments, and the real cost of maintaining a 150-year-old house in a neighborhood where character is the whole point.',
+      },
+    ],
+    nearby: ['east-nashville', 'salemtown', 'the-nations'],
+  },
+  {
+    slug: 'the-gulch',
+    name: 'The Gulch',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37203'],
+    tier: 3,
+    tagline: 'Nashville\'s luxury urban core — condos, dining, and city views.',
+    distanceFromNashville: 'Downtown Nashville',
+    lat: 36.1522,
+    lng: -86.7878,
+    metaDescription:
+      'The Gulch Nashville condos and homes for sale — luxury urban living with walkability, rooftop dining, and downtown Nashville access. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in The Gulch',
+        body: 'The Gulch is Nashville\'s most urban neighborhood — a former railroad gulch transformed into a dense, walkable district of condo towers, boutique hotels, and high-end restaurants. The "What Lifts You" wings mural is the Instagram landmark, but daily life is really about the walkability: groceries at Whole Foods, coffee, dinner, and nightlife without moving your car. It attracts young professionals, empty nesters, and anyone who wants a zero-commute urban lifestyle.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'The Gulch sits between Broadway and 8th Avenue South, directly adjacent to downtown and Music Row. There is no commute — you are already there. Most residents walk, bike, or scooter to work.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'The Gulch is almost entirely condos and luxury apartments. Condo prices range from the high $300s for studios to $1M+ for penthouses with skyline views. HOA fees are a significant consideration in every building.',
+      },
+      {
+        heading: 'Schools',
+        body: 'The Gulch does not have neighborhood schools given its urban density. Metro Nashville Public Schools serves the area, with magnet options accessible citywide.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'The neighborhood is walkable but not park-heavy. Centennial Park (1.5 miles) and the Gulch-to-Greenway connector provide outdoor access. The rooftop pools in condo buildings are the real outdoor lifestyle here.',
+      },
+      {
+        heading: 'Why House Haven knows The Gulch',
+        body: 'We help Gulch buyers compare the dozen-plus condo buildings on factors that matter: HOA health, rental restriction policies, parking, noise from Broadway, and which buildings are actually appreciating versus just holding value. The details in The Gulch are everything.',
+      },
+    ],
+    nearby: ['germantown', '12-south', 'edgehill-music-row'],
+  },
+  {
+    slug: '12-south',
+    name: '12 South',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37204'],
+    tier: 3,
+    tagline: 'Nashville\'s curated Main Street — boutiques, brunch, and bungalows.',
+    distanceFromNashville: '~10 min to downtown Nashville',
+    lat: 36.1244,
+    lng: -86.7911,
+    metaDescription:
+      '12 South Nashville homes for sale — walkable neighborhood with boutique shopping, Draper James, and some of Nashville\'s most desirable bungalows. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in 12 South',
+        body: '12 South is the neighborhood that looks like it was curated for a lifestyle magazine — and in many ways it was, organically, by the small business owners who invested here. The 12th Avenue South commercial strip includes Draper James (Reese Witherspoon\'s brand), Imogene + Willie, and a rotating roster of Nashville\'s best restaurants. The residential streets behind the strip are tree-lined and walkable, with Craftsman bungalows and newer infill.',
+      },
+      {
+        heading: 'Location and commute',
+        body: '12 South is about 10 minutes from downtown Nashville, tucked between Belmont University and the Sevier Park area. Wedgewood-Houston and Berry Hill are adjacent.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: '12 South is one of Nashville\'s most expensive neighborhoods on a per-square-foot basis. Original bungalows in good condition start around $700k; renovated and new construction ranges from $800k to well over $1M.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Metro Nashville Public Schools serves 12 South. Julia Green Elementary is a popular option. Belmont University provides a college-town energy to the area.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Sevier Park anchors the south end of the neighborhood with open green space, a community center, and a farmers\' market. The 12 South strip itself is the daily outdoor experience — walking the neighborhood is the lifestyle.',
+      },
+      {
+        heading: 'Why House Haven knows 12 South',
+        body: 'We help 12 South buyers understand that the premium is real but not uniform — one block can make a $100k+ difference. We also navigate the renovation considerations on historic bungalows and help investors understand short-term rental regulations that have tightened significantly in this area.',
+      },
+    ],
+    nearby: ['berry-hill', 'melrose', 'wedgewood-houston'],
+  },
+  {
+    slug: 'sylvan-park',
+    name: 'Sylvan Park',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37209'],
+    tier: 3,
+    tagline: 'West Nashville\'s most walkable neighborhood — McCabe Park to Murphy Road.',
+    distanceFromNashville: '~10 min to downtown Nashville',
+    lat: 36.1522,
+    lng: -86.8233,
+    metaDescription:
+      'Sylvan Park Nashville homes for sale — walkable west Nashville with McCabe Park, Murphy Road restaurants, and coveted bungalows. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Sylvan Park',
+        body: 'Sylvan Park is the west Nashville neighborhood that everyone wants but few homes turn over. The grid streets are walkable, the trees are mature, and the Murphy Road restaurant row (Park Cafe, McCabe Pub, Soy Bistro) provides daily-life convenience. McCabe Park and the adjacent golf course give it a green, family-friendly feel that is rare this close to downtown.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Sylvan Park sits about 10 minutes west of downtown along Charlotte Pike. The Nations is immediately west, and West End is to the east.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Sylvan Park is predominantly 1940s-1960s bungalows and ranch homes on smaller lots, with some new construction infill. Prices range from the mid $500s for original-condition homes to $900k+ for renovated or new builds. Inventory is perennially tight.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Metro Nashville Public Schools serves Sylvan Park. Sylvan Park Elementary is within the neighborhood. Hillwood High School serves as the zoned high school.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'McCabe Park is the neighborhood anchor — 37 acres with a community center, playground, tennis courts, and the McCabe Golf Course. The Charlotte Pike greenway connects to the broader trail system.',
+      },
+      {
+        heading: 'Why House Haven knows Sylvan Park',
+        body: 'Low inventory means Sylvan Park homes sell fast — we help buyers compete in multiple-offer situations and understand the renovation vs. teardown economics on the older bungalow stock.',
+      },
+    ],
+    nearby: ['the-nations', 'bellevue', 'west-end-midtown'],
+  },
+  {
+    slug: 'green-hills',
+    name: 'Green Hills',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37215'],
+    tier: 3,
+    tagline: 'Nashville\'s established address — upscale retail and top schools.',
+    distanceFromNashville: '~15 min to downtown Nashville',
+    lat: 36.1039,
+    lng: -86.8117,
+    metaDescription:
+      'Green Hills Nashville homes for sale — upscale Nashville living with The Mall at Green Hills, top schools, and established luxury neighborhoods. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Green Hills',
+        body: 'Green Hills is Nashville\'s established upscale address — the kind of neighborhood where longtime residents and country music executives have lived for decades. The Mall at Green Hills anchors the commercial side with Nordstrom, Tiffany, and Louis Vuitton. The residential streets are tree-lined and quiet, with generously sized lots and well-maintained homes. It is not trendy — it is proven.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Green Hills sits along Hillsboro Pike about 15 minutes from downtown Nashville. Belmont and Lipscomb Universities are nearby. Belle Meade is to the west.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Green Hills offers a range from 1960s ranch homes starting around $600k to multi-million-dollar estates. The average home price is significantly above the Nashville metro median. Lot sizes are larger than urban Nashville neighborhoods.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Metro Nashville Public Schools serves Green Hills — Julia Green Elementary and Hillsboro High School are the primary public options. Multiple private school options (MBA, USN, Ensworth) are nearby, which is a major draw.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Warner Parks (Edwin and Percy) are accessible from Green Hills — 3,100+ acres of forested trails, one of the largest urban parks in the country. The Bluebird Cafe in Green Hills is a Nashville cultural institution.',
+      },
+      {
+        heading: 'Why House Haven knows Green Hills',
+        body: 'We help Green Hills buyers navigate the significant price spread between different pockets of the neighborhood, understand the school zoning nuances between Julia Green and other elementary options, and evaluate renovation potential on older ranch homes in a market where teardowns are increasingly common.',
+      },
+    ],
+    nearby: ['hillsboro-village', '12-south', 'sylvan-park'],
+  },
+  {
+    slug: 'berry-hill',
+    name: 'Berry Hill',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37204'],
+    tier: 3,
+    tagline: 'Nashville\'s smallest city — recording studios and creative industry.',
+    distanceFromNashville: '~10 min to downtown Nashville',
+    lat: 36.1178,
+    lng: -86.7761,
+    metaDescription:
+      'Berry Hill Nashville homes for sale — tiny independent city within Nashville known for recording studios and creative businesses. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Berry Hill',
+        body: 'Berry Hill is a tiny incorporated city (less than one square mile) completely surrounded by Nashville. It is known for its concentration of recording studios, creative businesses, and a quietly cool commercial strip along Bransford Avenue. The residential areas are modest but increasingly sought-after as 12 South and Melrose pricing pushes buyers into adjacent neighborhoods.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Berry Hill sits along Thompson Lane and Bransford Avenue, about 10 minutes from downtown Nashville. 12 South, Melrose, and Wedgewood-Houston are all adjacent.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Berry Hill\'s residential stock is small — mostly mid-century ranch homes and bungalows. Prices range from the $400s to $700s depending on condition and lot size. The independent city status means separate city taxes (which are lower than Nashville\'s).',
+      },
+      {
+        heading: 'Schools',
+        body: 'Berry Hill has its own elementary school — Berry Hill Elementary, within the Metro Nashville school system. Middle and high school students attend MNPS zoned schools.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Berry Hill Park provides neighborhood green space. Sevier Park and the broader 12 South walkable district are minutes away.',
+      },
+      {
+        heading: 'Why House Haven knows Berry Hill',
+        body: 'Berry Hill\'s separate city status creates tax and governance implications that most Nashville agents overlook. We help buyers understand the practical differences of living in Berry Hill versus Nashville proper.',
+      },
+    ],
+    nearby: ['12-south', 'melrose', 'wedgewood-houston'],
+  },
+  {
+    slug: 'melrose',
+    name: 'Melrose',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37204'],
+    tier: 3,
+    tagline: 'South Nashville\'s up-and-coming corridor between 12 South and Berry Hill.',
+    distanceFromNashville: '~10 min to downtown Nashville',
+    lat: 36.1178,
+    lng: -86.7833,
+    metaDescription:
+      'Melrose Nashville homes for sale — emerging south Nashville neighborhood with proximity to 12 South and strong appreciation. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Melrose',
+        body: 'Melrose is the south Nashville neighborhood that has been quietly appreciating as 12 South and Berry Hill pricing pushed buyers south along 8th Avenue. The 8th Avenue South corridor is the commercial spine — restaurants, bars, and creative businesses have been steadily filling in. The residential streets have a mix of original homes and new infill.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Melrose runs along 8th Avenue South and Franklin Pike, about 10 minutes from downtown. 12 South is to the west, Berry Hill to the east, Wedgewood-Houston to the north.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Melrose offers original ranch homes, bungalows, and an increasing number of new-construction townhomes and single-family builds. Prices range from the mid $400s to $700s+.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Metro Nashville Public Schools serves Melrose — Glendale Elementary and Wright Middle School are in the area. Verify current zone assignments.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Sevier Park is accessible from Melrose, and the Melrose area benefits from the broader south Nashville greenway system.',
+      },
+      {
+        heading: 'Why House Haven knows Melrose',
+        body: 'We help buyers see Melrose as the value play relative to 12 South — similar proximity, similar trajectory, but with more room on pricing. Understanding which streets and blocks are appreciating fastest is what we bring.',
+      },
+    ],
+    nearby: ['12-south', 'berry-hill', 'wedgewood-houston'],
+  },
+  {
+    slug: 'wedgewood-houston',
+    name: 'Wedgewood-Houston',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37204', '37210'],
+    tier: 3,
+    tagline: 'Nashville\'s art district — galleries, breweries, and industrial-chic living.',
+    distanceFromNashville: '~5 min to downtown Nashville',
+    lat: 36.1389,
+    lng: -86.7711,
+    metaDescription:
+      'Wedgewood-Houston Nashville homes for sale — art galleries, breweries, adaptive reuse lofts, and rapid development south of downtown. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Wedgewood-Houston',
+        body: 'Wedgewood-Houston — "WeHo" to locals — is Nashville\'s art district. The neighborhood has transformed from industrial warehouses into a dense mix of galleries, breweries (Southern Grist, Jackalope), and adaptive reuse residential developments. The Houston Station food hall and the growing Chestnut Hill commercial strip give it daily-life convenience. The development pace is fast, and the neighborhood looks different every six months.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Wedgewood-Houston sits directly south of downtown between I-65 and I-40. Downtown is about 5 minutes north. The Gulch, 12 South, and Melrose are all adjacent.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'WeHo offers adaptive reuse lofts, new construction condos and townhomes, and a shrinking number of original single-family homes. Prices range from $350k for condos to $800k+ for new single-family builds.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Metro Nashville Public Schools serves the area. Given the neighborhood\'s urban density, families typically evaluate magnet and private school options.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Fort Negley Park and the adjacent Nashville Adventure Science Center provide green space and family activities. The neighborhood is more walkable to restaurants than to parks.',
+      },
+      {
+        heading: 'Why House Haven knows Wedgewood-Houston',
+        body: 'WeHo is changing so fast that comps from six months ago may not reflect current values. We track development announcements, rezoning activity, and which buildings are delivering quality versus cutting corners in a neighborhood where every block has active construction.',
+      },
+    ],
+    nearby: ['the-gulch', '12-south', 'melrose'],
+  },
+  {
+    slug: 'edgehill-music-row',
+    name: 'Edgehill / Music Row',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37203'],
+    tier: 3,
+    tagline: 'Where Nashville\'s music industry meets urban living.',
+    distanceFromNashville: 'Adjacent to downtown Nashville',
+    lat: 36.1506,
+    lng: -86.7950,
+    metaDescription:
+      'Edgehill and Music Row Nashville homes for sale — urban Nashville between Vanderbilt and downtown with recording studios and rapid redevelopment. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Edgehill / Music Row',
+        body: 'Edgehill and Music Row sit between Vanderbilt and downtown in a zone of active transformation. Music Row is the historic home of Nashville\'s recording industry — RCA Studio B, ASCAP, BMI — but residential development has been steadily replacing some of the older commercial buildings. Edgehill to the south is a historically significant neighborhood experiencing significant investment and change.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'This area sits directly between Vanderbilt University and downtown Nashville. You can walk to The Gulch, Midtown, or campus in minutes.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'The area has a mix of new luxury condos, townhomes, and remaining single-family homes. Condo prices start in the $400s; single-family homes range from $500k to $900k+ depending on lot size and condition.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Metro Nashville Public Schools serves the area. The proximity to Vanderbilt and Belmont universities creates a college-town atmosphere.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Music Row Roundabout and the Owen Bradley Park are small but central green spaces. Centennial Park is a 10-minute walk west.',
+      },
+      {
+        heading: 'Why House Haven knows Edgehill / Music Row',
+        body: 'This area is in flux — understanding which blocks are being rezoned for density, which historic structures are protected, and where the development pipeline is heading is critical for buyers making a purchase in this transitional zone.',
+      },
+    ],
+    nearby: ['the-gulch', 'hillsboro-village', 'west-end-midtown'],
+  },
+  {
+    slug: 'hillsboro-village',
+    name: 'Hillsboro Village',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37212'],
+    tier: 3,
+    tagline: 'Nashville\'s college-town village — Belmont, Pancake Pantry, and walkability.',
+    distanceFromNashville: '~10 min to downtown Nashville',
+    lat: 36.1328,
+    lng: -86.8014,
+    metaDescription:
+      'Hillsboro Village Nashville homes for sale — walkable neighborhood near Belmont University with Pancake Pantry, Belcourt Theatre, and charming streets. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Hillsboro Village',
+        body: 'Hillsboro Village is Nashville\'s college-adjacent walkable village — the Belcourt Theatre, Pancake Pantry, and a strip of independent shops create a neighborhood commercial district with genuine character. Belmont University provides energy and foot traffic. The residential streets behind the strip have some of Nashville\'s most charming homes.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Hillsboro Village sits along 21st Avenue South between Vanderbilt and Belmont. Downtown is about 10 minutes north. Green Hills is 5 minutes south.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Hillsboro Village has Tudor cottages, Craftsman bungalows, and newer infill. The walkability premium is real — homes start in the $600s and push past $1M for renovated properties on desirable streets.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Metro Nashville Public Schools serves the area. Eakin Elementary is nearby. Hillsboro High School is the zoned high school.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Fannie Mae Dees Park ("Dragon Park") is the beloved neighborhood gathering spot. Centennial Park is a short walk north.',
+      },
+      {
+        heading: 'Why House Haven knows Hillsboro Village',
+        body: 'We help Hillsboro Village buyers understand the parking and rental-regulation realities of living near a university, evaluate the renovation math on older homes, and compete in a market where inventory is perpetually tight.',
+      },
+    ],
+    nearby: ['green-hills', 'edgehill-music-row', '12-south'],
+  },
+  {
+    slug: 'west-end-midtown',
+    name: 'West End / Midtown',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37203'],
+    tier: 3,
+    tagline: 'Vanderbilt, Centennial Park, and Nashville\'s central corridor.',
+    distanceFromNashville: 'Adjacent to downtown Nashville',
+    lat: 36.1528,
+    lng: -86.8056,
+    metaDescription:
+      'West End and Midtown Nashville homes and condos for sale — Vanderbilt area, Centennial Park, and the heart of Nashville\'s urban core. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in West End / Midtown',
+        body: 'West End and Midtown form Nashville\'s central corridor between downtown and the suburbs. Centennial Park (home of the full-scale Parthenon replica) is the green anchor. Vanderbilt University provides the academic atmosphere. The Midtown bar scene along Division Street is the nightlife center. West End Avenue itself is a commercial boulevard with restaurants, offices, and the entrance to Belle Meade.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'There is essentially no commute — West End/Midtown is Nashville\'s geographic center. Downtown, Music Row, The Gulch, and Germantown are all within 10 minutes.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'The area is heavy on condos and apartments, with some single-family pockets near Vanderbilt. Condos range from $300k-$800k; single-family homes near campus push well past $1M.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Metro Nashville Public Schools serves the area. The proximity to Vanderbilt and multiple private schools makes this a popular area for families with school-age children despite the urban density.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Centennial Park is the crown jewel — 132 acres with the Parthenon, Lake Watauga, walking paths, and events throughout the year. It is Nashville\'s equivalent of Central Park.',
+      },
+      {
+        heading: 'Why House Haven knows West End / Midtown',
+        body: 'We help condo buyers in Midtown compare buildings on the factors that matter most — HOA health, noise levels from Division Street, parking, and which buildings allow short-term rentals versus those that have prohibited them.',
+      },
+    ],
+    nearby: ['germantown', 'sylvan-park', 'hillsboro-village'],
+  },
+  {
+    slug: 'salemtown',
+    name: 'Salemtown',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37208'],
+    tier: 3,
+    tagline: 'Germantown\'s quieter neighbor with rapid new construction.',
+    distanceFromNashville: 'Adjacent to downtown Nashville',
+    lat: 36.1825,
+    lng: -86.7950,
+    metaDescription:
+      'Salemtown Nashville homes for sale — north Nashville neighborhood adjacent to Germantown with new townhomes and rapid development. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Salemtown',
+        body: 'Salemtown sits between Germantown and the Cumberland River, and it has experienced some of Nashville\'s most dramatic transformation over the past decade. New-construction townhomes now stand alongside original shotgun houses. The Morgan Park area has been the epicenter of development. The neighborhood offers Germantown-adjacent walkability at a slightly lower price point.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Salemtown is immediately west of Germantown and north of downtown, within walking or biking distance of Bicentennial Mall and the State Capitol.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'New construction townhomes dominate recent inventory, typically in the $500k-$750k range. Original shotgun houses and cottages range from $300k-$500k depending on condition.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Metro Nashville Public Schools serves Salemtown. The area is close to several magnet program options.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Morgan Park is the neighborhood green space. The Germantown Farmers\' Market and Bicentennial Mall are walking distance.',
+      },
+      {
+        heading: 'Why House Haven knows Salemtown',
+        body: 'Salemtown\'s rapid development creates wide price variation within a few blocks. We help buyers understand which new construction is quality-built versus volume-built, and where the remaining appreciation potential sits relative to Germantown pricing.',
+      },
+    ],
+    nearby: ['germantown', 'the-nations', 'east-nashville'],
+  },
+  {
+    slug: 'the-nations',
+    name: 'The Nations',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37209'],
+    tier: 3,
+    tagline: 'West Nashville\'s hottest transformation — from industrial to residential.',
+    distanceFromNashville: '~10 min to downtown Nashville',
+    lat: 36.1700,
+    lng: -86.8289,
+    metaDescription:
+      'The Nations Nashville homes for sale — west Nashville neighborhood with rapid new construction, breweries, and strong appreciation. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in The Nations',
+        body: 'The Nations is west Nashville\'s most dramatic transformation story. What was an industrial and working-class neighborhood a decade ago is now dense with new-construction townhomes, breweries (Harding House, Tennessee Brew Works taproom), coffee shops, and a strong sense of neighborhood identity. The 51st Avenue corridor is the commercial spine. The speed of change has been remarkable even by Nashville standards.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'The Nations sits along Centennial Boulevard about 10 minutes from downtown Nashville. Sylvan Park is to the east, Charlotte Pike to the north.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'The Nations is dominated by new-construction townhomes and single-family infill, typically in the $500k-$800k range. Remaining original homes on larger lots occasionally list in the $400s-$500s.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Metro Nashville Public Schools serves The Nations. Verify current zone assignments as the area straddles multiple school clusters.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'England Park and the West Nashville Greenway provide neighborhood recreation. The 606 development corridor is adding community spaces.',
+      },
+      {
+        heading: 'Why House Haven knows The Nations',
+        body: 'The Nations has so much new construction that quality varies widely. We help buyers evaluate builder reputation, understand the difference between the 51st corridor and the quieter residential streets, and assess whether a tall-and-skinny townhome is the right fit versus a wider traditional build.',
+      },
+    ],
+    nearby: ['sylvan-park', 'germantown', 'salemtown'],
+  },
+  {
+    slug: 'lockeland-springs',
+    name: 'Lockeland Springs',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37206'],
+    tier: 3,
+    tagline: 'East Nashville\'s most charming sub-neighborhood — Victorians and walkability.',
+    distanceFromNashville: '~5 min to downtown Nashville',
+    lat: 36.1783,
+    lng: -86.7556,
+    metaDescription:
+      'Lockeland Springs Nashville homes for sale — Victorian homes, Lockeland Table, and one of East Nashville\'s most walkable streets. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Lockeland Springs',
+        body: 'Lockeland Springs is the sub-neighborhood within East Nashville that commands the highest premiums — and for good reason. The streets are tree-lined and walkable, the Victorian and Craftsman architecture is beautifully preserved, and the commercial strip along Woodland Street (Lockeland Table, Margot Cafe) creates genuine neighborhood dining. Lockeland Design Center Elementary is one of the most sought-after public elementary schools in Nashville.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Lockeland Springs sits in the heart of East Nashville, within walking distance of Five Points. Downtown Nashville is about 5 minutes across the river.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Victorian and Craftsman homes dominate, many beautifully restored. Prices range from $550k for homes needing work to $1M+ for turnkey Victorians on desirable streets. This is the most expensive pocket of East Nashville.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Lockeland Design Center Elementary is within the neighborhood and is a magnet-style program that draws families from across the city. This school zone is a major property value driver.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Shelby Park and the Shelby Bottoms Greenway are the outdoor anchors. The neighborhood\'s walkable streets and mature tree canopy make daily walks part of the lifestyle.',
+      },
+      {
+        heading: 'Why House Haven knows Lockeland Springs',
+        body: 'We help buyers navigate Lockeland Springs\' premium market — understanding which streets command the highest premiums, evaluating the renovation economics on historic homes, and competing in a market where desirable listings receive multiple offers within days.',
+      },
+    ],
+    nearby: ['east-nashville', 'inglewood', 'donelson'],
+  },
 ]
 
 export const communityBySlug = Object.fromEntries(
