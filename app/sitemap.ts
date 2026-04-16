@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next'
 import { communities } from '@/data/communities'
 import { visibleTeam } from '@/data/team'
 import { blogPosts } from '@/data/blog'
+import { NASHBUILDS_ZIPS } from '@/lib/nashbuilds-zips'
 
 const BASE_URL = 'https://househavenrealty.com'
 
@@ -9,6 +10,8 @@ const staticRoutes: { path: string; changeFrequency: MetadataRoute.Sitemap[numbe
   { path: '/', changeFrequency: 'weekly', priority: 1.0 },
   { path: '/homes-for-sale', changeFrequency: 'daily', priority: 0.9 },
   { path: '/home-valuation', changeFrequency: 'monthly', priority: 0.9 },
+  { path: '/new-builds', changeFrequency: 'daily', priority: 0.95 },
+  { path: '/new-builds/builders', changeFrequency: 'weekly', priority: 0.8 },
   { path: '/new-construction', changeFrequency: 'daily', priority: 0.9 },
   { path: '/communities', changeFrequency: 'weekly', priority: 0.8 },
   { path: '/about', changeFrequency: 'monthly', priority: 0.6 },
@@ -32,6 +35,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: r.priority,
   }))
 
+  // Community pages
   for (const c of communities) {
     entries.push({
       url: `${BASE_URL}/communities/${c.slug}`,
@@ -41,6 +45,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   }
 
+  // Team pages
   for (const m of visibleTeam) {
     entries.push({
       url: `${BASE_URL}/team/${m.slug}`,
@@ -50,12 +55,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   }
 
+  // Blog posts
   for (const p of blogPosts) {
     entries.push({
       url: `${BASE_URL}/blog/${p.slug}`,
       lastModified: new Date(p.updatedAt || p.publishedAt),
       changeFrequency: 'monthly',
       priority: 0.7,
+    })
+  }
+
+  // NashBuilds ZIP pages
+  for (const z of NASHBUILDS_ZIPS) {
+    entries.push({
+      url: `${BASE_URL}/new-builds/${z.zip}`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.85,
     })
   }
 
