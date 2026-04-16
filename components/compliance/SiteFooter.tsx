@@ -18,12 +18,15 @@ const footerNav = {
     { label: 'Buyers', href: '/buyers' },
     { label: 'Sellers', href: '/sellers' },
     { label: "What's My Home Worth?", href: '/home-valuation' },
+    { label: 'Property Management', href: '/property-management' },
+    { label: 'Mortgage Calculator', href: '/buyers#mortgage-calculator' },
   ],
   Company: [
     { label: 'About', href: '/about' },
     { label: 'Meet the Team', href: '/team' },
     { label: 'Contact', href: '/contact' },
     { label: 'Privacy Policy', href: '/privacy' },
+    { label: 'Terms of Service', href: '/terms-of-service' },
   ],
 }
 

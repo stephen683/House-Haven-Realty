@@ -29,6 +29,7 @@ const primaryNav = [
     children: [
       { label: 'Selling Your Home', href: '/sellers' },
       { label: "What's My Home Worth?", href: '/home-valuation' },
+      { label: 'Property Management', href: '/property-management' },
     ],
   },
   {
