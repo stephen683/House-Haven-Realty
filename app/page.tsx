@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import FadeIn from '@/components/ui/FadeIn'
 import TestimonialCarousel from '@/components/sections/TestimonialCarousel'
 import NewsletterSignup from '@/components/forms/NewsletterSignup'
 import AgentCard from '@/components/team/AgentCard'
@@ -137,6 +138,7 @@ export default function HomePage() {
       {/* Featured listings */}
       <section className="bg-white py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-4 lg:px-6">
+          <FadeIn>
           <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
             <div>
               <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
@@ -158,6 +160,7 @@ export default function HomePage() {
               Search all homes →
             </Link>
           </div>
+          </FadeIn>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredPlaceholderListings.map((l) => (
@@ -196,6 +199,7 @@ export default function HomePage() {
       {/* Communities */}
       <section className="bg-househaven-surface py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-4 lg:px-6">
+          <FadeIn>
           <div className="text-center max-w-2xl mx-auto mb-12">
             <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
               40-mile radius
@@ -208,6 +212,7 @@ export default function HomePage() {
               we&rsquo;re your local experts everywhere within 40 miles of downtown.
             </p>
           </div>
+          </FadeIn>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {homepageCommunities.map((c) => (
@@ -244,6 +249,7 @@ export default function HomePage() {
 
       {/* New Construction teaser */}
       <section className="bg-white py-20 lg:py-28">
+        <FadeIn>
         <div className="max-w-7xl mx-auto px-4 lg:px-6 grid lg:grid-cols-2 gap-12 items-center">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
@@ -278,11 +284,13 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+        </FadeIn>
       </section>
 
       {/* Testimonials */}
       <section className="bg-househaven-surface py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-4 lg:px-6">
+          <FadeIn>
           <div className="text-center mb-12">
             <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
               What clients say
@@ -291,6 +299,7 @@ export default function HomePage() {
               Clients become friends.
             </h2>
           </div>
+          </FadeIn>
           <TestimonialCarousel />
         </div>
       </section>
