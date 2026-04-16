@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { communities, communityBySlug } from '@/data/communities'
+import { blogPosts } from '@/data/blog'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
 import ContactForm from '@/components/forms/ContactForm'
 import IDXDisclaimer from '@/components/compliance/IDXDisclaimer'
@@ -189,6 +190,40 @@ export default function CommunityPage({ params }: CommunityPageProps) {
           </div>
         </section>
       )}
+
+      {/* Related blog posts */}
+      {(() => {
+        const relatedPosts = blogPosts
+          .filter((p) => p.relatedCommunitySlugs?.includes(c.slug))
+          .slice(0, 3)
+        if (relatedPosts.length === 0) return null
+        return (
+          <section className="max-w-5xl mx-auto px-4 lg:px-6 py-16">
+            <h2 className="font-serif text-3xl text-househaven-navy mb-6">
+              Articles about {c.name}
+            </h2>
+            <div className="grid sm:grid-cols-3 gap-4">
+              {relatedPosts.map((p) => (
+                <Link
+                  key={p.slug}
+                  href={`/blog/${p.slug}`}
+                  className="block rounded-lg border border-black/5 bg-white p-5 hover:shadow-lg transition"
+                >
+                  <p className="text-xs uppercase tracking-wider text-househaven-accent">
+                    {p.category}
+                  </p>
+                  <p className="font-serif text-lg text-househaven-navy mt-2 leading-tight">
+                    {p.title}
+                  </p>
+                  <p className="text-xs text-househaven-text-muted mt-3">
+                    {p.readTimeMinutes} min read
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )
+      })()}
 
       {/* Lead capture */}
       <section className="bg-househaven-navy text-white py-20">
