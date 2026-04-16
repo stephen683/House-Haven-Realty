@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { communities } from '@/data/communities'
 
@@ -18,19 +19,31 @@ export default function CommunitiesIndexPage() {
     {},
   )
 
+  const counties = Object.keys(byCounty).sort()
+
   return (
     <main className="bg-white">
-      <section className="bg-househaven-surface py-20 lg:py-28">
-        <div className="max-w-5xl mx-auto px-4 lg:px-6 text-center">
+      {/* Hero */}
+      <section className="relative bg-househaven-navy text-white overflow-hidden">
+        <Image
+          src="https://images.unsplash.com/photo-1545419913-775543f3d8b4?auto=format&fit=crop&w=2400&q=70"
+          alt=""
+          fill
+          priority
+          className="object-cover opacity-25"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-househaven-navy/50 via-househaven-navy/75 to-househaven-navy" />
+        <div className="relative max-w-5xl mx-auto px-4 lg:px-6 py-24 lg:py-32 text-center">
           <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
-            Communities
+            {communities.length} community guides &middot; {counties.length} counties
           </p>
-          <h1 className="font-serif text-5xl lg:text-6xl text-househaven-navy mt-3">
+          <h1 className="font-serif text-5xl lg:text-6xl text-white mt-3 leading-tight">
             Middle Tennessee,
             <br />
             neighborhood by neighborhood.
           </h1>
-          <p className="mt-6 max-w-2xl mx-auto text-lg text-househaven-text-muted">
+          <p className="mt-6 max-w-2xl mx-auto text-lg text-white/70">
             We build a real guide for every community we serve — so when you&rsquo;re
             trying to decide between Joelton and Ashland City, or Thompsons Station and
             Spring Hill, you have real answers, not filler.
@@ -38,47 +51,78 @@ export default function CommunitiesIndexPage() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 lg:px-6 py-20 lg:py-24 space-y-16">
-        {Object.entries(byCounty).map(([county, list]) => (
-          <div key={county}>
-            <div className="flex items-end justify-between flex-wrap gap-3 mb-6">
-              <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
-                  County
-                </p>
-                <h2 className="font-serif text-3xl text-househaven-navy mt-1">
-                  {county} County
-                </h2>
-              </div>
-              <p className="text-sm text-househaven-text-muted">
-                {list.length} community guide{list.length === 1 ? '' : 's'}
-              </p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {list.map((c) => (
-                <Link
-                  key={c.slug}
-                  href={`/communities/${c.slug}`}
-                  className="group block rounded-2xl border border-black/5 bg-white p-6 hover:shadow-xl transition"
-                >
+      {/* Quick-jump county nav */}
+      <section className="border-b border-black/5 bg-white sticky top-20 z-30">
+        <div className="max-w-7xl mx-auto px-4 lg:px-6 py-3 flex gap-3 overflow-x-auto scrollbar-hide">
+          {counties.map((county) => (
+            <a
+              key={county}
+              href={`#county-${county.toLowerCase().replace(/[^a-z]/g, '-')}`}
+              className="shrink-0 px-3 py-1.5 rounded-full bg-househaven-surface text-xs font-medium text-househaven-navy hover:bg-househaven-navy hover:text-white transition"
+            >
+              {county} ({byCounty[county].length})
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-4 lg:px-6 py-16 lg:py-20 space-y-16">
+        {counties.map((county) => {
+          const list = byCounty[county]
+          return (
+            <div
+              key={county}
+              id={`county-${county.toLowerCase().replace(/[^a-z]/g, '-')}`}
+              className="scroll-mt-32"
+            >
+              <div className="flex items-end justify-between flex-wrap gap-3 mb-6">
+                <div>
                   <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
-                    {c.zips.join(', ')}
+                    County
                   </p>
-                  <p className="font-serif text-2xl text-househaven-navy mt-2">
-                    {c.name}
-                  </p>
-                  <p className="text-sm text-househaven-text-muted mt-2">{c.tagline}</p>
-                  <p className="text-xs text-househaven-text-muted mt-4">
-                    {c.distanceFromNashville}
-                  </p>
-                  <span className="inline-flex mt-5 text-sm font-semibold text-househaven-navy group-hover:text-househaven-accent">
-                    Explore {c.name} →
-                  </span>
-                </Link>
-              ))}
+                  <h2 className="font-serif text-3xl text-househaven-navy mt-1">
+                    {county} County
+                  </h2>
+                </div>
+                <p className="text-sm text-househaven-text-muted">
+                  {list.length} community guide{list.length === 1 ? '' : 's'}
+                </p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {list.map((c) => (
+                  <Link
+                    key={c.slug}
+                    href={`/communities/${c.slug}`}
+                    className="group block rounded-2xl border border-black/5 bg-white p-6 hover:shadow-xl hover:border-househaven-navy/10 transition"
+                  >
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
+                        {c.zips.join(', ')}
+                      </p>
+                      {c.tier === 1 && (
+                        <span className="text-[9px] uppercase tracking-wider font-bold text-househaven-accent bg-househaven-accent/10 px-2 py-0.5 rounded-full">
+                          Core
+                        </span>
+                      )}
+                    </div>
+                    <p className="font-serif text-2xl text-househaven-navy mt-2">
+                      {c.name}
+                    </p>
+                    <p className="text-sm text-househaven-text-muted mt-2 line-clamp-2">
+                      {c.tagline}
+                    </p>
+                    <p className="text-xs text-househaven-text-muted mt-4">
+                      {c.distanceFromNashville}
+                    </p>
+                    <span className="inline-flex mt-5 text-sm font-semibold text-househaven-navy group-hover:text-househaven-accent transition">
+                      Explore {c.name} →
+                    </span>
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
 
         <div className="rounded-3xl bg-househaven-surface border border-black/5 p-8 text-center">
           <p className="font-serif text-2xl text-househaven-navy">
