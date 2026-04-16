@@ -7,6 +7,7 @@ import Link from 'next/link'
 import type { FilterSpecification } from 'maplibre-gl'
 import MapSearch from '@/components/permits/MapSearch'
 import MapFilters from '@/components/permits/MapFilters'
+import AlertSignup from '@/components/permits/AlertSignup'
 import PermitDetailPanel from '@/components/permits/PermitDetailPanel'
 import type { PermitFeatureProperties } from '@/components/permits/MapView'
 import type { ZipSaturationScore } from '@/lib/saturation-score'
@@ -159,6 +160,9 @@ export default function NashBuildsApp({
           </div>
 
           <div className="flex-1" />
+          <div className="relative">
+            <AlertSignup availableZips={availableZips} />
+          </div>
           <p className="text-[10px] text-househaven-text-muted hidden lg:block">
             Live data &middot; Metro Nashville Codes
           </p>

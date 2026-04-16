@@ -8,7 +8,7 @@ function isValidEmail(email: string) {
 }
 
 export async function POST(request: NextRequest) {
-  let body: { email?: string; tcpaConsent?: boolean }
+  let body: { email?: string; tcpaConsent?: boolean; source?: string; targetZip?: string }
   try {
     body = await request.json()
   } catch {
@@ -17,6 +17,8 @@ export async function POST(request: NextRequest) {
 
   const email = body.email?.toString().trim()
   const tcpaConsent = body.tcpaConsent === true
+  const source = body.source?.toString().trim() || 'website'
+  const targetZip = body.targetZip?.toString().trim() || null
 
   if (!email || !isValidEmail(email)) {
     return NextResponse.json({ error: 'Valid email is required.' }, { status: 400 })
@@ -41,12 +43,13 @@ export async function POST(request: NextRequest) {
       first_name: '',
       last_name: '',
       email,
-      form_type: 'newsletter',
-      source: 'website',
-      interest: 'newsletter',
+      form_type: source === 'nashbuilds_alert' ? 'nashbuilds_alert' : 'newsletter',
+      source,
+      interest: source === 'nashbuilds_alert' ? 'new_construction' : 'newsletter',
       tcpa_consent: tcpaConsent,
       tcpa_consent_at: tcpaConsent ? new Date().toISOString() : null,
       page_url: request.headers.get('referer') || null,
+      form_data: targetZip ? { target_zip: targetZip } : {},
     })
 
     if (error) {
