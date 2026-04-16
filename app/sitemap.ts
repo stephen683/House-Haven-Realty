@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { communities } from '@/data/communities'
 import { visibleTeam } from '@/data/team'
+import { blogPosts } from '@/data/blog'
 
 const BASE_URL = 'https://househavenrealty.com'
 
@@ -46,6 +47,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.5,
+    })
+  }
+
+  for (const p of blogPosts) {
+    entries.push({
+      url: `${BASE_URL}/blog/${p.slug}`,
+      lastModified: new Date(p.updatedAt || p.publishedAt),
+      changeFrequency: 'monthly',
+      priority: 0.7,
     })
   }
 
