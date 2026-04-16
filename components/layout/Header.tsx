@@ -76,12 +76,13 @@ export default function Header() {
                   {item.label}
                 </Link>
                 {item.children && (
-                  <div className="absolute left-0 top-full pt-3 hidden group-hover:block">
-                    <div className="bg-white rounded-lg shadow-xl border border-black/5 min-w-[220px] py-2">
+                  <div className="absolute left-0 top-full pt-3 hidden group-hover:block group-focus-within:block">
+                    <div className="bg-white rounded-lg shadow-xl border border-black/5 min-w-[220px] py-2" role="menu">
                       {item.children.map((c) => (
                         <Link
                           key={c.href}
                           href={c.href}
+                          role="menuitem"
                           className="block px-4 py-2 text-sm text-househaven-text hover:bg-househaven-surface hover:text-househaven-navy"
                         >
                           {c.label}
