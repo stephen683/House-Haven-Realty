@@ -164,6 +164,18 @@ This document is kept in sync as Claude Code builds. Check it at the start of ev
 - [ ] Permit alert email signup form (currently generic Contact CTA)
 - [ ] Surrounding counties (Sumner/Robertson/etc.) — research + add feeds
 
+### Phase 6B — "New Builds in Nash" Product Upgrade (FLAGSHIP)
+**Goal:** Elevate from permit viewer to a PermitPilot-quality product that beats Zillow for Nashville new construction.
+- [ ] Brand research: "New Builds in Nash", "NashBuilds", or similar
+- [ ] Enrich permit data with property details (sqft, beds, baths, type) — cross-reference Nashville property records API
+- [ ] New Build Saturation Score (like PermitPilot eligibility) — activity density per ZIP/neighborhood
+- [ ] Advanced filtering: price range, beds/baths, property type, builder, ZIP, construction status (pre-construction / under construction / move-in ready)
+- [ ] Builder profiles with reputation signals
+- [ ] Photo integration for completed/in-progress builds
+- [ ] Email alert signup for new permits in user's target ZIP
+- [ ] Standalone product-quality UI with its own nav/branding
+- [ ] Mobile-optimized map experience with drawer detail panel
+
 ## Phase 7 — Blog & Market Reports
 
 - [x] `data/blog.ts` — structured long-form posts with sections, callouts, related links
