@@ -1,9 +1,26 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { communities, communityBySlug } from '@/data/communities'
 import ContactForm from '@/components/forms/ContactForm'
 import IDXDisclaimer from '@/components/compliance/IDXDisclaimer'
+
+// Hero images by county — using Nashville/TN landscape photography
+const countyHeroImages: Record<string, string> = {
+  Davidson: 'https://images.unsplash.com/photo-1545419913-775543f3d8b4?auto=format&fit=crop&w=2400&q=70',
+  Sumner: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2400&q=70',
+  Robertson: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=2400&q=70',
+  Cheatham: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=2400&q=70',
+  Dickson: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2400&q=70',
+  Williamson: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2400&q=70',
+  Wilson: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=2400&q=70',
+  Rutherford: 'https://images.unsplash.com/photo-1605276373954-0c4a0dac5b12?auto=format&fit=crop&w=2400&q=70',
+  Maury: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=2400&q=70',
+  'Davidson/Sumner': 'https://images.unsplash.com/photo-1545419913-775543f3d8b4?auto=format&fit=crop&w=2400&q=70',
+  'Williamson/Maury': 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2400&q=70',
+}
+const defaultHero = 'https://images.unsplash.com/photo-1568454537842-d933259bb258?auto=format&fit=crop&w=2400&q=70'
 
 interface CommunityPageProps {
   params: { slug: string }
@@ -79,18 +96,43 @@ export default function CommunityPage({ params }: CommunityPageProps) {
         </ol>
       </nav>
 
-      {/* Hero */}
-      <section className="max-w-5xl mx-auto px-4 lg:px-6 pt-8 pb-14">
-        <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
-          {c.county} County · {c.zips.join(', ')}
-        </p>
-        <h1 className="font-serif text-5xl lg:text-6xl text-househaven-navy mt-3">
-          {c.name}, Tennessee
-        </h1>
-        <p className="mt-4 text-xl text-househaven-text-muted">{c.tagline}</p>
-        <p className="mt-6 text-sm text-househaven-text-muted">
-          {c.distanceFromNashville} · Updated {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-        </p>
+      {/* Hero with image */}
+      <section className="relative bg-househaven-navy text-white overflow-hidden">
+        <Image
+          src={countyHeroImages[c.county] || defaultHero}
+          alt={`${c.name}, Tennessee landscape`}
+          fill
+          priority
+          className="object-cover opacity-30"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-househaven-navy/40 via-househaven-navy/70 to-househaven-navy" />
+        <div className="relative max-w-5xl mx-auto px-4 lg:px-6 pt-20 pb-16">
+          <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
+            {c.county} County · {c.zips.join(', ')}
+          </p>
+          <h1 className="font-serif text-5xl lg:text-6xl text-white mt-3">
+            {c.name}, Tennessee
+          </h1>
+          <p className="mt-4 text-xl text-white/80">{c.tagline}</p>
+          <p className="mt-6 text-sm text-white/60">
+            {c.distanceFromNashville} · Updated {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+          </p>
+          <div className="mt-8 flex flex-col sm:flex-row gap-4">
+            <Link
+              href={`/homes-for-sale?city=${encodeURIComponent(c.name)}`}
+              className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-white text-househaven-navy font-semibold hover:bg-househaven-accent transition text-sm"
+            >
+              Search {c.name} homes
+            </Link>
+            <Link
+              href="/home-valuation"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white/30 text-white font-semibold hover:bg-white/10 transition text-sm"
+            >
+              What&rsquo;s my home worth?
+            </Link>
+          </div>
+        </div>
       </section>
 
       {/* Content */}
