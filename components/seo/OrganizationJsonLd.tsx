@@ -12,8 +12,11 @@ export default function OrganizationJsonLd() {
     url: BASE_URL,
     telephone: '+1-615-624-4766',
     email: 'Stephen@househavenrealty.com',
-    image: `${BASE_URL}/images/logo-dark.svg`,
-    logo: `${BASE_URL}/images/logo-dark.svg`,
+    image: `${BASE_URL}/images/logo/logo-dark.png`,
+    logo: `${BASE_URL}/images/logo/logo-dark.png`,
+    foundingDate: '2016',
+    numberOfEmployees: { '@type': 'QuantitativeValue', value: 11 },
+    slogan: 'Your Nashville neighbor in real estate.',
     areaServed: [
       { '@type': 'City', name: 'Nashville' },
       { '@type': 'AdministrativeArea', name: 'Middle Tennessee' },
@@ -31,6 +34,21 @@ export default function OrganizationJsonLd() {
       name: 'Stephen Delahoussaye',
       jobTitle: 'Broker | Owner',
     },
+    priceRange: '$150K - $5.3M',
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '09:00',
+        closes: '18:00',
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Saturday'],
+        opens: '10:00',
+        closes: '16:00',
+      },
+    ],
     sameAs: [
       'https://www.instagram.com/househavenrealty/',
       'https://www.facebook.com/stephen.delahoussaye',
