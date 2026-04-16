@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: 'Terms of Service',
   description:
     'Terms of service governing use of the House Haven Realty website, including property data, lead submissions, and general website use.',
+  alternates: { canonical: '/terms-of-service' },
 }
 
 export default function TermsPage() {

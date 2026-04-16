@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: 'Nashville Real Estate Insights — The House Haven Blog',
   description:
     'Market updates, buyer and seller guides, new construction insights, and Middle Tennessee neighborhood deep dives from the House Haven Realty team.',
+  alternates: { canonical: '/blog' },
 }
 
 export default function BlogIndexPage() {

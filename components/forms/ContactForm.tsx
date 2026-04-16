@@ -57,6 +57,7 @@ export default function ContactForm({ source = 'contact' }: { source?: string })
             name="name"
             type="text"
             required
+            autoComplete="name"
             className="w-full rounded-lg border border-black/10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-househaven-navy"
           />
         </div>
@@ -69,6 +70,7 @@ export default function ContactForm({ source = 'contact' }: { source?: string })
             name="email"
             type="email"
             required
+            autoComplete="email"
             className="w-full rounded-lg border border-black/10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-househaven-navy"
           />
         </div>
@@ -82,6 +84,7 @@ export default function ContactForm({ source = 'contact' }: { source?: string })
             id="contact-phone"
             name="phone"
             type="tel"
+            autoComplete="tel"
             className="w-full rounded-lg border border-black/10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-househaven-navy"
           />
         </div>

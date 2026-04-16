@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: 'Homes for Sale in Nashville & Middle Tennessee',
   description:
     'Search active listings across Nashville and Middle Tennessee. Filter by price, beds, baths, community, and more. Presented by House Haven Realty.',
+  alternates: { canonical: '/homes-for-sale' },
 }
 
 const propertyTypes = ['Single Family', 'Condo', 'Townhouse', 'Multi-Family', 'Land']

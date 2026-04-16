@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: 'Buying a Home in Nashville — The House Haven Process',
   description:
     'The House Haven Realty buyer process, from pre-approval to closing. First-time homebuyer programs, Tennessee buyer representation, and what to expect in the current Nashville market.',
+  alternates: { canonical: '/buyers' },
 }
 
 const steps = [

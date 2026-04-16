@@ -56,6 +56,7 @@ export default function ValuationForm() {
           name="address"
           required
           placeholder="123 Main St"
+          autoComplete="street-address"
           className="w-full rounded-lg border border-black/10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-househaven-navy"
         />
       </div>
@@ -69,6 +70,7 @@ export default function ValuationForm() {
             name="city"
             required
             defaultValue="Nashville"
+            autoComplete="address-level2"
             className="w-full rounded-lg border border-black/10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-househaven-navy"
           />
         </div>
@@ -82,6 +84,7 @@ export default function ValuationForm() {
             required
             inputMode="numeric"
             pattern="[0-9]{5}"
+            autoComplete="postal-code"
             className="w-full rounded-lg border border-black/10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-househaven-navy"
           />
         </div>
@@ -95,6 +98,7 @@ export default function ValuationForm() {
             id="val-name"
             name="name"
             required
+            autoComplete="name"
             className="w-full rounded-lg border border-black/10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-househaven-navy"
           />
         </div>
@@ -107,6 +111,7 @@ export default function ValuationForm() {
             name="email"
             type="email"
             required
+            autoComplete="email"
             className="w-full rounded-lg border border-black/10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-househaven-navy"
           />
         </div>
@@ -120,6 +125,7 @@ export default function ValuationForm() {
             id="val-phone"
             name="phone"
             type="tel"
+            autoComplete="tel"
             className="w-full rounded-lg border border-black/10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-househaven-navy"
           />
         </div>

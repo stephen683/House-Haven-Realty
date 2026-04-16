@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: 'Contact House Haven Realty',
   description:
     'Get in touch with House Haven Realty. Call (615) 624-4766 or send us a message — we respond within one business day.',
+  alternates: { canonical: '/contact' },
 }
 
 export default function ContactPage() {

@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: 'Property Management — Door Collectors',
   description:
     'Looking to invest in Nashville rental property or need management for your existing rentals? House Haven Realty&rsquo;s sister company Door Collectors handles it all.',
+  alternates: { canonical: '/property-management' },
 }
 
 export default function PropertyManagementPage() {

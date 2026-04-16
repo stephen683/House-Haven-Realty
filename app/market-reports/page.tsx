@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: 'Nashville Market Reports — House Haven Realty',
   description:
     'Monthly Nashville and Middle Tennessee market reports: median price, inventory, days on market, and what it means for buyers and sellers — from House Haven Realty.',
+  alternates: { canonical: '/market-reports' },
 }
 
 const counties = [

@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "What's My Home Worth? Free Nashville Home Valuation",
   description:
     "Get a free, no-obligation Comparative Market Analysis of your Nashville or Middle Tennessee home. Real numbers from House Haven Realty — not just an automated Zestimate.",
+  alternates: { canonical: '/home-valuation' },
 }
 
 export default function HomeValuationPage() {

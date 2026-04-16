@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: 'Selling Your Home in Nashville — House Haven Realty',
   description:
     'Sell your Nashville home with House Haven Realty. Free CMA, professional marketing, and a proven process built on 500+ closed sales.',
+  alternates: { canonical: '/sellers' },
 }
 
 const sellSteps = [

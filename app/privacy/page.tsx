@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: 'Privacy Policy',
   description:
     'How House Haven Realty collects, uses, and protects personal information submitted through our website and lead capture forms.',
+  alternates: { canonical: '/privacy' },
 }
 
 export default function PrivacyPage() {

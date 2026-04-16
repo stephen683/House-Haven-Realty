@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: 'Meet the Team',
   description:
     'Meet the House Haven Realty team — a boutique Nashville brokerage led by broker Stephen Delahoussaye. Our agents live, work, and serve across Middle Tennessee.',
+  alternates: { canonical: '/team' },
 }
 
 export default function TeamIndexPage() {

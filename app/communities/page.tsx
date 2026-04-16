@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: 'Nashville & Middle Tennessee Communities',
   description:
     'Explore every neighborhood, suburb, and small town within 40 miles of Nashville. Homes, schools, commute times, and lifestyle guides from House Haven Realty.',
+  alternates: { canonical: '/communities' },
 }
 
 export default function CommunitiesIndexPage() {

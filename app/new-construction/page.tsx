@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: 'New Construction Homes in Nashville — Live Permit Map',
   description:
     "See every active residential building permit across the Nashville metro. House Haven Realty's exclusive new construction map pulls live data from Metro Nashville's open data portal.",
+  alternates: { canonical: '/new-construction' },
 }
 
 export const revalidate = 21600 // 6 hours
