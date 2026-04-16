@@ -1408,6 +1408,417 @@ export const blogPosts: BlogPost[] = [
     relatedCommunitySlugs: ['east-nashville', 'franklin', 'mt-juliet', 'germantown', 'brentwood', 'nolensville'],
     relatedPostSlugs: ['nashville-market-report-april-2026', 'moving-to-nashville-2026'],
   },
+
+  // ── Nashville Suburb Deep-Dive Neighborhood Guides ─────────────────────
+
+  {
+    slug: 'living-in-franklin-tn-2026',
+    title: 'Living in Franklin, TN — The Complete 2026 Guide',
+    excerpt:
+      'Historic charm, top-rated schools, and a booming real estate market. Everything you need to know about buying a home in Franklin, Tennessee in 2026.',
+    authorSlug: 'stephen-delahoussaye',
+    publishedAt: '2026-04-08T09:00:00.000Z',
+    updatedAt: '2026-04-08T09:00:00.000Z',
+    readTimeMinutes: 11,
+    heroImage:
+      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1440&q=70',
+    heroCaption: 'Tree-lined streets in historic downtown Franklin, Tennessee.',
+    category: 'Neighborhood Guides',
+    tags: ['franklin', 'williamson county', 'neighborhood guide', 'homes for sale'],
+    sections: [
+      {
+        heading: 'Why Franklin keeps landing on "best places to live" lists',
+        paragraphs: [
+          'Franklin, Tennessee has been a magnet for relocating families and professionals for the better part of a decade, and in 2026 the momentum shows no signs of slowing. The city of roughly 90,000 sits about 20 miles south of downtown Nashville along the I-65 corridor, and it delivers something that is increasingly rare in fast-growing metro areas: genuine small-town character layered on top of big-city amenities. Main Street is not a marketing gimmick — it is a real, walkable downtown filled with independent shops, restaurants, and live music venues housed in Civil War-era buildings.',
+          'The broader appeal is practical. Williamson County Schools consistently ranks among the top districts in Tennessee, property values have appreciated steadily without the boom-bust volatility some Nashville neighborhoods experienced, and the job market is strong thanks to corporate campuses in Cool Springs and the healthcare corridor along Carothers Parkway. If you are weighing Franklin against other Nashville suburbs, the question is usually not whether Franklin is a good place to live — it is whether the price of entry fits your budget.',
+        ],
+      },
+      {
+        heading: 'Historic downtown Franklin vs. Cool Springs',
+        paragraphs: [
+          'Franklin is really two distinct areas connected by a five-minute drive. Historic downtown Franklin is centered on Main Street and radiates outward into tree-lined residential streets with homes ranging from restored Victorians to newer infill construction. Living downtown means walkability — you can get to restaurants, the Harpeth River greenway, and the Factory at Franklin without starting your car. The trade-off is price: most single-family homes within walking distance of Main Street start north of $800,000 and climb quickly.',
+          'Cool Springs is the commercial and retail engine south of downtown along Mallory Lane and Carothers Parkway. It is where you will find Galleria Mall, big-box retail, corporate offices for companies like Nissan North America and Community Health Systems, and a large inventory of newer construction — both single-family subdivisions and townhome communities. Homes in Cool Springs-area neighborhoods generally start in the mid-$500s for townhomes and low $600s for detached homes, making it the more accessible entry point into Franklin.',
+          'Neither is better in an absolute sense. Downtown is for buyers who prioritize charm, walkability, and character. Cool Springs is for buyers who want newer construction, proximity to retail, and a slightly lower price per square foot.',
+        ],
+        callout: {
+          title: 'Franklin Special School District',
+          body: 'Parts of Franklin city limits are served by Franklin Special School District rather than Williamson County Schools. Both are excellent, but they are separate systems with different school zones. Always confirm which district a specific address feeds into before making an offer.',
+        },
+      },
+      {
+        heading: 'Neighborhoods worth knowing',
+        paragraphs: [
+          'Westhaven is a master-planned, new-urbanist community on the west side of Franklin with a town center, pool complex, and miles of internal sidewalks. It is the closest thing to a self-contained village inside Franklin, and it appeals to families who want a community feel without leaving town. Prices range from the mid-$500s for townhomes to over $1.5M for larger single-family homes on premium lots.',
+          'Fieldstone Farms and Sullivan Farms are established neighborhoods south of downtown that offer larger lots, mature trees, and homes in the $600s to $900s range. They are popular with families who want solid Williamson County school zones without the premium of a newer master-planned community. Ladd Park, Berry Farms, and Lockwood Glen are newer developments that sit in the southern corridor and feature modern floorplans, community amenities, and price points from the high $500s through the $900s.',
+          'For buyers seeking estate-style living, areas like Laurelbrooke and Avalon offer homes on one-plus-acre lots with prices starting around $1.2M. These neighborhoods appeal to executives and families who want space, privacy, and still a Franklin address.',
+        ],
+      },
+      {
+        heading: 'Schools in Franklin',
+        paragraphs: [
+          'Williamson County Schools is the primary draw for families moving to Franklin, and the numbers back up the reputation. The district consistently posts some of the highest standardized test scores in the state, graduation rates above 95 percent, and strong Advanced Placement participation. High schools that serve Franklin addresses include Franklin High School, Centennial High School, and Independence High School — all of which are well-regarded.',
+          'Franklin Special School District serves a defined area within the city limits and operates several elementary and middle schools. It is a smaller, community-oriented district with strong parent involvement and solid outcomes. Families sometimes overlook FSSD because it is less known, but it deserves consideration.',
+          'Private school options in and around Franklin include Battle Ground Academy, Brentwood Academy (nearby in Brentwood), and several faith-based schools. The density of quality education options — public and private — is one of the key reasons Franklin real estate holds its value.',
+        ],
+      },
+      {
+        heading: 'Price ranges and what your money buys',
+        paragraphs: [
+          'As of early 2026, the Franklin real estate market breaks down roughly as follows. Townhomes and condos start in the mid-$400s and run to the low $700s depending on age, location, and finishes. Entry-level single-family homes — typically three bedrooms, under 2,000 square feet, in older or outer-ring neighborhoods — start around $550,000. The bulk of family homes with four bedrooms, good school zones, and updated finishes trade between $650,000 and $950,000. Above $1M you are into premium neighborhoods, larger lots, and custom or semi-custom construction.',
+          'Compared to 2024, prices are up modestly — roughly 3 to 4 percent annually — but the pace of appreciation has normalized from the double-digit gains of 2021 and 2022. Inventory is healthier than it has been in years, which means buyers have more choices and slightly more negotiating room, especially in the new-construction segment where builders are offering rate buydowns and closing cost incentives.',
+        ],
+        callout: {
+          title: 'New construction incentives',
+          body: 'Several Franklin-area builders are currently offering mortgage rate buydowns, closing cost credits, and upgrade packages to move standing inventory. If new construction appeals to you, 2026 is a strong time to negotiate.',
+        },
+      },
+      {
+        heading: 'The commute from Franklin',
+        paragraphs: [
+          'The I-65 north corridor from Franklin to downtown Nashville is the most-traveled suburban commute in Middle Tennessee. In practical terms, expect 30 to 45 minutes during peak morning hours and 35 to 50 minutes in the evening. The drive is predictable — it is slow but rarely stopped — and many commuters find it manageable, especially with hybrid work schedules.',
+          'Cool Springs employers like Nissan, CKE Restaurants, and Community Health Systems mean that a significant portion of Franklin residents never commute to Nashville at all. If you work in Cool Springs and live in Franklin, your commute is likely under 15 minutes. That is an underappreciated advantage — Franklin is not just a bedroom community, it is a jobs center in its own right.',
+          'For those who do head north regularly, Mack Hatcher Parkway provides a bypass around Franklin that connects the east and west sides of town without touching I-65. It is one of the most useful roads in Middle Tennessee and dramatically improves quality of life for Franklin residents.',
+        ],
+      },
+      {
+        heading: 'Is Franklin right for you?',
+        paragraphs: [
+          'Franklin is the right fit for buyers who want strong schools, a charming downtown, a stable and appreciating real estate market, and are comfortable with a budget that starts in the mid-$500s for a family home. It is especially attractive for families relocating from higher-cost metros who find that their dollar stretches further here than it does in comparable suburbs outside Atlanta, Dallas, or Denver.',
+          'Franklin is not the right fit if your budget is under $450,000 for a single-family home, if you want urban walkability and nightlife, or if your job is on the north or east side of Nashville and a 45-minute reverse commute is a dealbreaker. In those cases, consider Hendersonville, Mt. Juliet, or neighborhoods inside Davidson County.',
+          'If Franklin is on your shortlist, House Haven Realty knows the market at the neighborhood level. We can help you understand which streets, subdivisions, and school zones align with what you are looking for — and which ones are overpriced relative to what they deliver.',
+        ],
+      },
+    ],
+    relatedCommunitySlugs: ['franklin', 'brentwood', 'thompsons-station', 'nolensville', 'spring-hill'],
+    relatedPostSlugs: ['moving-to-nashville-2026', 'best-neighborhoods-nashville-families-2026', 'best-nashville-suburbs-commuters'],
+  },
+
+  {
+    slug: 'living-in-brentwood-tn',
+    title: 'Living in Brentwood, TN — Schools, Homes & What to Know',
+    excerpt:
+      'Brentwood offers estate-caliber homes, two of Tennessee\'s top high schools, and a 25-minute shot to downtown Nashville. Here is what buyers should know in 2026.',
+    authorSlug: 'stephen-delahoussaye',
+    publishedAt: '2026-04-10T09:00:00.000Z',
+    updatedAt: '2026-04-10T09:00:00.000Z',
+    readTimeMinutes: 10,
+    heroImage:
+      'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1440&q=70',
+    heroCaption: 'Upscale residential neighborhood in Brentwood, Tennessee.',
+    category: 'Neighborhood Guides',
+    tags: ['brentwood', 'williamson county', 'neighborhood guide', 'homes for sale', 'schools'],
+    sections: [
+      {
+        heading: 'The Brentwood proposition',
+        paragraphs: [
+          'Brentwood, Tennessee occupies a unique position in the Nashville metro. It sits directly between downtown Nashville and Franklin along I-65, which means it has the shortest suburban commute of any Williamson County city — typically 20 to 30 minutes to downtown. It also benefits from Williamson County Schools while being closer to Nashville amenities like Green Hills shopping, Vanderbilt Medical Center, and the airport. For buyers who want top-tier schools and do not want to live 35 minutes from the city, Brentwood is often the answer.',
+          'What Brentwood is not is affordable entry-level housing. The city was deliberately planned as a low-density, residential-first community, and its zoning and minimum lot sizes reflect that. The median home price in Brentwood hovers around $900,000 in 2026, and a meaningful portion of the housing stock is north of $1.2M. Buyers come to Brentwood for specific reasons — schools, space, and proximity — and they pay accordingly.',
+        ],
+      },
+      {
+        heading: 'Ravenwood vs. Brentwood High — the school question everyone asks',
+        paragraphs: [
+          'The two public high schools serving Brentwood addresses are Ravenwood High School and Brentwood High School, both part of Williamson County Schools. Parents relocating to Brentwood almost always ask which one is better, and the honest answer is that both are excellent. Ravenwood tends to edge ahead in AP participation and recent test scores, while Brentwood High has a strong athletics tradition and deep community roots. Neither is a wrong choice.',
+          'The more important question is which elementary and middle schools feed into which high school, because the feeder patterns determine your specific school experience from kindergarten through graduation. Neighborhoods like Governors Club, Annandale, and Taramore feed into Ravenwood. Neighborhoods like Brentwood Country Club Estates, Meadowlake, and Owl Creek feed into Brentwood High. We can map the exact feeder pattern for any address you are considering.',
+          'Private school families also find Brentwood attractive because of its proximity to Brentwood Academy, Currey Ingram Academy, Montessori Academy, and several excellent private elementary options. The density of strong schools — public and private — is arguably Brentwood best single feature.',
+        ],
+        callout: {
+          title: 'School zone verification',
+          body: 'Williamson County has redrawn some school zone boundaries in recent years to accommodate growth. Never rely on an online listing school zone — confirm directly with the district for the specific address you are considering.',
+        },
+      },
+      {
+        heading: 'Maryland Farms and the Brentwood business district',
+        paragraphs: [
+          'Maryland Farms is Brentwood commercial center — a planned office park and mixed-use area along Maryland Way that houses corporate offices, medical practices, restaurants, and the Maryland Farms YMCA. Companies including Tractor Supply, Delek US, and several healthcare firms have offices here. For residents who work in Maryland Farms, the commute is measured in minutes rather than miles.',
+          'The Hill Center Brentwood, located along Franklin Road, is a newer mixed-use development with upscale retail, dining, and a Whole Foods. It has become a social hub for Brentwood residents and provides walkable shopping without driving to Green Hills or Cool Springs. Between Maryland Farms and Hill Center, Brentwood has enough commercial infrastructure that residents do not feel isolated — a common concern for buyers considering a primarily residential city.',
+        ],
+      },
+      {
+        heading: 'Estate neighborhoods and what your money buys',
+        paragraphs: [
+          'Brentwood housing stock is dominated by single-family homes on larger lots, many with half an acre or more. The market breaks down into several tiers. Entry-level Brentwood — if you can call it that — consists of homes built in the 1980s and 1990s in neighborhoods like Bradford Hills, Brentwood Pointe, and River Oaks. These trade in the $650,000 to $850,000 range and often need cosmetic updating. They are the most accessible way into a Brentwood address and Brentwood schools.',
+          'The core of the market is homes in the $900,000 to $1.4M range in neighborhoods like Fountainbrooke, Taramore, Owl Creek, and Meadowlake. These are four- to five-bedroom homes on half-acre to one-acre lots with updated finishes, pools, and established landscaping. This is where most Brentwood families land.',
+          'At the top of the market, Governors Club, Annandale, and Brentwood Country Club Estates offer estate-caliber homes on one-plus-acre lots with prices from $1.5M to well over $3M. These neighborhoods attract executives, entertainers, and high-net-worth families who want privacy, space, and the very best school zones in the county.',
+        ],
+      },
+      {
+        heading: 'The commute and daily life',
+        paragraphs: [
+          'Brentwood sits right off I-65 between exits 71 and 74, and the commute to downtown Nashville is the best of any Williamson County suburb. Most Brentwood residents report 20 to 30 minutes to downtown during peak hours — faster than many in-town Nashville neighborhoods deal with on surface streets. The same drive in reverse (Nashville to Brentwood) is often quicker because you are heading against the flow of traffic.',
+          'Daily life in Brentwood revolves around family, schools, and outdoor recreation. Crockett Park, Marcella Vivrette Smith Park, and the Brentwood greenway system provide trails, sports fields, and community gathering spaces. The Brentwood Library is one of the best-funded in the state. Youth sports leagues are deeply embedded in the community — if you have school-age kids, your weekends will be full.',
+          'Dining and nightlife are limited within Brentwood itself, which is by design. Residents head to Green Hills (10 minutes north) or downtown Franklin (15 minutes south) for date nights. That trade-off — quiet residential living in exchange for driving to entertainment — is exactly what Brentwood buyers are choosing.',
+        ],
+        callout: {
+          title: 'Green Hills proximity',
+          body: 'The border between Brentwood and the Green Hills area of Nashville is essentially seamless. Many Brentwood residents do their grocery shopping, dining, and errands in Green Hills without thinking of it as "going to Nashville." The Mall at Green Hills, Trader Joe\'s, and dozens of restaurants are all within a 10-minute drive.',
+        },
+      },
+      {
+        heading: 'Brentwood vs. Franklin — how to decide',
+        paragraphs: [
+          'Buyers in the Williamson County price range almost always compare Brentwood and Franklin, and the decision usually comes down to three factors. First, proximity to Nashville: if you commute to Nashville daily, Brentwood saves you 10 to 15 minutes each way compared to Franklin. Second, walkable downtown: Franklin has one and Brentwood does not. If walkability to restaurants and shops matters to you, Franklin wins. Third, lot size and home style: Brentwood tends toward larger lots and more traditional estate-style homes, while Franklin offers more variety including new-urbanist and townhome communities.',
+          'Both cities share Williamson County Schools, so the school quality argument is a wash at the district level (though specific school zones differ). Both have strong home values and appreciation. The right answer depends on your lifestyle preferences, not on which city is objectively "better" — because that question does not have an answer.',
+        ],
+      },
+      {
+        heading: 'Is Brentwood right for you?',
+        paragraphs: [
+          'Brentwood is the right fit for buyers with a budget north of $700,000 who prioritize schools, space, safety, and a short commute to Nashville. It is especially strong for families with school-age children and for professionals who work in the Maryland Farms business district or along the I-65 corridor.',
+          'Brentwood is not the right fit if you want a walkable downtown lifestyle, if nightlife matters, or if your budget is under $650,000 for a single-family home. In those cases, consider Franklin for the downtown feel, Mt. Juliet for more affordable family homes, or neighborhoods inside Nashville like Green Hills or Sylvan Park for urban walkability.',
+          'If Brentwood is on your radar, House Haven Realty can walk you through the neighborhoods, school zones, and pricing tiers in detail. Every street in Brentwood is different, and we know which ones deliver the best value for what you are looking for.',
+        ],
+      },
+    ],
+    relatedCommunitySlugs: ['brentwood', 'franklin', 'nolensville', 'green-hills'],
+    relatedPostSlugs: ['moving-to-nashville-2026', 'best-neighborhoods-nashville-families-2026', 'living-in-franklin-tn-2026'],
+  },
+
+  {
+    slug: 'mt-juliet-tn-guide',
+    title: "Mt. Juliet, TN — Nashville's Fastest Growing Suburb Explained",
+    excerpt:
+      'Mt. Juliet has exploded with growth over the last five years. Here is an honest look at schools, neighborhoods, pricing, and whether it is the right fit for your family.',
+    authorSlug: 'stephen-delahoussaye',
+    publishedAt: '2026-04-12T09:00:00.000Z',
+    updatedAt: '2026-04-12T09:00:00.000Z',
+    readTimeMinutes: 10,
+    heroImage:
+      'https://images.unsplash.com/photo-1582407947092-50b8c1a9c3e5?auto=format&fit=crop&w=1440&q=70',
+    heroCaption: 'Suburban neighborhood in the rolling hills east of Nashville.',
+    category: 'Neighborhood Guides',
+    tags: ['mt juliet', 'wilson county', 'neighborhood guide', 'homes for sale', 'growth'],
+    sections: [
+      {
+        heading: 'Why Mt. Juliet is on every relocation list',
+        paragraphs: [
+          'Mt. Juliet, Tennessee has grown from a quiet Wilson County town into one of the fastest-expanding suburbs in the entire Southeast. The population has more than doubled since 2010, and the infrastructure — retail, dining, medical, and recreational — has kept pace in a way that many fast-growing suburbs fail to manage. The result is a city that feels established rather than half-built, even though much of it is less than a decade old.',
+          'The appeal is straightforward: Mt. Juliet offers new and newer construction homes at price points that are $100,000 to $200,000 below equivalent homes in Franklin or Brentwood, with a commute to downtown Nashville that is comparable or shorter via I-40. For families who want space, a good school district, and modern housing stock without Williamson County pricing, Mt. Juliet is the most compelling option on the east side of Nashville.',
+        ],
+      },
+      {
+        heading: 'Providence Marketplace and the retail explosion',
+        paragraphs: [
+          'Providence Marketplace, anchored by a Costco, Target, and dozens of national retailers and restaurants along Mt. Juliet Road, fundamentally changed the city when it opened. Before Providence, Mt. Juliet residents drove to Nashville or Murfreesboro for major shopping. Now the commercial corridor along Mt. Juliet Road and Pleasant Grove Road has enough retail density that most daily needs are met without leaving town.',
+          'The growth has continued beyond Providence. The Highway 109 corridor is developing rapidly with new commercial projects, and the city has invested in mixed-use zoning that encourages walkable commercial nodes rather than strip-mall sprawl. Mt. Juliet is making deliberate planning decisions that will matter in ten years, and that forward-thinking approach is part of what makes it attractive to buyers who plan to stay.',
+        ],
+      },
+      {
+        heading: 'Wilson County Schools and the education landscape',
+        paragraphs: [
+          'Wilson County Schools serves Mt. Juliet and has invested heavily in new school construction to keep up with population growth. Mt. Juliet High School and West Wilson Middle School are the primary secondary schools serving the city, and both have solid reputations. The district opened new elementary schools in recent years specifically to handle the influx of families.',
+          'Wilson County Schools is not Williamson County Schools — the test scores and AP participation rates are a tier below — but it is a strong, well-funded district that most families find meets their needs. For buyers coming from underperforming districts in other states, Wilson County will feel like a significant upgrade. For buyers specifically seeking the highest-ranked district in the region, Williamson County remains the benchmark.',
+          'Private school options in Mt. Juliet are more limited than in Franklin or Brentwood, though several faith-based schools serve the area and families can access Nashville private schools via I-40 in 20 to 25 minutes.',
+        ],
+        callout: {
+          title: 'New schools coming online',
+          body: 'Wilson County Schools has multiple new school construction projects underway or recently completed. If you are buying in a newer subdivision, check whether your assigned school is currently open or scheduled to open — it affects both the school experience and your home resale value.',
+        },
+      },
+      {
+        heading: 'Charlie Daniels Park and outdoor life',
+        paragraphs: [
+          'Charlie Daniels Park is the crown jewel of Mt. Juliet green space — a 180-acre park with sports fields, playgrounds, a dog park, walking trails, and community event space. It is named after the late country music legend who called Mt. Juliet home, and it serves as the social center of the community. Youth sports, festivals, and weekend recreation all revolve around the park.',
+          'Beyond Charlie Daniels Park, Mt. Juliet benefits from proximity to Percy Priest Lake, which offers boating, fishing, and lakeside recreation within a 15-minute drive. The city has also invested in a growing greenway system that connects neighborhoods to parks and commercial areas. For families who value outdoor recreation, Mt. Juliet delivers more accessible green space per capita than most Nashville suburbs.',
+        ],
+      },
+      {
+        heading: 'Neighborhoods and pricing',
+        paragraphs: [
+          'Mt. Juliet real estate is heavily weighted toward newer construction, which is both an advantage (modern floorplans, energy efficiency, builder warranties) and a consideration (smaller lots, HOA communities, less mature landscaping). The market breaks down into several tiers.',
+          'Entry-level homes — typically three-bedroom, 1,500 to 1,800 square feet, in neighborhoods like Del Webb or starter communities — trade in the $375,000 to $475,000 range. The core of the market is four-bedroom family homes in the $475,000 to $650,000 range in neighborhoods like Providence, Sierra, Victory Station, and Willoughby Station. These are the homes that attract most relocating families, and the inventory in this price range is the healthiest it has been in years.',
+          'Above $650,000 you move into larger custom and semi-custom homes in neighborhoods like Catalina and the newer sections of Providence. Estate-style properties on acreage exist in unincorporated Wilson County surrounding Mt. Juliet, typically priced from $700,000 to $1M+. Compared to Williamson County, your dollar stretches 20 to 30 percent further in Mt. Juliet at every price tier.',
+        ],
+      },
+      {
+        heading: 'The growth trajectory — what comes next',
+        paragraphs: [
+          'Mt. Juliet is not done growing. The city annexation area extends well beyond current development, and the I-40 corridor between Mt. Juliet and Lebanon is filling in steadily. New commercial projects, healthcare facilities, and mixed-use developments are in various stages of planning and construction. The question is not whether Mt. Juliet will continue to grow — it will — but whether the infrastructure can keep pace.',
+          'Traffic is the honest concern. Mt. Juliet Road during peak hours is slow, and the I-40 interchange at exit 226 backs up during morning and evening rush. The city and state have road-widening and interchange improvement projects planned, but construction takes time. If your commute depends on I-40 west during peak hours, drive it at 7:30 a.m. before you buy.',
+          'Long-term, Mt. Juliet trajectory is strongly positive. It is on the right side of Nashville growth pattern, it has strong commercial tax base, and it is making smart infrastructure investments. Homes purchased in Mt. Juliet today are likely to appreciate steadily over the next decade.',
+        ],
+        callout: {
+          title: 'Drive the commute first',
+          body: 'I-40 from Mt. Juliet to downtown Nashville is roughly 20 miles. On a clear day that is 22 minutes. During Tuesday morning rush hour it can be 40 to 50 minutes. Test it before you commit.',
+        },
+      },
+      {
+        heading: 'Is Mt. Juliet right for you?',
+        paragraphs: [
+          'Mt. Juliet is the right fit for families who want modern homes, good schools, strong community amenities, and a price point that is meaningfully lower than the Williamson County suburbs. It is especially attractive for buyers relocating from higher-cost metros who want the most house for their money without sacrificing school quality or proximity to Nashville.',
+          'Mt. Juliet is not the right fit if you want historic charm, walkable urban living, or the very top-tier school district in the region. It is also not ideal if your job is in south Nashville, Franklin, or Brentwood — the cross-town commute via I-40 to I-65 is long. In those cases, consider Nolensville, Spring Hill, or Thompsons Station.',
+          'House Haven Realty works with Mt. Juliet buyers every week. We know which subdivisions are delivering on their promises, which builders to trust, and which school zones are most desirable. Reach out and we will walk you through it.',
+        ],
+      },
+    ],
+    relatedCommunitySlugs: ['mt-juliet', 'hermitage', 'lebanon'],
+    relatedPostSlugs: ['moving-to-nashville-2026', 'best-nashville-suburbs-commuters', 'new-construction-contracts-nashville'],
+  },
+
+  {
+    slug: 'hendersonville-tn-guide',
+    title: 'Hendersonville, TN — Lake Life Meets Nashville Commute',
+    excerpt:
+      'Old Hickory Lake, strong Sumner County schools, and a straight shot to downtown Nashville. Here is the complete buyer guide to Hendersonville, Tennessee.',
+    authorSlug: 'stephen-delahoussaye',
+    publishedAt: '2026-04-14T09:00:00.000Z',
+    updatedAt: '2026-04-14T09:00:00.000Z',
+    readTimeMinutes: 11,
+    heroImage:
+      'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1440&q=70',
+    heroCaption: 'Sunset over Old Hickory Lake in Sumner County, Tennessee.',
+    category: 'Neighborhood Guides',
+    tags: ['hendersonville', 'sumner county', 'neighborhood guide', 'homes for sale', 'lake living'],
+    sections: [
+      {
+        heading: 'Hendersonville at a glance',
+        paragraphs: [
+          'Hendersonville, Tennessee sits on the shores of Old Hickory Lake about 18 miles northeast of downtown Nashville, and it has quietly built a reputation as one of the most livable suburbs in the metro. With a population around 60,000, it is large enough to have its own commercial infrastructure — grocery stores, restaurants, medical facilities, and retail — but small enough to retain a community feel that some of the faster-growing suburbs have lost.',
+          'The defining feature of Hendersonville is the lake. Old Hickory Lake is a 22,500-acre reservoir managed by the Army Corps of Engineers, and it wraps around the city on three sides. That proximity to water shapes everything from home values (lakefront and lake-access homes command significant premiums) to lifestyle (boating, fishing, and waterfront dining are part of daily life). If water access matters to you, Hendersonville is the most accessible lake-living option within commuting distance of Nashville.',
+        ],
+      },
+      {
+        heading: 'Lakefront vs. lake-access vs. lake-view — understanding the tiers',
+        paragraphs: [
+          'Not all "lake" homes in Hendersonville are created equal, and the terminology matters. Lakefront homes sit directly on Old Hickory Lake with a private dock or dock permit. These are the premium tier and prices start around $700,000 for modest homes with older construction, climbing to $1.5M and above for updated or new-build lakefront estates. Inventory is limited because lakefront lots are finite — when one comes on the market, it moves quickly.',
+          'Lake-access homes are in neighborhoods or communities that have a shared dock, boat ramp, or community waterfront area. You do not have a private dock, but you can get on the water from your neighborhood. These homes are priced more like standard Hendersonville homes with a 10 to 20 percent premium — typically $450,000 to $700,000 for a family home.',
+          'Lake-view homes can see the water but do not have direct or community access. The premium is modest — 5 to 10 percent above comparable non-lake homes. And then there is the rest of Hendersonville, where homes are priced on their own merits without any lake factor. Understanding which tier you are buying into is critical because the price gaps are significant.',
+        ],
+        callout: {
+          title: 'Dock permits and the Corps of Engineers',
+          body: 'Old Hickory Lake is federal water managed by the Army Corps of Engineers. Dock permits are issued by the Corps and are tied to specific properties. Not every lakefront lot has a dock permit, and getting a new one can be difficult. If lakefront living with a dock is your goal, verify the permit status before making an offer.',
+        },
+      },
+      {
+        heading: 'Sumner County Schools',
+        paragraphs: [
+          'Hendersonville is served by Sumner County Schools, which is a solid mid-tier district in the Nashville metro. It is not Williamson County, and it does not claim to be — but it is a well-funded district with dedicated teachers, reasonable class sizes, and outcomes that satisfy most families. Hendersonville High School, Beech High School, and Station Camp High School serve different parts of the city, and each has its own character and strengths.',
+          'Station Camp has been the fastest-growing feeder zone due to new construction in the northern part of Hendersonville and into Gallatin. Beech serves the eastern portion of the city and has a strong athletics program. Hendersonville High is the legacy school closest to the lake and downtown Hendersonville.',
+          'For families who require the absolute highest-ranked public schools, Sumner County may not be the answer — Williamson County is. But for families who want good schools, reasonable home prices, and lake access, Sumner County delivers a combination that Williamson County cannot match.',
+        ],
+      },
+      {
+        heading: 'Streets of Indian Lake and the commercial core',
+        paragraphs: [
+          'Streets of Indian Lake is Hendersonville primary lifestyle and retail center — an open-air shopping and dining complex anchored by national retailers and a strong selection of restaurants. It serves as the social hub of the city and provides enough commercial variety that most Hendersonville residents do their shopping locally rather than driving to Nashville.',
+          'The Indian Lake Boulevard corridor has matured significantly in recent years with medical offices, fitness centers, and additional retail filling in around Streets of Indian Lake. Combined with the established commercial areas along Main Street and New Shackle Island Road, Hendersonville has a deeper commercial base than most suburbs its size. That self-sufficiency is a quality-of-life advantage that buyers often underestimate.',
+        ],
+      },
+      {
+        heading: 'Neighborhoods and pricing',
+        paragraphs: [
+          'Hendersonville real estate market is diverse. Entry-level homes — typically ranch-style or split-level homes built in the 1970s through 1990s — trade in the $325,000 to $425,000 range. These are the most affordable family homes within a reasonable Nashville commute and represent genuine value for buyers priced out of Davidson County or Williamson County.',
+          'The middle market, $425,000 to $650,000, includes updated older homes, newer subdivision construction, and lake-access properties. Neighborhoods like Durham Farms (a master-planned community), Millstone, and September Oaks offer modern amenities and strong community features in this range. This is where the bulk of relocating families land.',
+          'Above $650,000 you enter lake-premium territory — either lakefront homes, large estate properties on acreage, or newer custom builds in premium subdivisions. The high end of Hendersonville ($1M+) is almost exclusively lakefront, and it represents a lifestyle purchase as much as a real estate investment.',
+        ],
+      },
+      {
+        heading: 'The commute — what to honestly expect',
+        paragraphs: [
+          'Hendersonville to downtown Nashville via I-65 south or Vietnam Veterans Boulevard to Ellington Parkway is approximately 18 miles. On a good day, that is 25 minutes. During peak morning rush, expect 35 to 50 minutes. The I-65 corridor from Rivergate to downtown is the bottleneck, and it is consistently one of the most congested stretches in the metro.',
+          'The silver lining is that Hendersonville commuters have multiple route options. Gallatin Pike, Ellington Parkway, and Vietnam Veterans Boulevard all provide alternatives when I-65 is backed up. No single route is always fastest, and experienced Hendersonville commuters learn to read traffic apps and adjust. If you work in the Rivergate area, Gallatin, or northeast Nashville, the commute is dramatically shorter — often under 15 minutes.',
+          'For hybrid workers who commute two or three days per week, the I-65 congestion is manageable. For daily commuters to downtown or south Nashville, it is the primary trade-off of Hendersonville living. Test the drive at peak hours before you buy.',
+        ],
+        callout: {
+          title: 'Ellington Parkway shortcut',
+          body: 'Ellington Parkway connects Hendersonville to northeast Nashville and avoids I-65 entirely. For commuters headed to East Nashville, Germantown, or the north side of downtown, it can save 10 to 15 minutes compared to the I-65 route during rush hour.',
+        },
+      },
+      {
+        heading: 'Is Hendersonville right for you?',
+        paragraphs: [
+          'Hendersonville is the right fit for buyers who want lake access or proximity, affordable family homes relative to the Nashville metro, and a self-sufficient suburb with its own retail and dining. It is especially compelling for boaters, anglers, and outdoor enthusiasts who want to live on or near the water without moving an hour from Nashville.',
+          'Hendersonville is not the right fit if you need the top-tier school district (that is Williamson County), if your job is in south Nashville or Franklin (the cross-metro commute is punishing), or if you want walkable urban living. In those cases, look at Brentwood, Franklin, or neighborhoods inside Nashville like East Nashville or Donelson.',
+          'House Haven Realty knows the Hendersonville lake market inside and out — including which lakefront properties have active dock permits, which neighborhoods have the best lake access, and where the best values are right now. Let us know what you are looking for.',
+        ],
+      },
+    ],
+    relatedCommunitySlugs: ['hendersonville', 'gallatin', 'goodlettsville', 'old-hickory'],
+    relatedPostSlugs: ['moving-to-nashville-2026', 'best-nashville-suburbs-commuters', 'understanding-nashville-flood-zones'],
+  },
+
+  {
+    slug: 'spring-hill-tn-guide',
+    title: 'Spring Hill, TN — The Two-County Growth Story',
+    excerpt:
+      'Spring Hill straddles the Williamson-Maury county line, and which side you buy on changes everything. Schools, pricing, new construction, and what buyers need to know.',
+    authorSlug: 'stephen-delahoussaye',
+    publishedAt: '2026-04-16T09:00:00.000Z',
+    updatedAt: '2026-04-16T09:00:00.000Z',
+    readTimeMinutes: 12,
+    heroImage:
+      'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1440&q=70',
+    heroCaption: 'New construction homes in Spring Hill, Tennessee.',
+    category: 'Neighborhood Guides',
+    tags: ['spring hill', 'williamson county', 'maury county', 'neighborhood guide', 'new construction', 'homes for sale'],
+    sections: [
+      {
+        heading: 'The two-county reality',
+        paragraphs: [
+          'Spring Hill, Tennessee is one of the most interesting real estate stories in the Nashville metro, and it starts with a county line. The city of Spring Hill straddles the border between Williamson County to the north and Maury County to the south. That single geographic fact — which county your home sits in — determines your school district, your property tax rate, your home resale trajectory, and in many cases, a $50,000 to $100,000 price difference for otherwise comparable homes.',
+          'Understanding this divide is essential for anyone buying in Spring Hill. Two homes on the same street, built by the same builder, with the same floorplan, can be priced differently solely based on which side of the county line they sit on. This is not a flaw in the market — it is a feature that informed buyers can use to their advantage. But you need to understand what you are buying and what the trade-offs are.',
+        ],
+      },
+      {
+        heading: 'Williamson County side vs. Maury County side',
+        paragraphs: [
+          'The Williamson County portion of Spring Hill feeds into Williamson County Schools — the same district that serves Franklin, Brentwood, and Nolensville. Homes on this side benefit from the district reputation, and that reputation is reflected in pricing. A four-bedroom home on the Williamson County side of Spring Hill typically trades for $50,000 to $100,000 more than a comparable home on the Maury County side, and it tends to appreciate faster because the school district drives sustained demand.',
+          'The Maury County portion of Spring Hill feeds into Maury County Public Schools, which is a good and improving district but does not carry the same market premium as Williamson County. Homes on this side are priced more accessibly, which makes them attractive to buyers who are budget-conscious, do not have school-age children, or plan to use private schools. Property tax rates also differ between the two counties, which affects your total monthly cost.',
+          'Neither side is objectively better — they serve different buyers with different priorities. But you need to know which side of the line you are on before you fall in love with a house.',
+        ],
+        callout: {
+          title: 'How to check the county line',
+          body: 'The county line runs roughly along Port Royal Road and shifts in places. Your real estate agent should verify the county and school district for every property you tour. Do not rely on city limits — the city of Spring Hill spans both counties, but school assignments follow county boundaries.',
+        },
+      },
+      {
+        heading: 'The GM plant and Spring Hill economic engine',
+        paragraphs: [
+          'The General Motors assembly plant in Spring Hill is the largest single employer in Maury County and one of the most significant manufacturing facilities in Tennessee. The plant has operated since 1990 (originally as a Saturn plant), and GM has invested billions in retooling it for current and future vehicle production, including electric vehicle manufacturing. The plant employs thousands directly and supports an extensive supplier network in the surrounding area.',
+          'For the real estate market, the GM plant provides a stable economic anchor that supports home values and commercial growth. It also means that a significant portion of Spring Hill residents work locally rather than commuting to Nashville, which reduces the pressure on I-65 and improves quality of life. Restaurants, retail, and services that have opened along Main Street and the Highway 31 corridor are sustained in part by the economic activity the plant generates.',
+          'Beyond GM, Spring Hill has attracted healthcare, logistics, and service-sector employers as the population has grown. The city is transitioning from a one-employer town into a diversified small economy, which is a positive sign for long-term real estate fundamentals.',
+        ],
+      },
+      {
+        heading: 'New construction — the dominant market force',
+        paragraphs: [
+          'Spring Hill real estate market is defined by new construction to a greater degree than almost any other Nashville suburb. National and regional builders — including Lennar, Smith Douglas, Drees, and Ole South — have active communities throughout the city, and the majority of homes sold in Spring Hill in any given quarter are newly built or under construction. For buyers who want modern floorplans, energy efficiency, and builder warranties, Spring Hill offers the deepest inventory in the metro.',
+          'The flip side of this new-construction dominance is that resale homes compete directly with shiny new alternatives, which can compress resale appreciation. If you buy a new home in Spring Hill and try to sell it five years later, you will be competing with the next wave of new construction down the road. This is not a reason to avoid Spring Hill — it is a reason to buy smartly and understand the resale dynamics.',
+          'Builder incentives are generous in 2026. Rate buydowns, closing cost credits, and free upgrade packages are standard at most Spring Hill communities. Shop multiple builders, compare the incentives, and do not be afraid to negotiate. Builders with standing inventory are especially motivated.',
+        ],
+        callout: {
+          title: 'Builder incentives in Spring Hill',
+          body: 'We track builder incentive programs across every active Spring Hill community. Some incentives are only available through a buyer agent and are not advertised on builder websites. Contact House Haven Realty before visiting a model home — representation costs you nothing and can save you thousands.',
+        },
+      },
+      {
+        heading: 'Schools on both sides of the line',
+        paragraphs: [
+          'On the Williamson County side, Spring Hill students feed into schools including Independence High School and Heritage schools, both part of Williamson County Schools. The district reputation needs no introduction — it is the top-rated system in the region and one of the strongest in the state. Families who prioritize public school rankings above all else should focus their Spring Hill search on the Williamson County side.',
+          'On the Maury County side, students attend Spring Hill High School and its feeder schools within Maury County Public Schools. The district has invested significantly in new facilities and teacher recruitment, and outcomes have improved steadily. It is a good district that is getting better, and for many families, the quality is more than sufficient — especially when the $50,000 to $100,000 savings on the home purchase is factored in.',
+          'Private school options are more limited in Spring Hill itself, but families on the Williamson County side can access Franklin-area private schools within 15 to 20 minutes. Columbia, the Maury County seat, also has private options.',
+        ],
+      },
+      {
+        heading: 'Pricing and what your money buys',
+        paragraphs: [
+          'Spring Hill is one of the most affordable ways to get a new-construction family home within the Nashville metro commute shed. On the Maury County side, new three-bedroom homes start in the low $300s and four-bedroom family homes cluster in the $375,000 to $500,000 range. That pricing — for a brand-new home in a growing city with a reasonable Nashville commute — is difficult to match anywhere in the metro.',
+          'On the Williamson County side, the same builder floorplans start roughly $50,000 to $100,000 higher, with four-bedroom homes ranging from $450,000 to $600,000. That is still significantly less than equivalent new construction in Franklin, where you would pay $600,000 to $800,000 for the same square footage.',
+          'Resale homes, mostly built in the last 10 to 15 years, trade at slight discounts to new construction depending on condition and location. Estate properties on acreage exist in the surrounding countryside, typically priced from $600,000 to $1M+, and they appeal to buyers who want land and space without subdivision living.',
+        ],
+      },
+      {
+        heading: 'Is Spring Hill right for you?',
+        paragraphs: [
+          'Spring Hill is the right fit for buyers who want the most new-construction home for their money, are comfortable with a 35 to 45-minute commute to Nashville, and either do not have school-age children or are satisfied with either Williamson County or Maury County schools depending on which side of the line they buy. It is an outstanding value play for first-time buyers, growing families on a budget, and remote workers who do not commute daily.',
+          'Spring Hill is not the right fit if you want established neighborhoods with mature trees and character, if walkable dining and shopping are non-negotiable, or if a daily commute to north Nashville or east Nashville is part of your life. In those cases, consider Mt. Juliet, Hendersonville, or neighborhoods inside Davidson County.',
+          'House Haven Realty helps Spring Hill buyers navigate the county-line question, builder selection, and incentive comparison every week. It is one of the most nuanced markets in the Nashville metro, and having an agent who understands the details saves you real money. Reach out and let us help you find the right fit.',
+        ],
+      },
+    ],
+    relatedCommunitySlugs: ['spring-hill', 'thompsons-station', 'franklin'],
+    relatedPostSlugs: ['moving-to-nashville-2026', 'new-construction-contracts-nashville', 'living-in-franklin-tn-2026'],
+  },
 ]
 
 export const blogPostBySlug = Object.fromEntries(
