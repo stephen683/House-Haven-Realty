@@ -385,9 +385,9 @@ export const blogPosts: BlogPost[] = [
     tags: ['families', 'schools', 'neighborhoods', 'nashville'],
     sections: [
       {
-        heading: 'What makes a neighborhood family-friendly?',
+        heading: 'What makes a neighborhood work for your household?',
         paragraphs: [
-          'Every family defines "family-friendly" differently. Some prioritize school ratings above everything. Others want a cul-de-sac and a big backyard. Some need a short commute so they can make it to daycare pickup by 5:30. And some just want neighbors who wave.',
+          'Every household defines a great neighborhood differently. Some prioritize school ratings above everything. Others want a cul-de-sac and a big backyard. Some need a short commute so they can make it to daycare pickup by 5:30. And some just want neighbors who wave.',
           'In Nashville, the good news is that you have options across every price range. The challenge is that the best family neighborhoods are often the most competitive — and the ones that seem affordable sometimes come with trade-offs that are not obvious from a Zillow listing.',
           'Here is our honest assessment of where to look in 2026, based on actually helping families buy homes in these neighborhoods — not aggregated data or sponsored content.',
         ],

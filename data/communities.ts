@@ -1101,12 +1101,12 @@ export const communities: Community[] = [
     state: 'TN',
     zips: ['37221'],
     tier: 2,
-    tagline: 'West Nashville\'s family-friendly anchor.',
+    tagline: 'West Nashville\'s neighborhood anchor — parks, schools, and Harpeth River.',
     distanceFromNashville: '~20 min to downtown Nashville',
     lat: 36.0767,
     lng: -86.9178,
     metaDescription:
-      'Bellevue, TN homes for sale — west Nashville living with Harpeth River access, strong retail, and family-friendly neighborhoods. Guide from House Haven Realty.',
+      'Bellevue, TN homes for sale — west Nashville living with Harpeth River access, strong retail, and established neighborhoods. Guide from House Haven Realty.',
     content: [
       {
         heading: 'What it feels like to live in Bellevue',
@@ -1892,7 +1892,7 @@ export const communities: Community[] = [
     content: [
       {
         heading: 'What it feels like to live in Sylvan Park',
-        body: 'Sylvan Park is the west Nashville neighborhood that everyone wants but few homes turn over. The grid streets are walkable, the trees are mature, and the Murphy Road restaurant row (Park Cafe, McCabe Pub, Soy Bistro) provides daily-life convenience. McCabe Park and the adjacent golf course give it a green, family-friendly feel that is rare this close to downtown.',
+        body: 'Sylvan Park is the west Nashville neighborhood that everyone wants but few homes turn over. The grid streets are walkable, the trees are mature, and the Murphy Road restaurant row (Park Cafe, McCabe Pub, Soy Bistro) provides daily-life convenience. McCabe Park and the adjacent golf course give it a green, neighborhood-centered feel that is rare this close to downtown.',
       },
       {
         heading: 'Location and commute',
