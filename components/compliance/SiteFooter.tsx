@@ -49,7 +49,7 @@ export default function SiteFooter() {
               height={56}
               className="h-10 w-auto mb-3"
             />
-            <p className="text-sm text-white/70 leading-relaxed mb-4 max-w-xs">
+            <p className="text-sm text-white/85 leading-relaxed mb-4 max-w-xs">
               A small boutique local Nashville real estate brokerage. Our clients are our
               neighbors.
             </p>
@@ -75,7 +75,7 @@ export default function SiteFooter() {
                 href="https://www.instagram.com/househavenrealty/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white/70 hover:text-white"
+                className="text-white/85 hover:text-white"
               >
                 Instagram
               </a>
@@ -83,7 +83,7 @@ export default function SiteFooter() {
                 href="https://www.facebook.com/stephen.delahoussaye"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white/70 hover:text-white"
+                className="text-white/85 hover:text-white"
               >
                 Facebook
               </a>
@@ -91,7 +91,7 @@ export default function SiteFooter() {
                 href="https://www.linkedin.com/company/house-haven-realty-nashville"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white/70 hover:text-white"
+                className="text-white/85 hover:text-white"
               >
                 LinkedIn
               </a>
@@ -108,7 +108,7 @@ export default function SiteFooter() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-white/70 hover:text-white"
+                      className="text-white/85 hover:text-white"
                     >
                       {link.label}
                     </Link>
@@ -123,7 +123,7 @@ export default function SiteFooter() {
       {/* Compliance bar — must show firm name + phone + EHO + TREC disclosure */}
       <div className="border-t border-white/10 bg-househaven-navy-light">
         <div className="max-w-7xl mx-auto px-4 lg:px-6 py-6">
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 text-xs text-white/70">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 text-xs text-white/85">
             <div className="flex items-center gap-4">
               <span
                 aria-label="Equal Housing Opportunity"
@@ -142,7 +142,7 @@ export default function SiteFooter() {
                 regulated by the Tennessee Real Estate Commission.
               </p>
             </div>
-            <p className="lg:text-right text-white/60">
+            <p className="lg:text-right text-white/80">
               &copy; {currentYear} House Haven Realty. All rights reserved.
             </p>
           </div>

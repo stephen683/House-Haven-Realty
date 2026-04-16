@@ -87,6 +87,7 @@ export default function MovingChecklist() {
               onClick={() => setOpenIndex(isOpen ? null : i)}
               className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-househaven-surface/50 transition"
               aria-expanded={isOpen}
+              aria-controls={`checklist-panel-${i}`}
             >
               <span className="font-serif text-lg text-househaven-navy">
                 {cat.title}
@@ -99,6 +100,7 @@ export default function MovingChecklist() {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={2}
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -108,7 +110,7 @@ export default function MovingChecklist() {
               </svg>
             </button>
             {isOpen && (
-              <div className="px-5 pb-5">
+              <div id={`checklist-panel-${i}`} className="px-5 pb-5" role="region">
                 <ul className="space-y-2">
                   {cat.items.map((item) => (
                     <li key={item} className="flex gap-3 text-sm text-househaven-text">

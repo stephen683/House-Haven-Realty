@@ -89,7 +89,7 @@ export default function NewConstructionMap({
             <h1 className="font-serif text-2xl lg:text-3xl text-white leading-tight">
               New Construction &middot; Nashville Metro
             </h1>
-            <p className="text-xs text-white/60 mt-1">
+            <p className="text-xs text-white/80 mt-1">
               Live residential building permits from Metro Nashville Open Data
             </p>
           </div>
@@ -97,12 +97,12 @@ export default function NewConstructionMap({
           {/* Stats pills */}
           <div className="flex flex-wrap gap-3 text-xs">
             <div className="px-3 py-1.5 rounded-lg bg-white/10">
-              <span className="text-white/60">Permits:</span>{' '}
+              <span className="text-white/80">Permits:</span>{' '}
               <span className="font-semibold">{permitCount.toLocaleString()}</span>
             </div>
             {avgCost > 0 && (
               <div className="px-3 py-1.5 rounded-lg bg-white/10">
-                <span className="text-white/60">Avg cost:</span>{' '}
+                <span className="text-white/80">Avg cost:</span>{' '}
                 <span className="font-semibold">
                   ${Math.round(avgCost).toLocaleString()}
                 </span>
@@ -113,7 +113,7 @@ export default function NewConstructionMap({
                 key={zip}
                 className="px-3 py-1.5 rounded-lg bg-white/10 hidden md:block"
               >
-                <span className="text-white/60">{zip}:</span>{' '}
+                <span className="text-white/80">{zip}:</span>{' '}
                 <span className="font-semibold">{count}</span>
               </div>
             ))}

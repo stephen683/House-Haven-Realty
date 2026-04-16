@@ -188,7 +188,7 @@ export default function MortgageCalculator() {
               <dd>{formatCurrency(monthlyIns)}</dd>
             </div>
           </dl>
-          <div className="mt-6 pt-6 border-t border-white/10 text-xs text-white/60">
+          <div className="mt-6 pt-6 border-t border-white/10 text-xs text-white/80">
             <p>Loan amount: {formatCurrency(loanAmount)}</p>
             <p className="mt-1">
               Estimate only. Actual payment depends on lender fees, HOA, PMI, and

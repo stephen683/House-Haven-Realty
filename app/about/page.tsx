@@ -71,7 +71,7 @@ export default function AboutPage() {
           {stats.map((s) => (
             <div key={s.label}>
               <p className="font-serif text-4xl lg:text-5xl text-white">{s.value}</p>
-              <p className="mt-2 text-xs uppercase tracking-[0.18em] text-white/60">
+              <p className="mt-2 text-xs uppercase tracking-[0.18em] text-white/80">
                 {s.label}
               </p>
             </div>

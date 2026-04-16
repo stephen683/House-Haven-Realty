@@ -116,7 +116,7 @@ export default function Header() {
             className="lg:hidden p-2 text-househaven-navy"
             onClick={() => setOpen(!open)}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               {open ? (
                 <path d="M6 6l12 12M6 18L18 6" strokeLinecap="round" />
               ) : (

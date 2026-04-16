@@ -126,7 +126,7 @@ export default function HomePage() {
             {heroStats.map((s) => (
               <div key={s.label}>
                 <p className="font-serif text-3xl lg:text-4xl text-white">{s.value}</p>
-                <p className="text-xs uppercase tracking-[0.16em] text-white/60 mt-1">
+                <p className="text-xs uppercase tracking-[0.16em] text-white/80 mt-1">
                   {s.label}
                 </p>
               </div>

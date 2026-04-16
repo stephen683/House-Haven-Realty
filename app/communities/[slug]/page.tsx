@@ -103,7 +103,7 @@ export default function CommunityPage({ params }: CommunityPageProps) {
             {c.name}, Tennessee
           </h1>
           <p className="mt-4 text-xl text-white/80">{c.tagline}</p>
-          <p className="mt-6 text-sm text-white/60">
+          <p className="mt-6 text-sm text-white/80">
             {c.distanceFromNashville} · Updated {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
