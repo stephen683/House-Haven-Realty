@@ -845,6 +845,870 @@ export const communities: Community[] = [
     ],
     nearby: ['inglewood', 'madison'],
   },
+
+  // ─── TIER 2 ──────────────────────────────────────────────
+
+  {
+    slug: 'hendersonville',
+    name: 'Hendersonville',
+    county: 'Sumner',
+    state: 'TN',
+    zips: ['37075'],
+    tier: 2,
+    tagline: 'Lake life on Old Hickory, minutes from Nashville.',
+    distanceFromNashville: '~25 min to downtown Nashville',
+    lat: 36.3048,
+    lng: -86.6200,
+    metaDescription:
+      'Hendersonville, TN homes for sale and neighborhood guide. Old Hickory Lake living in Sumner County — schools, parks, and market data from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Hendersonville',
+        body: 'Hendersonville wraps around Old Hickory Lake in a way that gives the whole city a resort-adjacent vibe without the resort pricing. Johnny Cash and June Carter lived here for decades, and that combination of celebrity legacy and genuine small-town warmth still defines the place. Streets of Indian Lake gives you suburban retail without driving to Cool Springs, and the lake access — from marinas to public parks — is the quality-of-life differentiator families mention most.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Hendersonville sits on the north side of Old Hickory Lake along Vietnam Veterans Boulevard and Route 31E. Downtown Nashville is about 25 minutes via I-65 or Gallatin Pike. The commute into Rivergate, Goodlettsville, and Madison is even shorter.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'You will find everything from 1970s lakefront ranches to new master-planned subdivisions with pools and clubhouses. Entry-level homes start in the mid $300s; lakefront and luxury properties push well into the $800s and beyond. The market rewards lake proximity heavily.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Hendersonville is served by Sumner County Schools, one of the higher-performing districts in Middle Tennessee. Hendersonville High School, Station Camp High, and Pope John Paul II High School (private) are all within the area.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Old Hickory Lake is the headline — boating, fishing, paddleboarding, and sunset watching are everyday activities here. Drakes Creek Park, Sanders Ferry Park, and the Hendersonville Greenway add land-based options.',
+      },
+      {
+        heading: 'Why House Haven knows Hendersonville',
+        body: 'We help Hendersonville buyers navigate flood zone considerations on lakefront lots, HOA structures in the newer subdivisions, and the meaningful pricing differences between lake-view, lake-access, and lakefront properties. Those distinctions can mean six figures.',
+      },
+    ],
+    nearby: ['gallatin', 'goodlettsville', 'madison'],
+  },
+  {
+    slug: 'gallatin',
+    name: 'Gallatin',
+    county: 'Sumner',
+    state: 'TN',
+    zips: ['37066'],
+    tier: 2,
+    tagline: 'Sumner County\'s growing seat with small-town roots.',
+    distanceFromNashville: '~30 min to downtown Nashville',
+    lat: 36.3887,
+    lng: -86.4466,
+    metaDescription:
+      'Gallatin, TN homes for sale and community guide. Sumner County seat with a revitalized square, Old Hickory Lake access, and strong schools — from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Gallatin',
+        body: 'Gallatin is Sumner County\'s county seat and it feels like a town that knows it is growing but has not abandoned its identity. The downtown square has been revitalized with local restaurants and shops. Volunteer State Community College anchors the west side. There is a tangible sense of community investment here — new parks, upgraded infrastructure, and steady residential development without the runaway sprawl some neighboring towns have experienced.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Gallatin sits at the intersection of Route 31E and Route 109, about 30 minutes northeast of downtown Nashville. The drive into Hendersonville takes about 10 minutes, and the Gallatin Pike corridor connects directly into East Nashville.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Gallatin offers a wide range from older in-town bungalows near the square to new subdivisions with modern floorplans. Entry-level starts in the mid $200s to low $300s, making it one of the most accessible markets in the Nashville metro for first-time buyers.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Sumner County Schools serves Gallatin, with Gallatin High School and Station Camp High School as the primary public options. Vol State Community College provides local higher education.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Lock 4 Park on the Cumberland River, Triple Creek Park, and Old Hickory Lake access make outdoor recreation a daily option. The Gallatin Civic Center includes sports facilities and community programming.',
+      },
+      {
+        heading: 'Why House Haven knows Gallatin',
+        body: 'We have guided buyers into Gallatin who were priced out of Hendersonville or wanted more land for the dollar. We understand which neighborhoods are appreciating fastest and where new development is headed based on permit activity.',
+      },
+    ],
+    nearby: ['hendersonville', 'portland', 'white-house'],
+  },
+  {
+    slug: 'goodlettsville',
+    name: 'Goodlettsville',
+    county: 'Davidson/Sumner',
+    state: 'TN',
+    zips: ['37072'],
+    tier: 2,
+    tagline: 'Two-county value play on Nashville\'s north side.',
+    distanceFromNashville: '~20 min to downtown Nashville',
+    lat: 36.3231,
+    lng: -86.7133,
+    metaDescription:
+      'Goodlettsville, TN homes for sale — straddling Davidson and Sumner counties with lower taxes and quick Nashville access. Community guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Goodlettsville',
+        body: 'Goodlettsville straddles the Davidson-Sumner county line, which creates an unusual dynamic: some addresses get Sumner County schools while being minutes from Nashville amenities. The Rivergate area anchors commercial activity, and the Goodlettsville Antique Mall district has a quiet charm. It is not flashy, but households who prioritize value, highway access, and pragmatic living gravitate here.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Goodlettsville sits along I-65 about 20 minutes north of downtown Nashville. Rivergate Mall and its surrounding retail corridor make daily errands easy. Hendersonville and Madison are both a short drive away.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'A mix of 1960s-80s ranch homes, townhomes near Rivergate, and newer subdivision builds. Homes typically start in the low $300s, making Goodlettsville one of the more affordable options this close to Nashville.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Depending on which side of the county line a home sits, students attend either Metro Nashville Public Schools or Sumner County Schools. This is critical to verify before purchasing.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Moss Wright Park is the centerpiece — 125 acres with sports fields, playgrounds, a fishing lake, and walking trails. The Mansker Creek area offers greenway connections.',
+      },
+      {
+        heading: 'Why House Haven knows Goodlettsville',
+        body: 'The county-line split in Goodlettsville affects property tax rates, school districts, and even garbage pickup. We help buyers understand exactly which jurisdiction their home falls in and what that means for their monthly costs.',
+      },
+    ],
+    nearby: ['hendersonville', 'madison', 'whites-creek'],
+  },
+  {
+    slug: 'portland',
+    name: 'Portland',
+    county: 'Sumner',
+    state: 'TN',
+    zips: ['37148'],
+    tier: 2,
+    tagline: 'Strawberry-town charm at Nashville\'s northern edge.',
+    distanceFromNashville: '~45 min to downtown Nashville',
+    lat: 36.5817,
+    lng: -86.5164,
+    metaDescription:
+      'Portland, TN homes for sale — Sumner County\'s strawberry capital with affordable land and small-town living. Community guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Portland',
+        body: 'Portland is best known for the Middle Tennessee Strawberry Festival, but day-to-day it is a small agricultural town that has started attracting Nashville commuters who want acreage and affordability. The pace is slower here, the lots are bigger, and the cost per square foot is meaningfully lower than anything inside the Nashville urban core.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Portland sits about 45 minutes north of Nashville along Route 109 and Route 52. Gallatin is about 20 minutes south. The commute is real, but remote workers and hybrid employees have been making it work.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Homes in Portland range from farmhouses on multi-acre lots to newer subdivision builds. The market is one of the most affordable in the Nashville metro, with many homes available in the $200s and $300s.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Portland is served by Sumner County Schools, including Portland High School. The school system has invested in updated facilities in recent years.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Richland Park provides sports fields and community gathering space. The surrounding countryside offers horseback riding, farm life, and open-sky living that is increasingly hard to find this close to a major metro.',
+      },
+      {
+        heading: 'Why House Haven knows Portland',
+        body: 'We help buyers in Portland understand well and septic considerations on rural lots, the trajectory of development coming north from Gallatin, and how to evaluate land purchases for future value.',
+      },
+    ],
+    nearby: ['gallatin', 'white-house', 'springfield'],
+  },
+  {
+    slug: 'hermitage',
+    name: 'Hermitage',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37076'],
+    tier: 2,
+    tagline: 'Andrew Jackson\'s backyard, now Nashville\'s east-side value play.',
+    distanceFromNashville: '~20 min to downtown Nashville',
+    lat: 36.1721,
+    lng: -86.5856,
+    metaDescription:
+      'Hermitage, TN homes for sale and neighborhood guide. Davidson County living near Percy Priest Lake and The Hermitage — market data from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Hermitage',
+        body: 'Hermitage is the Davidson County community that quietly offers some of the best price-per-square-foot value east of Nashville. Andrew Jackson\'s Hermitage estate is the historical anchor, but daily life revolves around Percy Priest Lake access, the Lebanon Pike commercial corridor, and neighborhoods that range from established brick ranches to new construction infill.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Hermitage sits east of Nashville along I-40 and Lebanon Pike. Downtown is about 20 minutes west; Mt. Juliet and Lebanon are a short drive east. Percy Priest Lake runs along the southern edge.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'The housing mix includes mid-century ranches, 1990s subdivisions, and new construction townhomes. Entry-level homes start in the low $300s, with larger family homes in the $400s-$500s.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Hermitage is served by Metro Nashville Public Schools, including McGavock High School. Several private options are within driving distance.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Percy Priest Lake, Long Hunter State Park, and the Stones River Greenway are all accessible from Hermitage. This is a strong area for fishing, kayaking, and trail running.',
+      },
+      {
+        heading: 'Why House Haven knows Hermitage',
+        body: 'We help Hermitage buyers identify which neighborhoods are seeing the strongest appreciation, navigate the flood zone considerations near Percy Priest, and understand the difference between addressed Hermitage and adjacent Mt. Juliet for school purposes.',
+      },
+    ],
+    nearby: ['donelson', 'mt-juliet', 'antioch'],
+  },
+  {
+    slug: 'antioch',
+    name: 'Antioch',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37013'],
+    tier: 2,
+    tagline: 'Nashville\'s most diverse and undervalued neighborhood.',
+    distanceFromNashville: '~20 min to downtown Nashville',
+    lat: 36.0590,
+    lng: -86.6722,
+    metaDescription:
+      'Antioch, TN homes for sale — southeast Davidson County with diverse dining, affordable homes, and rapid development. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Antioch',
+        body: 'Antioch is southeast Davidson County\'s most dynamic neighborhood. The international dining scene along Nolensville Pike is genuinely world-class — Korean, Kurdish, Mexican, Somali, and Vietnamese food within a single mile. Antioch has been one of Nashville\'s most affordable areas for years, and investment is now following: new mixed-use development, greenway extensions, and commercial upgrades are reshaping perceptions.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Antioch is centered around the I-24 and Harding Place interchange, about 20 minutes from downtown Nashville. Nolensville Pike connects north into the city, and Murfreesboro Pike runs east toward Smyrna and La Vergne.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Antioch offers some of the lowest entry points in Davidson County — starter homes in the mid $200s to low $300s. The range extends through the $400s for renovated and new-construction properties.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Antioch is served by Metro Nashville Public Schools, including Antioch High School and Cane Ridge High School. Verify specific school zones as they have shifted with redistricting.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Mill Creek Greenway, Antioch Community Center, and nearby Percy Priest Lake provide outdoor access. The ongoing investment in greenway connectivity is expanding options year over year.',
+      },
+      {
+        heading: 'Why House Haven knows Antioch',
+        body: 'We help buyers see past outdated perceptions of Antioch and evaluate specific pockets where appreciation is outpacing the metro average. The neighborhood-by-neighborhood variation in Antioch is wider than almost anywhere else in Nashville.',
+      },
+    ],
+    nearby: ['hermitage', 'la-vergne', 'donelson'],
+  },
+  {
+    slug: 'bellevue',
+    name: 'Bellevue',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37221'],
+    tier: 2,
+    tagline: 'West Nashville\'s family-friendly anchor.',
+    distanceFromNashville: '~20 min to downtown Nashville',
+    lat: 36.0767,
+    lng: -86.9178,
+    metaDescription:
+      'Bellevue, TN homes for sale — west Nashville living with Harpeth River access, strong retail, and family-friendly neighborhoods. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Bellevue',
+        body: 'Bellevue is the west Nashville community that families discover when they want Davidson County schools, a suburban feel, and a reasonable commute. The One Bellevue Place development and surrounding retail make daily life convenient. The Harpeth River winds through, giving the area a green, tree-covered character that feels more removed from the city than the 20-minute drive would suggest.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Bellevue sits along I-40 west of Nashville, with Highway 70 South as the main commercial corridor. Downtown is about 20 minutes east. Pegram and Kingston Springs are a short drive west.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Bellevue features established 1980s-2000s subdivisions, some new construction, and pockets of larger lots near the Harpeth River. Prices range from the low $300s for starter homes to $600s+ for larger properties.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Bellevue is served by Metro Nashville Public Schools, including Hillwood High School cluster. Bellevue Middle School and Harpeth Valley Elementary are well-regarded within the MNPS system.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'The Harpeth River is the recreational anchor — kayaking and float trips are a Bellevue way of life. Red Caboose Park, Warner Parks (Edwin and Percy), and the planned Bellevue Greenway additions extend the outdoor options.',
+      },
+      {
+        heading: 'Why House Haven knows Bellevue',
+        body: 'We help Bellevue buyers understand which subdivisions sit in flood zones along the Harpeth, where new development is planned, and how the west Nashville corridor is evolving with mixed-use investment.',
+      },
+    ],
+    nearby: ['pegram', 'kingston-springs', 'fairview'],
+  },
+  {
+    slug: 'old-hickory',
+    name: 'Old Hickory',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37138'],
+    tier: 2,
+    tagline: 'Historic DuPont village on Old Hickory Lake.',
+    distanceFromNashville: '~20 min to downtown Nashville',
+    lat: 36.2459,
+    lng: -86.6494,
+    metaDescription:
+      'Old Hickory, TN homes for sale — historic village with lake access and character homes in Davidson County. Community guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Old Hickory',
+        body: 'Old Hickory was built as a company town for the DuPont powder plant during World War I, and that origin story still shows in the walkable village layout, the uniform Craftsman-style homes, and the community-centered feel. It sits on Old Hickory Lake with genuine waterfront access. The village has become a draw for buyers who want character, lake proximity, and Davidson County proximity without paying East Nashville prices.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Old Hickory sits on the north shore of Old Hickory Lake, east of Madison and south of Hendersonville. Downtown Nashville is about 20 minutes via I-65 or Gallatin Pike.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'The Old Hickory Village section features original Craftsman homes from the 1920s-1940s. Surrounding areas have mid-century and newer builds. Village homes start in the $200s-$300s; lakefront properties command significantly more.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Old Hickory is served by Metro Nashville Public Schools. DuPont-Hadley Middle School is located within the village. Verify current zone assignments with MNPS.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Old Hickory Lake is the centerpiece — boat launches, fishing, and lakeside parks are walking distance in the village. Old Hickory Beach at the dam is a popular summer destination.',
+      },
+      {
+        heading: 'Why House Haven knows Old Hickory',
+        body: 'We help Old Hickory buyers understand the historic overlay restrictions in the village, evaluate lakefront versus lake-access pricing, and identify which renovation projects are worth the investment in these character homes.',
+      },
+    ],
+    nearby: ['hendersonville', 'madison', 'hermitage'],
+  },
+  {
+    slug: 'murfreesboro',
+    name: 'Murfreesboro',
+    county: 'Rutherford',
+    state: 'TN',
+    zips: ['37127', '37128', '37129', '37130'],
+    tier: 2,
+    tagline: 'Tennessee\'s fastest-growing city, 30 minutes from Nashville.',
+    distanceFromNashville: '~35 min to downtown Nashville',
+    lat: 35.8456,
+    lng: -86.3903,
+    metaDescription:
+      'Murfreesboro, TN homes for sale — Rutherford County seat, MTSU, and one of Tennessee\'s fastest-growing cities. Market guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Murfreesboro',
+        body: 'Murfreesboro has been one of the fastest-growing cities in Tennessee for over a decade, and the infrastructure has largely kept pace. The historic downtown square is walkable and active. Middle Tennessee State University brings energy and culture. The commercial corridors along Medical Center Parkway and Memorial Boulevard make Murfreesboro a self-contained city, not just a Nashville bedroom community.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Murfreesboro sits about 35 minutes southeast of Nashville along I-24. The commute into Nashville during rush hour is the main trade-off — plan for 45-60 minutes during peak times.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Murfreesboro has a massive range — from 1950s homes near the square to brand-new master-planned communities on the outskirts. Entry-level starts in the low $300s; new construction in popular subdivisions typically ranges from $400s-$600s.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Rutherford County Schools is one of the largest and strongest school systems in Tennessee. Siegel, Riverdale, Oakland, and Blackman High Schools all serve Murfreesboro families.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Stones River National Battlefield, Barfield Crescent Park (with the Wilderness Station), and the Greenway system provide extensive outdoor recreation. Percy Priest Lake is accessible from the northern edge.',
+      },
+      {
+        heading: 'Why House Haven knows Murfreesboro',
+        body: 'We help Nashville-area buyers evaluate whether the Murfreesboro commute trade-off works for their lifestyle, which of the rapidly expanding subdivisions are delivering real value, and where the next wave of commercial development is headed.',
+      },
+    ],
+    nearby: ['smyrna', 'la-vergne'],
+  },
+  {
+    slug: 'smyrna',
+    name: 'Smyrna',
+    county: 'Rutherford',
+    state: 'TN',
+    zips: ['37167'],
+    tier: 2,
+    tagline: 'Nissan-anchored, family-forward, and halfway between Nashville and Murfreesboro.',
+    distanceFromNashville: '~25 min to downtown Nashville',
+    lat: 35.9828,
+    lng: -86.5186,
+    metaDescription:
+      'Smyrna, TN homes for sale — Rutherford County community with Nissan plant, strong schools, and family neighborhoods. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Smyrna',
+        body: 'Smyrna sits between Nashville and Murfreesboro and benefits from both without being defined by either. The Nissan manufacturing plant is the economic anchor and the largest employer, giving the town a stable economic base. Sam Davis Home provides historical character. The town has invested heavily in parks and recreation in recent years.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Smyrna is along I-24 about 25 minutes from downtown Nashville. La Vergne is immediately north, Murfreesboro is 10 minutes south. The central position makes it viable for commuters in either direction.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Smyrna offers predominantly newer construction — many 2000s-2020s subdivisions with modern floorplans. Prices start in the low $300s for townhomes and range into the $500s for single-family.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Rutherford County Schools serves Smyrna, including Smyrna High School and La Vergne High School for addresses near the boundary.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Sharp Springs Park, Lee Victory Recreation Park, and the Smyrna Greenway provide extensive outdoor options. Percy Priest Lake is a short drive north.',
+      },
+      {
+        heading: 'Why House Haven knows Smyrna',
+        body: 'We help Smyrna buyers identify which subdivisions offer the strongest long-term value, understand the school zone boundaries that split between Smyrna and La Vergne, and evaluate new construction options against resale.',
+      },
+    ],
+    nearby: ['la-vergne', 'murfreesboro', 'antioch'],
+  },
+  {
+    slug: 'la-vergne',
+    name: 'La Vergne',
+    county: 'Rutherford',
+    state: 'TN',
+    zips: ['37086'],
+    tier: 2,
+    tagline: 'Percy Priest Lake access at an entry-level price point.',
+    distanceFromNashville: '~20 min to downtown Nashville',
+    lat: 36.0156,
+    lng: -86.5819,
+    metaDescription:
+      'La Vergne, TN homes for sale — Rutherford County\'s most affordable entry to the Nashville metro with lake access. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in La Vergne',
+        body: 'La Vergne is the Rutherford County community closest to Nashville, and it offers one of the most accessible entry points into the metro housing market. Percy Priest Lake runs along its northern border. The town has been investing in its own identity with downtown improvements and park upgrades rather than accepting the bedroom-community label.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'La Vergne sits at the I-24 and I-840 intersection, about 20 minutes from downtown Nashville. This position makes it central to Nashville, Murfreesboro, and Smyrna employment centers.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'La Vergne is one of the most affordable communities in the Nashville metro, with homes starting in the mid $200s. Most inventory is 1990s-2010s subdivision builds, with some new construction pushing into the $400s.',
+      },
+      {
+        heading: 'Schools',
+        body: 'La Vergne is served by Rutherford County Schools, with La Vergne High School as the primary public option.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Percy Priest Lake access and Veterans Memorial Park are the main outdoor draws. The Stones River Greenway extension is planned to improve connectivity.',
+      },
+      {
+        heading: 'Why House Haven knows La Vergne',
+        body: 'We guide first-time buyers into La Vergne who need to stay under $300k and want to build equity in a market that is appreciating as Nashville pushes outward. Understanding which subdivisions are positioned for the strongest growth is what we bring to the conversation.',
+      },
+    ],
+    nearby: ['smyrna', 'antioch', 'murfreesboro'],
+  },
+  {
+    slug: 'franklin',
+    name: 'Franklin',
+    county: 'Williamson',
+    state: 'TN',
+    zips: ['37064', '37067', '37069'],
+    tier: 2,
+    tagline: 'Historic charm meets Williamson County polish.',
+    distanceFromNashville: '~25 min to downtown Nashville',
+    lat: 35.9251,
+    lng: -86.8689,
+    metaDescription:
+      'Franklin, TN homes for sale — Williamson County\'s crown jewel with a historic Main Street, top schools, and luxury living. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Franklin',
+        body: 'Franklin consistently ranks among the best places to live in Tennessee, and the downtown Main Street is the reason most people fall in love on their first visit. The Civil War history, the independent shops and restaurants, the Pilgrimage Music Festival, and the Williamson County school system create a package that is hard to match. Cool Springs adds major retail and corporate office space to the south.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Franklin is about 25 minutes south of Nashville along I-65. Cool Springs is the commercial hub. The commute to downtown Nashville is manageable but I-65 traffic during peak hours is the main friction point.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Franklin\'s market starts higher than most Nashville suburbs. Townhomes and condos begin in the $400s; single-family homes in established neighborhoods range from $500s to well over $1M. Historic homes near downtown command premium pricing.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Williamson County Schools is consistently ranked among the top school districts in Tennessee. Franklin High School, Centennial High School, and Independence High School are all highly regarded.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Pinkerton Park, the Harpeth River, and the Franklin Greenway system provide extensive outdoor access. Eastern Flank Battlefield Park combines history with open green space.',
+      },
+      {
+        heading: 'Why House Haven knows Franklin',
+        body: 'We help Franklin buyers navigate the significant price variation between cool-springs-area subdivisions and historic-district adjacency, understand HOA structures in the larger master-planned communities, and identify value in a market where the average home price requires careful strategy.',
+      },
+    ],
+    nearby: ['brentwood', 'thompsons-station', 'nolensville'],
+  },
+  {
+    slug: 'brentwood',
+    name: 'Brentwood',
+    county: 'Williamson',
+    state: 'TN',
+    zips: ['37027'],
+    tier: 2,
+    tagline: 'Nashville\'s premier address for families and executives.',
+    distanceFromNashville: '~20 min to downtown Nashville',
+    lat: 36.0331,
+    lng: -86.7828,
+    metaDescription:
+      'Brentwood, TN homes for sale — Williamson County luxury living with top-rated schools and executive neighborhoods. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Brentwood',
+        body: 'Brentwood is Nashville\'s most established luxury suburb. The tree-lined streets, manicured neighborhoods, and Williamson County schools create an environment that corporate relocations and established families consistently choose. It is not trendy — it is proven. The Brentwood Library, Maryland Farms business park, and Smith Park recreation complex reflect a city that invests in quality infrastructure.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Brentwood sits directly south of Nashville along I-65 and Old Hickory Boulevard. Downtown Nashville is about 20 minutes north. Franklin and Cool Springs are 10 minutes south.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Brentwood skews toward larger single-family homes on generous lots. The market floor is roughly $600k for smaller or older homes, with most inventory in the $800k-$1.5M range. Estate properties push well beyond $2M.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Williamson County Schools serves Brentwood — Brentwood High School and Ravenwood High School are both highly ranked nationally. This is the single biggest draw for families.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Smith Park, Marcella Vivrette Smith Park (360 acres of wilderness), Crockett Park, and the Brentwood Greenway system provide excellent outdoor options within city limits.',
+      },
+      {
+        heading: 'Why House Haven knows Brentwood',
+        body: 'We help buyers navigate Brentwood\'s distinct sub-markets — from the governor\'s club area to the older-growth neighborhoods near Maryland Farms. Understanding the HOA structures, school zone boundaries between Brentwood High and Ravenwood, and where the value-per-dollar peaks is what we bring.',
+      },
+    ],
+    nearby: ['franklin', 'nolensville', 'antioch'],
+  },
+  {
+    slug: 'nolensville',
+    name: 'Nolensville',
+    county: 'Williamson',
+    state: 'TN',
+    zips: ['37135'],
+    tier: 2,
+    tagline: 'Williamson County schools with a small-town Main Street.',
+    distanceFromNashville: '~25 min to downtown Nashville',
+    lat: 35.9523,
+    lng: -86.6694,
+    metaDescription:
+      'Nolensville, TN homes for sale — Williamson County living with a growing Main Street village and new-construction neighborhoods. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Nolensville',
+        body: 'Nolensville is the Williamson County community that has exploded in the last decade — from a quiet crossroads town to one of the most sought-after family markets in Middle Tennessee. The historic Nolensville Road Main Street is being curated with local shops and restaurants. New master-planned subdivisions surround the town in every direction, and the Williamson County school assignment is the primary driver.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Nolensville sits about 25 minutes southeast of Nashville along Nolensville Road. Brentwood is to the north, Murfreesboro to the southeast. The commute is manageable but Nolensville Road itself can be congested during peak hours.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Nolensville is dominated by new construction and near-new subdivisions. Townhomes start in the $400s; single-family homes range from the low $500s to $800s+ in premium communities like Bent Creek and Sherwood Green.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Williamson County Schools serves Nolensville, with Nolensville High School (opened 2016) as the primary high school. The school district is the number-one reason families move here.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Mill Creek runs through the area, and Nolensville Park provides community recreation. The surrounding countryside offers a pastoral quality that newer subdivisions have worked to preserve.',
+      },
+      {
+        heading: 'Why House Haven knows Nolensville',
+        body: 'We help buyers navigate the new-construction landscape in Nolensville — which builders deliver on promises, which communities have the strongest HOA management, and where the next phases of development will shape long-term property values.',
+      },
+    ],
+    nearby: ['brentwood', 'franklin', 'thompsons-station'],
+  },
+  {
+    slug: 'spring-hill',
+    name: 'Spring Hill',
+    county: 'Williamson/Maury',
+    state: 'TN',
+    zips: ['37174'],
+    tier: 2,
+    tagline: 'Two-county growth engine south of Franklin.',
+    distanceFromNashville: '~35 min to downtown Nashville',
+    lat: 35.7511,
+    lng: -86.9300,
+    metaDescription:
+      'Spring Hill, TN homes for sale — straddling Williamson and Maury counties with GM plant jobs, new construction, and rapid growth. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Spring Hill',
+        body: 'Spring Hill has been one of Tennessee\'s fastest-growing cities, straddling the Williamson-Maury county line. The GM manufacturing plant is the economic anchor. The growth is visible everywhere — new subdivisions, new schools, new retail. The trade-off for the energy and affordability is that infrastructure is actively catching up.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Spring Hill sits about 35 minutes south of Nashville along I-65 and US-31. Franklin and Cool Springs are 15 minutes north. Columbia is 15 minutes south.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Spring Hill is overwhelmingly new construction — master-planned communities with modern floorplans, community pools, and walkable amenities. Prices start in the mid $300s and range into the $600s for larger homes in premium communities.',
+      },
+      {
+        heading: 'Schools',
+        body: 'The county line is critical here: Williamson County side addresses get WCS schools, Maury County side addresses get MCPS. This single factor can mean a $50k+ difference in comparable home prices. Verify before purchasing.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Spring Hill has invested in new park development including Harvey Park, Port Royal State Park is nearby, and Saturn Parkway provides green corridors.',
+      },
+      {
+        heading: 'Why House Haven knows Spring Hill',
+        body: 'We help Spring Hill buyers navigate the Williamson/Maury county line — the school district, tax rate, and long-term appreciation differences between two homes on the same street can be significant. We also track which builders and subdivisions are delivering on quality versus cutting corners in a fast-growth market.',
+      },
+    ],
+    nearby: ['thompsons-station', 'franklin'],
+  },
+  {
+    slug: 'mt-juliet',
+    name: 'Mt. Juliet',
+    county: 'Wilson',
+    state: 'TN',
+    zips: ['37122'],
+    tier: 2,
+    tagline: 'Wilson County\'s booming suburb on the Providence corridor.',
+    distanceFromNashville: '~25 min to downtown Nashville',
+    lat: 36.2001,
+    lng: -86.5186,
+    metaDescription:
+      'Mt. Juliet, TN homes for sale — Wilson County\'s fastest-growing city with Providence Marketplace, strong schools, and family neighborhoods. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Mt. Juliet',
+        body: 'Mt. Juliet has transformed from a small Wilson County town into one of Nashville\'s most desirable suburbs. Providence Marketplace is the commercial anchor — a massive mixed-use development with retail, dining, and entertainment. The city calls itself "The City Between the Lakes" (Old Hickory and Percy Priest), and that geography shapes the outdoor lifestyle.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Mt. Juliet sits along I-40 about 25 minutes east of Nashville. Hermitage is to the west, Lebanon to the east. The Providence exit has become the commercial center of Wilson County.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Mt. Juliet offers a mix of established 1990s-2000s subdivisions and new construction. Prices range from the mid $300s for townhomes to $600s+ for larger family homes in premium communities.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Wilson County Schools serves Mt. Juliet — Mt. Juliet High School and West Wilson Middle School are strong performers. The school system is a major draw for families.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Charlie Daniels Park, Cedar Creek Sports Complex, and Percy Priest Lake access provide recreation. The greenway system is expanding with the city\'s growth.',
+      },
+      {
+        heading: 'Why House Haven knows Mt. Juliet',
+        body: 'We help Mt. Juliet buyers understand the difference between the Providence corridor and the older parts of town, evaluate which new subdivisions are positioned for the strongest appreciation, and navigate the Wilson County school zone boundaries.',
+      },
+    ],
+    nearby: ['hermitage', 'lebanon'],
+  },
+  {
+    slug: 'pleasant-view',
+    name: 'Pleasant View',
+    county: 'Cheatham',
+    state: 'TN',
+    zips: ['37146'],
+    tier: 2,
+    tagline: 'Rolling hills and acreage in Cheatham County.',
+    distanceFromNashville: '~30 min to downtown Nashville',
+    lat: 36.3917,
+    lng: -87.0375,
+    metaDescription:
+      'Pleasant View, TN homes for sale — Cheatham County rural living with Nashville access and affordable acreage. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Pleasant View',
+        body: 'Pleasant View is the Cheatham County community for buyers who want land, privacy, and a rural feel without disconnecting from Nashville entirely. The rolling hills, horse properties, and multi-acre lots define the landscape. There is no downtown to speak of — this is a residential community built around country living.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Pleasant View sits about 30 minutes northwest of Nashville along Highway 41A. Springfield is 15 minutes north, and Joelton is nearby. Clarksville is about 30 minutes northwest.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Homes in Pleasant View tend to sit on larger lots — one to five acres is common. Prices range from the mid $300s for smaller properties to $600s+ for homes with significant acreage.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Cheatham County Schools serves Pleasant View, with Pleasant View Elementary and Cheatham County Central High School as the primary options.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'The rural setting is the recreation — horseback riding, gardening, and open-sky living. Nearby Beaman Park and Sycamore Creek add structured outdoor options.',
+      },
+      {
+        heading: 'Why House Haven knows Pleasant View',
+        body: 'We help buyers evaluating Pleasant View understand well and septic requirements on rural lots, the Cheatham County property tax advantages, and how to compare acreage value between Pleasant View and neighboring communities.',
+      },
+    ],
+    nearby: ['joelton', 'springfield', 'coopertown'],
+  },
+  {
+    slug: 'cross-plains',
+    name: 'Cross Plains',
+    county: 'Robertson',
+    state: 'TN',
+    zips: ['37049'],
+    tier: 2,
+    tagline: 'Small-town Robertson County at its most authentic.',
+    distanceFromNashville: '~40 min to downtown Nashville',
+    lat: 36.5489,
+    lng: -86.6889,
+    metaDescription:
+      'Cross Plains, TN homes for sale — quiet Robertson County living with affordable acreage and Nashville access. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Cross Plains',
+        body: 'Cross Plains is the kind of small town where the general store still matters and everyone knows the mail carrier by name. It sits in northern Robertson County and has remained genuinely rural even as Nashville\'s growth pushes outward. Buyers come here for land, quiet, and a cost of living that feels like a different state.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Cross Plains is about 40 minutes north of Nashville along Highway 25 and Highway 76. Springfield is 15 minutes west, Portland about 15 minutes east.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Cross Plains offers farmhouses, ranch homes on acreage, and some newer construction. The market is highly affordable — many homes in the $200s and $300s with meaningful land included.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Robertson County Schools serves Cross Plains, with East Robertson Elementary and High School cluster.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'The rural setting provides open space, and the community hosts seasonal events. The surrounding farmland and rolling hills offer a peaceful lifestyle.',
+      },
+      {
+        heading: 'Why House Haven knows Cross Plains',
+        body: 'We help buyers looking for land and affordability understand the Cross Plains market — well and septic considerations, road frontage versus landlocked parcels, and the realistic commute times to Nashville employment centers.',
+      },
+    ],
+    nearby: ['springfield', 'portland', 'white-house'],
+  },
+  {
+    slug: 'orlinda',
+    name: 'Orlinda',
+    county: 'Robertson',
+    state: 'TN',
+    zips: ['37141'],
+    tier: 2,
+    tagline: 'Quiet corners of Robertson County, tobacco-road charm.',
+    distanceFromNashville: '~45 min to downtown Nashville',
+    lat: 36.6056,
+    lng: -86.7228,
+    metaDescription:
+      'Orlinda, TN homes for sale — rural Robertson County living with farmland, affordable homes, and authentic small-town character. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Orlinda',
+        body: 'Orlinda is a tiny community in northern Robertson County that sits along the Kentucky border. It is as rural as the Nashville metro gets — tobacco barns, cattle fences, and gravel roads are part of the daily landscape. For buyers who want maximum land for minimum cost and are willing to drive, Orlinda delivers.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Orlinda is about 45 minutes north of Nashville. Springfield is 20 minutes south. The commute is the primary trade-off for the land and pricing.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Homes in Orlinda are predominantly farmhouses and rural builds on multi-acre lots. Pricing is among the lowest in the Nashville metro area, with properties available in the $200s.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Robertson County Schools serves Orlinda. Jo Byrns High School is the local high school.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'The lifestyle is the outdoors — farming, horseback riding, hunting, and open-sky living. Cross Plains and Springfield provide the nearest structured recreation.',
+      },
+      {
+        heading: 'Why House Haven knows Orlinda',
+        body: 'We help Orlinda buyers understand rural property considerations — land surveys, fence-line agreements, agricultural exemptions, and the realistic value trajectory for properties at the edge of Nashville\'s growth radius.',
+      },
+    ],
+    nearby: ['cross-plains', 'springfield', 'coopertown'],
+  },
+  {
+    slug: 'millersville',
+    name: 'Millersville',
+    county: 'Sumner',
+    state: 'TN',
+    zips: ['37072'],
+    tier: 2,
+    tagline: 'Small-city independence between Goodlettsville and Hendersonville.',
+    distanceFromNashville: '~25 min to downtown Nashville',
+    lat: 36.3700,
+    lng: -86.7100,
+    metaDescription:
+      'Millersville, TN homes for sale — small Sumner County city with independent governance, low taxes, and proximity to Hendersonville. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Millersville',
+        body: 'Millersville is a small incorporated city in Sumner County that sits between Goodlettsville and Hendersonville. It has maintained its own governance and identity despite being surrounded by larger communities. The vibe is quiet, residential, and family-oriented — a place where people know their neighbors.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Millersville sits along Louisville Highway, about 25 minutes from downtown Nashville. Hendersonville is minutes to the east, Goodlettsville to the south.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Millersville has a mix of established homes and some new development. Prices are generally competitive with Goodlettsville and slightly below Hendersonville, ranging from the $300s to $500s.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Sumner County Schools serves Millersville. Students typically attend schools in the Hendersonville or Station Camp clusters.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Millersville Community Center and Park provides local recreation. Old Hickory Lake and Hendersonville\'s parks are a short drive away.',
+      },
+      {
+        heading: 'Why House Haven knows Millersville',
+        body: 'We help buyers understand Millersville\'s unique position — independent city services with Sumner County schools, competitive pricing relative to neighbors, and the implications of ongoing residential development.',
+      },
+    ],
+    nearby: ['goodlettsville', 'hendersonville', 'white-house'],
+  },
+  {
+    slug: 'white-bluff',
+    name: 'White Bluff',
+    county: 'Dickson',
+    state: 'TN',
+    zips: ['37187'],
+    tier: 2,
+    tagline: 'Dickson County\'s quiet eastern edge.',
+    distanceFromNashville: '~35 min to downtown Nashville',
+    lat: 36.1078,
+    lng: -87.2222,
+    metaDescription:
+      'White Bluff, TN homes for sale — small Dickson County community with rural character, affordable homes, and Nashville access. Guide from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in White Bluff',
+        body: 'White Bluff is a small community on the eastern edge of Dickson County that offers rural living with a shorter drive into Nashville than Dickson proper. The town has a quiet, unassuming character — no commercial strip to speak of, just residential neighborhoods, country roads, and the Harpeth River nearby.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'White Bluff sits along Highway 47 about 35 minutes west of Nashville. Dickson is 10 minutes west, and Fairview is nearby to the south. The commute along I-40 is the primary route to Nashville.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'White Bluff offers affordable homes on larger lots, with prices typically in the $200s to $400s. Many properties include one or more acres.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Dickson County Schools serves White Bluff, with White Bluff Elementary and Creek Wood High School.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'The Harpeth River provides canoe and kayak access. Montgomery Bell State Park is a short drive south for hiking, golf, and lake recreation.',
+      },
+      {
+        heading: 'Why House Haven knows White Bluff',
+        body: 'We help buyers exploring the Dickson County corridor understand where White Bluff fits relative to Dickson and Burns for pricing, school quality, and commute considerations.',
+      },
+    ],
+    nearby: ['dickson', 'burns', 'fairview'],
+  },
 ]
 
 export const communityBySlug = Object.fromEntries(
