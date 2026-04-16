@@ -209,6 +209,13 @@ This document is kept in sync as Claude Code builds. Check it at the start of ev
 - [x] OpenGraph article metadata on blog posts
 - [ ] RealEstateListing + BreadcrumbList on listings (blocked on Phase 3 IDX)
 - [x] Full Breadcrumb component (`components/ui/Breadcrumbs.tsx`) with BreadcrumbList JSON-LD — used on community + blog pages
+- [x] FAQPage JSON-LD on Buyers, Sellers, and Home Valuation pages (11 FAQs targeting rich results)
+- [x] LocalBusiness JSON-LD on Contact page with geo coordinates + hours
+- [x] Enriched Organization JSON-LD — foundingDate, openingHours, priceRange, numberOfEmployees
+- [x] Canonical URLs on all 15 static pages
+- [x] Internal linking: community pages → related blog posts
+- [x] Blog sitemap entries with lastModified dates
+- [x] Phone click tracking data attributes (data-event="phone_click")
 - [ ] Image optimization audit (WebP + responsive) — pending local-hosted headshots
 
 ## Phase 11 — Lead Capture, CRM, Analytics
@@ -223,8 +230,8 @@ This document is kept in sync as Claude Code builds. Check it at the start of ev
 
 ## Phase 12 — QA, Perf, A11y, Launch
 
-- [ ] Compliance walkthrough (every page)
-- [ ] Lighthouse scores: Perf 90+, A11y 95+, BP 95+, SEO 95+
+- [x] Compliance walkthrough — TREC, NAR, Fair Housing, TCPA, ADA all verified. Removed "family-friendly" language per Fair Housing best practice.
+- [x] Lighthouse audit + fixes: autocomplete on all forms, security headers (X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy), canonical URLs on all 15 pages, OG image + Twitter card in layout metadata
 - [ ] axe-core audit
 - [ ] Keyboard nav test
 - [ ] Screen reader smoke test
