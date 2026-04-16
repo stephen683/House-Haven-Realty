@@ -3,13 +3,14 @@ import { createClient as createServerClient } from '@/lib/supabase/server'
 
 export const runtime = 'nodejs'
 
-interface ContactPayload {
+interface ValuationPayload {
+  address?: string
+  city?: string
+  zip?: string
   name?: string
   email?: string
   phone?: string
-  message?: string
-  interest?: string
-  source?: string
+  timeline?: string
 }
 
 function isValidEmail(email: string) {
@@ -17,23 +18,24 @@ function isValidEmail(email: string) {
 }
 
 export async function POST(request: NextRequest) {
-  let body: ContactPayload
+  let body: ValuationPayload
   try {
-    body = (await request.json()) as ContactPayload
+    body = (await request.json()) as ValuationPayload
   } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
 
+  const address = body.address?.toString().trim()
+  const city = body.city?.toString().trim() || 'Nashville'
+  const zip = body.zip?.toString().trim()
   const name = body.name?.toString().trim()
   const email = body.email?.toString().trim()
-  const message = body.message?.toString().trim()
   const phone = body.phone?.toString().trim() || null
-  const source = body.source?.toString().trim() || 'website'
-  const interest = body.interest?.toString().trim() || null
+  const timeline = body.timeline?.toString().trim() || null
 
-  if (!name || !email || !message) {
+  if (!address || !zip || !name || !email) {
     return NextResponse.json(
-      { error: 'Name, email, and message are required.' },
+      { error: 'Address, ZIP, name, and email are required.' },
       { status: 400 },
     )
   }
@@ -41,24 +43,24 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid email address.' }, { status: 400 })
   }
 
-  // Persist to Supabase if configured
   try {
     const supabase = await createServerClient()
-    const { error } = await supabase.from('contact_submissions').insert({
+    const { error } = await supabase.from('valuation_requests').insert({
+      address,
+      city,
+      state: 'TN',
+      zip,
       name,
       email,
       phone,
-      message: interest ? `[${interest}] ${message}` : message,
-      source_page: source,
+      timeline,
+      source: 'website',
     })
-    if (error) {
-      console.error('[contact] supabase insert failed', error.message)
-    }
+    if (error) console.error('[valuation] supabase insert failed', error.message)
   } catch (err) {
-    console.error('[contact] supabase client failed', err)
+    console.error('[valuation] supabase client failed', err)
   }
 
-  // Notify Stephen via Resend if configured
   const resendKey = process.env.RESEND_API_KEY
   if (resendKey) {
     try {
@@ -72,25 +74,22 @@ export async function POST(request: NextRequest) {
           from: 'House Haven Web <notifications@househavenrealty.com>',
           to: ['Stephen@househavenrealty.com'],
           reply_to: email,
-          subject: `New website lead — ${source}`,
+          subject: `Home valuation request — ${address}`,
           text: [
-            `New lead from the House Haven Realty website.`,
+            `New CMA request from the House Haven Realty website.`,
             ``,
-            `Source: ${source}`,
             `Name: ${name}`,
             `Email: ${email}`,
             phone ? `Phone: ${phone}` : null,
-            interest ? `Interested in: ${interest}` : null,
-            ``,
-            `Message:`,
-            message,
+            `Address: ${address}, ${city}, TN ${zip}`,
+            timeline ? `Timeline: ${timeline}` : null,
           ]
             .filter(Boolean)
             .join('\n'),
         }),
       })
     } catch (err) {
-      console.error('[contact] resend notify failed', err)
+      console.error('[valuation] resend notify failed', err)
     }
   }
 

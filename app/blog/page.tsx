@@ -1,14 +1,113 @@
-export default function BlogPage() {
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import Image from 'next/image'
+import { getSortedPosts } from '@/data/blog'
+
+export const metadata: Metadata = {
+  title: 'Nashville Real Estate Insights — The House Haven Blog',
+  description:
+    'Market updates, buyer and seller guides, new construction insights, and Middle Tennessee neighborhood deep dives from the House Haven Realty team.',
+}
+
+export default function BlogIndexPage() {
+  const posts = getSortedPosts()
+  const [featured, ...rest] = posts
+
   return (
-    <main>
-      <section className="min-h-screen flex items-center justify-center bg-househaven-surface">
-        <div className="text-center px-4">
-          <h1 className="text-5xl md:text-7xl font-serif text-househaven-navy mb-4">
+    <main className="bg-white">
+      <section className="bg-househaven-surface py-20 lg:py-28">
+        <div className="max-w-5xl mx-auto px-4 lg:px-6 text-center">
+          <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
             Blog
-          </h1>
-          <p className="text-xl text-househaven-text-muted">
-            Coming soon
           </p>
+          <h1 className="font-serif text-5xl lg:text-6xl text-househaven-navy mt-3">
+            Insights from the field.
+          </h1>
+          <p className="mt-6 max-w-2xl mx-auto text-lg text-househaven-text-muted">
+            Real estate writing that actually helps. No AI sludge, no filler — just
+            honest takes from a team that does this every day.
+          </p>
+        </div>
+      </section>
+
+      {featured && (
+        <section className="max-w-6xl mx-auto px-4 lg:px-6 py-16 lg:py-20">
+          <Link
+            href={`/blog/${featured.slug}`}
+            className="group grid lg:grid-cols-2 gap-10 items-center"
+          >
+            <div className="relative aspect-[4/3] rounded-3xl overflow-hidden bg-househaven-surface">
+              <Image
+                src={featured.heroImage}
+                alt={featured.heroCaption}
+                fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover group-hover:scale-[1.02] transition duration-500"
+                unoptimized
+              />
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
+                Featured · {featured.category}
+              </p>
+              <h2 className="font-serif text-4xl lg:text-5xl text-househaven-navy mt-3 leading-tight group-hover:text-househaven-accent-dark transition">
+                {featured.title}
+              </h2>
+              <p className="mt-4 text-househaven-text-muted text-lg">
+                {featured.excerpt}
+              </p>
+              <p className="mt-6 text-xs text-househaven-text-muted">
+                {new Date(featured.publishedAt).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}{' '}
+                · {featured.readTimeMinutes} min read
+              </p>
+            </div>
+          </Link>
+        </section>
+      )}
+
+      <section className="bg-househaven-surface py-16 lg:py-20">
+        <div className="max-w-6xl mx-auto px-4 lg:px-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
+            {rest.map((p) => (
+              <Link
+                key={p.slug}
+                href={`/blog/${p.slug}`}
+                className="group block rounded-2xl overflow-hidden bg-white border border-black/5 hover:shadow-xl transition"
+              >
+                <div className="relative aspect-[16/9] bg-househaven-surface">
+                  <Image
+                    src={p.heroImage}
+                    alt={p.heroCaption}
+                    fill
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    className="object-cover"
+                    unoptimized
+                  />
+                </div>
+                <div className="p-6">
+                  <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
+                    {p.category}
+                  </p>
+                  <p className="font-serif text-2xl text-househaven-navy mt-2 leading-tight">
+                    {p.title}
+                  </p>
+                  <p className="text-sm text-househaven-text-muted mt-3">{p.excerpt}</p>
+                  <p className="mt-5 text-xs text-househaven-text-muted">
+                    {new Date(p.publishedAt).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}{' '}
+                    · {p.readTimeMinutes} min read
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
     </main>

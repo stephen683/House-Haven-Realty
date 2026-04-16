@@ -1,0 +1,852 @@
+// Community directory — ROADMAP Section 7.
+// `content` is the long-form copy for the community page. Fair-Housing-safe:
+// describe amenities, commute, schools, lifestyle — never demographics.
+
+export interface CommunityContentSection {
+  heading: string
+  body: string
+}
+
+export interface Community {
+  slug: string
+  name: string
+  county: string
+  state: 'TN'
+  zips: string[]
+  tier: 1 | 2 | 3
+  tagline: string
+  distanceFromNashville: string
+  /** Approximate centroid used for map and structured data. */
+  lat: number
+  lng: number
+  metaDescription: string
+  content: CommunityContentSection[]
+  nearby: string[]
+}
+
+export const communities: Community[] = [
+  {
+    slug: 'joelton',
+    name: 'Joelton',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37080'],
+    tier: 1,
+    tagline: 'Country living, city close.',
+    distanceFromNashville: '~20 min to downtown Nashville',
+    lat: 36.3237,
+    lng: -86.8722,
+    metaDescription:
+      'Explore Joelton, TN — a rural Davidson County community just 20 minutes from downtown Nashville. Homes, schools, Beaman Park, and market data from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Joelton',
+        body: "Joelton sits in the northwestern corner of Davidson County, where Nashville fades out into rolling pasture, wooded ridges, and long country driveways. It is one of the last places inside the Nashville city limits where you can still find a few acres, a wraparound porch, and a creek running across your back property line without a 45-minute commute. Most residents describe it as the perfect compromise — the peace of a small rural town with downtown Nashville only about 20 minutes south on I-24.",
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Joelton is anchored by Exit 42 on Interstate 24, which drops you at downtown Nashville in roughly 20 minutes off-peak and 30 minutes during rush hour. Briley Parkway (I-440) connects Joelton commuters to the BNA airport, Opryland, and the eastern suburbs without fighting downtown traffic. For healthcare workers, Ascension Saint Thomas West, TriStar Skyline, and Vanderbilt are all 25 to 30 minutes away.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Housing in the 37080 ZIP code ranges from mid-century ranches on small lots near Old Hickory Boulevard to custom-built homes on 3- to 10-acre parcels tucked along Clarksville Pike and Eatons Creek Road. Buyers typically see single-family homes from the high $300s for in-town cottages up to $1M+ for newer custom builds on acreage. New construction is active but not saturated, making Joelton a strong match for buyers who want privacy and land without giving up Metro Nashville services.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Joelton is served by Metro Nashville Public Schools: Joelton Elementary, Joelton Middle, and Whites Creek High School. Families also have access to MNPS choice zones and nearby private options in Goodlettsville and Ashland City. Verify current attendance zones with MNPS before making a purchase decision, as zones are periodically updated.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: "Joelton's crown jewel is Beaman Park — 1,700 acres of old-growth forest, wildflower hikes, and the Henry Hollow Loop Trail, all about five minutes from most Joelton homes. Marrowbone Lake sits just north of town for bass fishing and kayaking. Residents who want a farmers-market Saturday can be in downtown Goodlettsville or the Nashville Farmers' Market in under 25 minutes.",
+      },
+      {
+        heading: 'Why House Haven knows Joelton',
+        body: "Our team has helped Joelton buyers navigate everything from well-and-septic contingencies to agricultural-use tax transitions — things a template national brokerage rarely gets right the first time. If you're comparing a Joelton home against a Greenbrier or Ashland City property, we can walk you through the pros and cons from real closed transactions in all three communities.",
+      },
+    ],
+    nearby: ['whites-creek', 'ashland-city', 'greenbrier', 'madison'],
+  },
+  {
+    slug: 'ashland-city',
+    name: 'Ashland City',
+    county: 'Cheatham',
+    state: 'TN',
+    zips: ['37015'],
+    tier: 1,
+    tagline: "Cheatham County's river town, 25 minutes from Nashville.",
+    distanceFromNashville: '~25 min to downtown Nashville',
+    lat: 36.2734,
+    lng: -87.0639,
+    metaDescription:
+      'Ashland City, TN homes for sale and lifestyle guide. Cumberland River access, small-town charm, and quick commutes to Nashville — with market data from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Ashland City',
+        body: 'Ashland City is the Cheatham County seat and the river town most Nashville commuters discover when they want more house, more land, and more quiet than Davidson County can give them at the same price. Main Street still has the feel of a small Southern town — a diner, the courthouse square, a river walk — but the growth around Highway 12 has brought newer subdivisions, grocery anchors, and commuter-friendly infrastructure.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Ashland City sits directly west of Nashville along the Cumberland River. Highway 12 (Ashland City Highway) is the main commuter artery and drops you at The Nations and West Nashville in about 20 minutes. Downtown Nashville is typically a 25- to 30-minute drive depending on time of day. Ascension Saint Thomas has a major hospital campus in Ashland City, which means many residents do not commute at all.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'The Ashland City market covers a wide spectrum: starter homes in established subdivisions, new construction in planned communities off Chapmansboro Road and Highway 49, and rural acreage properties north of town toward Pleasant View. Entry-level single-family homes typically start in the mid $300s, with newer custom builds on acreage stretching above $1M.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Ashland City is served by Cheatham County Schools, including Cheatham Middle School and Cheatham County Central High School. Several Christian and homeschool cooperatives also operate in the area. Zones change over time, so buyers should confirm directly with the district before committing.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'The Cumberland River Bicentennial Trail starts in downtown Ashland City and runs 3.7 miles along a former rail bed — it is one of the most loved walking and biking spots in Middle Tennessee. Sycamore Creek, Cheatham Dam, and the river itself make Ashland City a fishing, kayaking, and pontoon-boating community.',
+      },
+      {
+        heading: 'Why House Haven knows Ashland City',
+        body: 'Our agents regularly close homes in Ashland City and the surrounding Cheatham County corridor. We can speak to everything from HOA realities in the newer subdivisions off Highway 49 to well/septic expectations on rural acreage north of town.',
+      },
+    ],
+    nearby: ['pegram', 'kingston-springs', 'joelton'],
+  },
+  {
+    slug: 'greenbrier',
+    name: 'Greenbrier',
+    county: 'Robertson',
+    state: 'TN',
+    zips: ['37073'],
+    tier: 1,
+    tagline: 'Affordable small-town living off I-65.',
+    distanceFromNashville: '~30 min to downtown Nashville',
+    lat: 36.4267,
+    lng: -86.8058,
+    metaDescription:
+      'Greenbrier, TN real estate and community guide. A fast-growing Robertson County small town with I-65 access, strong schools, and approachable prices.',
+    content: [
+      {
+        heading: 'What it feels like to live in Greenbrier',
+        body: "Greenbrier is exactly what a lot of Nashville commuters are looking for: a genuine small town with its own identity, not a far-out subdivision of Nashville. Residents shop at the local grocery, kids play at the city park on Saturday, and football Friday night is a real community event. Growth is happening — new subdivisions are working their way up Highway 41 — but it still feels like Robertson County, not a metroplex spillover.",
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Greenbrier is anchored by Exit 108 on I-65, about 30 minutes north of downtown Nashville. Commuters who work in Germantown, MetroCenter, or downtown typically report 35 to 45 minute door-to-door drives depending on time of day. For healthcare workers, NorthCrest Medical Center in Springfield is less than 15 minutes away.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Greenbrier is one of the more affordable doorsteps into Robertson County. Entry-level single-family homes typically start in the high $200s to low $300s, with newer construction in the mid $300s to mid $400s and rural acreage properties going higher. This makes it a strong option for first-time buyers and move-up buyers leaving Sumner or Davidson County.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Greenbrier is served by Robertson County Schools: Greenbrier Elementary, Greenbrier Middle, and Greenbrier High. Families should verify current zones with the district directly, as rapid growth has triggered periodic rezoning conversations.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Greenbrier City Park offers baseball, playgrounds, and walking paths. Nearby, Port Royal State Park in Adams and the Cumberland River boat ramps give residents weekend outdoor options without driving back toward Nashville.',
+      },
+      {
+        heading: 'Why House Haven knows Greenbrier',
+        body: "We have buyers and sellers across the I-65 corridor, and Greenbrier is one of the communities we actively track. We can tell you which subdivisions are holding value, where the road widening is coming, and how commute times really feel on a Tuesday morning versus what Google Maps claims.",
+      },
+    ],
+    nearby: ['springfield', 'white-house', 'coopertown'],
+  },
+  {
+    slug: 'springfield',
+    name: 'Springfield',
+    county: 'Robertson',
+    state: 'TN',
+    zips: ['37172'],
+    tier: 1,
+    tagline: "Robertson County's historic seat, growing fast.",
+    distanceFromNashville: '~35 min to downtown Nashville',
+    lat: 36.5092,
+    lng: -86.8839,
+    metaDescription:
+      'Springfield, TN homes and neighborhood guide from House Haven Realty. Historic Robertson County seat with new construction, strong healthcare jobs, and small-town charm.',
+    content: [
+      {
+        heading: 'What it feels like to live in Springfield',
+        body: 'Springfield is the Robertson County seat, and you can feel it. The downtown square still has the courthouse at its center, a handful of locally owned restaurants, and Saturday morning farmers market energy. Outside the square, Springfield is the fastest-growing part of the county — new construction, retail expansion along Memorial Boulevard, and a healthcare job base anchored by NorthCrest Medical Center.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Springfield sits at the intersection of Highway 431 and Highway 41, about 35 minutes north of downtown Nashville via I-65. Many Springfield residents work locally (NorthCrest, schools, county government, manufacturing) and commute times feel shorter than the mileage suggests because traffic is rarely an all-day issue.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Springfield has a broad housing stock: historic homes on Main Street, mid-century ranches and cottages in the older neighborhoods, and active new construction in subdivisions on the south and east sides of town. Entry-level single-family homes typically run in the high $200s to low $300s, with newer construction in the mid $300s and custom acreage homes above.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Springfield is served by Robertson County Schools, including Springfield High School and a network of elementary and middle schools. The district has been actively planning for growth. Buyers should confirm current attendance zones with the district before making a decision.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'J. Travis Price Park is the county parks anchor, with walking trails, disc golf, and athletic fields. Residents also take advantage of Dunbar Cave State Park in nearby Clarksville and Port Royal State Park for weekend outings.',
+      },
+      {
+        heading: 'Why House Haven knows Springfield',
+        body: 'We have worked Springfield from downtown historic homes to brand-new construction off Memorial Boulevard. We can help you understand where to expect appreciation, which builders are actively delivering, and how school zones may shift with new subdivisions.',
+      },
+    ],
+    nearby: ['greenbrier', 'coopertown', 'white-house'],
+  },
+  {
+    slug: 'thompsons-station',
+    name: 'Thompsons Station',
+    county: 'Williamson',
+    state: 'TN',
+    zips: ['37179'],
+    tier: 1,
+    tagline: 'Williamson County growth, minus the Franklin price tag.',
+    distanceFromNashville: '~35 min to downtown Nashville',
+    lat: 35.8062,
+    lng: -86.9125,
+    metaDescription:
+      'Thompsons Station, TN real estate guide from House Haven Realty. Williamson County schools, fast new construction, and a value alternative to Franklin and Brentwood.',
+    content: [
+      {
+        heading: 'What it feels like to live in Thompsons Station',
+        body: 'Thompsons Station is the Williamson County town a lot of buyers discover after they price out of Franklin and Brentwood. It offers the same highly regarded Williamson County school system and the same I-65 commute, but with newer homes, larger lots, and meaningfully lower prices per square foot than its neighbors to the north. Growth has been aggressive — this is one of the most active new-construction markets in Middle Tennessee — and the town is still working to balance that growth with small-town character.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Thompsons Station sits on I-65 at Exit 59 (Peytonsville Road) and Exit 61 (Goose Creek Bypass), roughly 35 minutes south of downtown Nashville in off-peak traffic. Cool Springs is a 10-minute drive, which makes it a strong fit for Nashville commuters who want a mix of big-city work and small-town home life.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: "Thompsons Station is dominated by newer subdivisions — Bridgemore Village, Tollgate Village, Cherry Grove, Canterbury, and many more — with floor plans ranging from attached townhomes in the mid $400s to large single-family homes approaching or exceeding $1.5M. There is also a strong supply of resale homes from the past 10 to 15 years and a smaller pocket of historic properties near the town's original core.",
+      },
+      {
+        heading: 'Schools',
+        body: 'Thompsons Station is served by Williamson County Schools, widely considered one of the strongest public districts in Tennessee. Specific zones depend on address, and with new schools coming online the district has rezoned parts of Thompsons Station periodically — buyers should confirm current zones before committing.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Preservation Park offers walking trails, open fields, and event space. The Harpeth River winds through parts of Williamson County nearby, and Timberland Park in Leipers Fork is a short drive west for hiking and views along the Natchez Trace.',
+      },
+      {
+        heading: 'Why House Haven knows Thompsons Station',
+        body: "We actively help clients compare Thompsons Station to Spring Hill, Nolensville, and Franklin. Each of those markets has a different long-term growth pattern, school zone math, and resale profile — and we can walk you through exactly what that means for your budget and timeline.",
+      },
+    ],
+    nearby: ['fairview', 'franklin', 'spring-hill', 'nolensville'],
+  },
+  {
+    slug: 'bordeaux',
+    name: 'Bordeaux',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37207', '37208'],
+    tier: 1,
+    tagline: 'North Nashville value, with serious new-construction activity.',
+    distanceFromNashville: '~10 min to downtown Nashville',
+    lat: 36.1912,
+    lng: -86.8311,
+    metaDescription:
+      'Bordeaux and Brick Church Pike homes for sale and neighborhood guide. North Nashville value, heavy new construction, and House Haven Realty market intel.',
+    content: [
+      {
+        heading: 'What it feels like to live in Bordeaux',
+        body: 'Bordeaux is the North Nashville neighborhood most buyers stumble onto when they realize the downtown core has priced them out. It sits just across the Cumberland River from MetroCenter, close enough to downtown that you can see the skyline, and it has become one of the most active new-construction pockets inside the I-440 loop. Older streets still feel residential and quiet; newer infill blocks are being redrawn house by house.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Bordeaux is minutes from Exit 86 on I-65, with downtown Nashville about 10 minutes away, Germantown and MetroCenter about 5, and BNA airport roughly 20. The commuter math here is hard to beat — most Bordeaux residents reach downtown faster than neighbors in Franklin or Hendersonville.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Bordeaux has two markets running at once. Older single-family homes and duplexes from the 1950s-1970s still trade in the low-to-mid $300s, especially closer to Clarksville Pike. Modern tall-and-skinny new builds and detached townhomes on Brick Church Pike and Buena Vista have pushed newer construction into the high $400s to $600s. Investor activity is meaningful — we see many buyers holding one unit of a two-on-a-lot build as a primary and renting the other.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Bordeaux is served by Metro Nashville Public Schools, with families also accessing MNPS choice schools and nearby magnet options. School zones here have shifted with recent boundary updates, so verify current zoning with MNPS before committing to an address.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Hartman Park, Watkins Park, and the Cumberland River greenway system all connect through this part of North Nashville. Bells Bend and Beaman Park are a short drive northwest for hiking and paddling, and downtown attractions are always close enough to feel spontaneous rather than planned.',
+      },
+      {
+        heading: 'Why House Haven knows Bordeaux',
+        body: 'We have walked Bordeaux block by block with first-time buyers, investor buyers, and families moving into new construction. We can tell you which streets are appreciating, where the infill is adding value, and where an older home is worth more to a flipper than to you.',
+      },
+    ],
+    nearby: ['whites-creek', 'madison', 'inglewood', 'joelton'],
+  },
+  {
+    slug: 'whites-creek',
+    name: 'Whites Creek',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37189'],
+    tier: 1,
+    tagline: 'Rural Davidson County acreage, still inside the city limits.',
+    distanceFromNashville: '~20 min to downtown Nashville',
+    lat: 36.2798,
+    lng: -86.8392,
+    metaDescription:
+      'Whites Creek, TN real estate and neighborhood guide. Rural Davidson County acreage, Beaman Park access, and affordable prices — minutes from Nashville.',
+    content: [
+      {
+        heading: 'What it feels like to live in Whites Creek',
+        body: 'Whites Creek is one of the last corners of Davidson County where you can still buy acreage, keep a horse, and commute to downtown Nashville in under half an hour. It is technically inside the city limits, which means Metro services apply, but the feel is decidedly rural — narrow two-lane roads, tree lines instead of fences, and long gravel driveways leading to brick ranches or custom farmhouse builds.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Whites Creek Pike (Highway 431) is the main artery, running directly into downtown Nashville in about 20 minutes off-peak. I-24 access at Exit 42 is a few minutes north. For healthcare workers, TriStar Skyline is just south of the neighborhood; Vanderbilt is about 25 minutes downtown.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Whites Creek has a broad housing stock: older ranches on small-to-mid lots near the historic district, bigger homes on 3-10 acre parcels on Old Hickory Boulevard and Knight Road, and periodic new custom builds on larger acreage. Entry-level single-family homes run mid-$300s, with acreage properties and newer custom builds stretching into the $800s and above.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Whites Creek is served by Metro Nashville Public Schools, including Whites Creek High School. Several private and charter options in nearby Madison and Goodlettsville are within reach for families who want alternatives. Confirm zones directly with MNPS before making an offer.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: "Beaman Park is the crown jewel — 1,700 acres of old-growth forest, hiking trails, and the Henry Hollow Loop less than five minutes from most Whites Creek homes. The neighborhood also has quick access to the Cumberland River, Marrowbone Lake, and Bells Bend Outdoor Center.",
+      },
+      {
+        heading: 'Why House Haven knows Whites Creek',
+        body: 'We have closed homes in Whites Creek on city water and on well, on septic and on sewer, and on lots big enough to need a brush hog. We know the inspection issues to watch for here and which streets hold their value best over time.',
+      },
+    ],
+    nearby: ['joelton', 'bordeaux', 'madison'],
+  },
+  {
+    slug: 'madison',
+    name: 'Madison',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37115'],
+    tier: 1,
+    tagline: 'The North Nashville suburb everyone is watching.',
+    distanceFromNashville: '~15 min to downtown Nashville',
+    lat: 36.2565,
+    lng: -86.7133,
+    metaDescription:
+      'Madison, TN homes for sale and neighborhood guide. Gallatin Pike growth, new retail, and strong commuter access to downtown Nashville from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Madison',
+        body: 'Madison is the North Nashville suburb that spent a decade being overlooked and is now one of the most closely watched corners of Davidson County. Gallatin Pike — the neighborhood&rsquo;s main drag — is in the middle of a real revitalization: new restaurants, a growing music venue scene, and commercial investment that hasn&rsquo;t quite reached the East Nashville price point yet.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Madison sits between Exit 90 and Exit 92 on I-65, about 15 minutes from downtown Nashville. Briley Parkway makes it easy to reach BNA, Opry Mills, and the Donelson/Hermitage corridor. Nashville General Hospital, TriStar Skyline, and Vanderbilt are all within 20 minutes.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Madison&rsquo;s housing stock is a mix of mid-century ranches, postwar bungalows, and newer infill construction. Entry-level homes still run in the mid-to-high $300s, which is rare for anything inside the I-440 loop equivalent. Newer builds and heavily renovated homes trend into the $500s, and small multi-family investment opportunities are active.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Madison is served by Metro Nashville Public Schools with MNPS choice zone access. Private and magnet options are within reach. Buyers should confirm zoning with the district before committing to an address.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Cedar Hill Park, Peeler Park along the Cumberland, and the Stones River greenway all anchor Madison&rsquo;s outdoor life. The neighborhood also benefits from quick access to Opryland, the Cumberland River, and the broader Music Valley entertainment district.',
+      },
+      {
+        heading: 'Why House Haven knows Madison',
+        body: 'Madison is one of our most active markets for buyers who want a real neighborhood inside the city, not a subdivision pretending to be one. We have helped clients navigate older homes with foundation questions, newer infill with HOA details, and small multi-family buildings that make good first-investment properties.',
+      },
+    ],
+    nearby: ['inglewood', 'bordeaux', 'donelson', 'whites-creek'],
+  },
+  {
+    slug: 'pegram',
+    name: 'Pegram',
+    county: 'Cheatham',
+    state: 'TN',
+    zips: ['37143'],
+    tier: 1,
+    tagline: 'Tiny Harpeth River town, minutes from West Nashville.',
+    distanceFromNashville: '~25 min to downtown Nashville',
+    lat: 36.1045,
+    lng: -87.0495,
+    metaDescription:
+      'Pegram, TN real estate and lifestyle guide. A small Harpeth River town in Cheatham County, 25 minutes from Nashville, with a mix of rural charm and commuter convenience.',
+    content: [
+      {
+        heading: 'What it feels like to live in Pegram',
+        body: 'Pegram is a small Cheatham County town perched along the Harpeth River, and for years it was the quiet-kept secret of Nashville commuters who wanted something more rural than Bellevue and more affordable than Ashland City. A few stoplights, a longtime general store, a volunteer fire department — and homes tucked along ridges and bottomland that feel hours from the city, even though downtown Nashville is less than half an hour away.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Pegram sits at Exit 188 on I-40, about 25 minutes west of downtown Nashville off-peak. The Nations and West Nashville are about 15 minutes away, making it one of the shorter "rural-feel" commutes in Middle Tennessee. The small downtown hub of Kingston Springs is just a few miles west.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Pegram homes range from cottage-style single-family on small lots near town to custom homes on several acres along the river and the ridgelines. Entry-level single family typically starts in the high $300s, with acreage and custom builds reaching well above $700k. Inventory is usually thin, so buyers should be ready to move when the right home lists.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Pegram is served by Cheatham County Schools. Specific zones depend on address and can change — verify with the district before committing.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'The Harpeth River defines Pegram&rsquo;s outdoor life — canoeing, kayaking, and fishing right out your back door. Harpeth River State Park is a short drive and Montgomery Bell State Park&rsquo;s trails are within 20 minutes. Many Pegram buyers are specifically chasing that outdoor access.',
+      },
+      {
+        heading: 'Why House Haven knows Pegram',
+        body: 'We have handled Pegram deals ranging from starter homes with simple inspections to ridge-top builds that needed well-and-septic scrutiny and flood-zone review. We know which parts of town flood, which do not, and how to read a Harpeth River property report.',
+      },
+    ],
+    nearby: ['kingston-springs', 'ashland-city', 'fairview'],
+  },
+  {
+    slug: 'kingston-springs',
+    name: 'Kingston Springs',
+    county: 'Cheatham',
+    state: 'TN',
+    zips: ['37082'],
+    tier: 1,
+    tagline: 'Small-town character, big-time commuter value.',
+    distanceFromNashville: '~25 min to downtown Nashville',
+    lat: 36.0984,
+    lng: -87.1119,
+    metaDescription:
+      'Kingston Springs, TN homes for sale and community guide. Harpeth River access, small-town charm, and a 25-minute commute to Nashville — from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Kingston Springs',
+        body: 'Kingston Springs is the Cheatham County town that sold a generation of Nashville commuters on the idea that you can have a real small-town mailing address and still be at your downtown desk in under half an hour. The downtown area is compact, the river is always nearby, and the community calendar fills up fast around the annual July 4th fireworks and summer events at the city park.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Kingston Springs sits at Exit 188 and Exit 192 on I-40, with downtown Nashville about 25 minutes east. West Nashville, The Nations, and Sylvan Park are all about 15 minutes away. For families with one commuter and one flexible work schedule, Kingston Springs is one of the easiest compromises in Middle Tennessee.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Kingston Springs has a surprisingly wide price range: cottages on small in-town lots starting in the low $400s, subdivision homes in the $500s-$600s, and custom builds on acreage stretching past $1M. Most housing stock is single-family — condos and townhomes are rare here.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Kingston Springs is served by Cheatham County Schools. Families should confirm attendance zones with the district before making a decision, and several Christian and co-op options operate nearby.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Harpeth River State Park, Montgomery Bell State Park, and the Narrows of the Harpeth are all within a short drive. Burns Park and downtown Kingston Springs host events year-round, and river access means summers revolve around tubing, kayaking, and fishing.',
+      },
+      {
+        heading: 'Why House Haven knows Kingston Springs',
+        body: 'We have represented buyers moving to Kingston Springs from Bellevue, Franklin, and out-of-state relocations. We know the subdivisions that hold their value, the older properties worth restoring, and the rural parcels where inspection details really matter.',
+      },
+    ],
+    nearby: ['pegram', 'ashland-city', 'fairview', 'burns'],
+  },
+  {
+    slug: 'white-house',
+    name: 'White House',
+    county: 'Robertson',
+    state: 'TN',
+    zips: ['37188'],
+    tier: 1,
+    tagline: 'Straddling Robertson and Sumner, growing every year.',
+    distanceFromNashville: '~30 min to downtown Nashville',
+    lat: 36.4672,
+    lng: -86.6525,
+    metaDescription:
+      'White House, TN real estate and neighborhood guide. A fast-growing suburb on the Robertson-Sumner line with strong commuter access to Nashville — from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in White House',
+        body: 'White House is the suburb that literally straddles two counties — part of the city sits in Robertson and part in Sumner — and that dual identity is part of the charm. It has grown steadily for the last decade as Nashville commuters pushed north on I-65 looking for more house, more yard, and a smaller-town feel than Goodlettsville or Hendersonville.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'White House sits at Exit 108 on I-65, about 30 minutes north of downtown Nashville. Commuters reach MetroCenter and Germantown in roughly 35 minutes. The north end of the city touches Portland and Orlinda; the south side is close to Goodlettsville retail.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'White House has become one of the more active new-construction markets in the I-65 north corridor, with subdivisions on both sides of the highway adding inventory in the high $300s to high $500s. Older resale homes in established neighborhoods can be found lower, and acreage parcels at the outer edges of town go higher.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Because White House straddles the county line, students attend either Robertson County Schools or Sumner County Schools depending on the side of the line their home sits on. This is one of the few places in Middle Tennessee where asking which side of the street matters is a serious question — always confirm the school district assignment before you buy.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Municipal Park and the White House Greenway anchor outdoor life in town. Drakes Creek, Cross Plains, and the surrounding rural Robertson County countryside provide quick access to state-park-quality outdoor experiences for weekend trips.',
+      },
+      {
+        heading: 'Why House Haven knows White House',
+        body: 'We have handled both Robertson-side and Sumner-side closings in White House and can talk you through the school-district math, which subdivisions have active HOAs, and which builders have been delivering the best product.',
+      },
+    ],
+    nearby: ['springfield', 'greenbrier', 'coopertown'],
+  },
+  {
+    slug: 'coopertown',
+    name: 'Coopertown',
+    county: 'Robertson',
+    state: 'TN',
+    zips: ['37047'],
+    tier: 1,
+    tagline: 'Small and rural, big on acreage.',
+    distanceFromNashville: '~30 min to downtown Nashville',
+    lat: 36.3931,
+    lng: -86.9525,
+    metaDescription:
+      'Coopertown, TN homes and real estate guide. A small rural Robertson County town with acreage, privacy, and easy I-24 access — from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Coopertown',
+        body: 'Coopertown is the Robertson County town you drive through if you take Highway 49 from Springfield to Ashland City — and that is part of its appeal. Small, rural, and thoroughly uncrowded, it attracts buyers who want land, privacy, and a mailing address that does not show up on most Nashville relocation guides.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Coopertown sits between I-24 (Exit 24) and I-65 (Exit 108), giving it flexible access in either direction. Downtown Nashville is about 30 minutes on a good day; Ascension Saint Thomas Midtown and Vanderbilt are within 30-35 minutes.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Coopertown&rsquo;s housing stock is dominated by single-family homes on larger lots, with plenty of options for buyers who want 2 to 10 acres. Entry-level homes start in the low $300s, with acreage properties and newer custom builds stretching into the $600s and beyond.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Coopertown is served by Robertson County Schools. Zones can change — confirm current attendance zones with the district.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Coopertown itself is small, but residents quickly access Port Royal State Park, Dunbar Cave State Park in Clarksville, and the Cumberland River. Most weekends in Coopertown revolve around being outside, not being in traffic.',
+      },
+      {
+        heading: 'Why House Haven knows Coopertown',
+        body: 'We have closed rural Robertson County homes with every kind of quirk — septic systems, private wells, shared driveways, agricultural-use tax transitions. Coopertown is exactly the kind of market where having an agent who has seen those deals before pays for itself.',
+      },
+    ],
+    nearby: ['springfield', 'greenbrier', 'white-house'],
+  },
+  {
+    slug: 'dickson',
+    name: 'Dickson',
+    county: 'Dickson',
+    state: 'TN',
+    zips: ['37055'],
+    tier: 1,
+    tagline: 'Big enough to have everything, small enough to know your neighbors.',
+    distanceFromNashville: '~45 min to downtown Nashville',
+    lat: 36.0770,
+    lng: -87.3878,
+    metaDescription:
+      'Dickson, TN homes and community guide. A growing Middle Tennessee city 45 minutes from Nashville with affordable prices and strong local amenities — from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Dickson',
+        body: 'Dickson is the largest city in Dickson County and one of the more complete small cities in Middle Tennessee — hospital, retail, restaurants, parks, and neighborhoods for every budget. It sits far enough west to feel distinctly separate from Nashville, but close enough that a one-way commute is still a real option for households who need it.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Dickson sits at Exit 172 on I-40, about 45 minutes west of downtown Nashville in off-peak traffic. TriStar Horizon Medical Center is right in town, and many Dickson residents do not commute at all. For those who do, The Nations and West Nashville are typically a 35-minute drive.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Dickson offers one of the widest price ranges in the region: entry-level single-family homes in the $200s, modern subdivisions in the $300s and $400s, and custom-built homes on acreage reaching higher. The price-per-square-foot value is hard to match inside Metro Nashville.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Dickson is served by Dickson County Schools. Zones should be confirmed with the district directly, and several private and church-based options operate in the area.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Dickson&rsquo;s city park system is robust, and Montgomery Bell State Park — one of the best state parks in Middle Tennessee — is just minutes east of town with trails, cabins, a lake, and a golf course.',
+      },
+      {
+        heading: 'Why House Haven knows Dickson',
+        body: 'We have helped clients who were priced out of Williamson County find more home in Dickson than they ever expected, and we have walked Dickson sellers through listings that went under contract in days. Our local knowledge covers both the in-town neighborhoods and the outlying acreage parcels.',
+      },
+    ],
+    nearby: ['burns', 'charlotte', 'fairview'],
+  },
+  {
+    slug: 'burns',
+    name: 'Burns',
+    county: 'Dickson',
+    state: 'TN',
+    zips: ['37029'],
+    tier: 1,
+    tagline: 'Rural Dickson County, surrounded by state park land.',
+    distanceFromNashville: '~40 min to downtown Nashville',
+    lat: 36.0467,
+    lng: -87.3083,
+    metaDescription:
+      'Burns, TN real estate and neighborhood guide. A small rural Dickson County community bordering Montgomery Bell State Park, close to Nashville — from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Burns',
+        body: 'Burns is a small rural community tucked against Montgomery Bell State Park — and that proximity defines daily life there. The town itself is quiet, the roads narrow and wooded, and most properties feel more like weekend retreats than suburban commutes. For buyers who prioritize land, privacy, and outdoor access, Burns is a genuine under-the-radar option.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Burns sits along Highway 96 just off I-40, with downtown Nashville about 40 minutes east. White Bluff, Dickson, and Fairview are all close neighbors. Commuters who work downtown a few days a week tend to make Burns work better than a daily grind.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Burns is dominated by single-family homes on larger lots and acreage parcels. Entry-level prices start in the mid $300s, and acreage properties with newer builds can stretch well above $700k depending on land and finishes.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Burns is served by Dickson County Schools. Buyers should verify current attendance zones with the district.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Montgomery Bell State Park is the headliner — nearly 4,000 acres of trails, lakes, and cabins directly adjacent to Burns. Harpeth River access and Narrows of the Harpeth are a short drive northeast.',
+      },
+      {
+        heading: 'Why House Haven knows Burns',
+        body: 'Rural Dickson County real estate lives and dies on inspections: wells, septic, road maintenance agreements, and easements. We have closed enough deals out here to know what to look for and what to walk away from.',
+      },
+    ],
+    nearby: ['dickson', 'charlotte', 'kingston-springs'],
+  },
+  {
+    slug: 'charlotte',
+    name: 'Charlotte',
+    county: 'Dickson',
+    state: 'TN',
+    zips: ['37036'],
+    tier: 1,
+    tagline: 'Dickson County&rsquo;s historic seat, quiet and affordable.',
+    distanceFromNashville: '~50 min to downtown Nashville',
+    lat: 36.1789,
+    lng: -87.3411,
+    metaDescription:
+      'Charlotte, TN real estate and community guide. The historic seat of Dickson County with affordable homes and small-town character — from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Charlotte',
+        body: 'Charlotte is the original county seat of Dickson County — older than much of Middle Tennessee — and its historic courthouse square still anchors the town. Life here runs on a slower clock than the Nashville metro. Neighbors know each other. Bigger shopping happens a short drive east in Dickson proper.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Charlotte is about 10 minutes north of Dickson off Highway 48. Downtown Nashville is roughly 50 minutes away, which makes Charlotte less of a daily-commuter option and more of a home base for remote workers, local employees, and retirees.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Charlotte has a mix of historic homes near the square, mid-century ranches, and acreage parcels in the surrounding countryside. Entry-level homes can still be found in the $200s, with newer builds in the $300s and $400s and larger acreage properties going higher.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Charlotte is served by Dickson County Schools. Confirm attendance zones with the district before making a decision.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'The surrounding Dickson County countryside offers access to Montgomery Bell State Park, the Harpeth River, and miles of rural riding and hiking. Downtown Charlotte itself is walkable in the best small-town sense.',
+      },
+      {
+        heading: 'Why House Haven knows Charlotte',
+        body: 'Charlotte is the kind of market where patience and local knowledge win. We help buyers evaluate older homes honestly — what is charming character versus what is a major renovation project — and price sellers so their home sells in a reasonable window rather than sitting for months.',
+      },
+    ],
+    nearby: ['dickson', 'burns'],
+  },
+  {
+    slug: 'fairview',
+    name: 'Fairview',
+    county: 'Williamson',
+    state: 'TN',
+    zips: ['37062'],
+    tier: 1,
+    tagline: 'Williamson County, minus the Franklin price tag.',
+    distanceFromNashville: '~35 min to downtown Nashville',
+    lat: 35.9822,
+    lng: -87.1306,
+    metaDescription:
+      'Fairview, TN real estate and community guide. Western Williamson County with strong schools, forest trails, and real value compared to Franklin and Brentwood.',
+    content: [
+      {
+        heading: 'What it feels like to live in Fairview',
+        body: 'Fairview is the western edge of Williamson County — and for buyers who love the idea of Williamson County schools but not the price tag of Franklin or Brentwood, it is often the answer. Bowie Nature Park sits in the middle of town, giving Fairview an outdoor-first character that is unusual for suburban Tennessee. The downtown area is small and functional; most new growth is happening in subdivisions along Highway 100.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Fairview is reached via Highway 100 or I-840. Downtown Nashville is about 35 minutes east via 100, and Bellevue is about 20 minutes. Franklin is a 25-minute drive for buyers who want to keep shopping and dining options close.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Fairview offers a range from older farmhouse-style homes on several acres to newer subdivision builds. Entry-level single-family starts in the high $400s, with newer subdivisions running into the $600s and $700s and larger acreage properties reaching $1M+.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Fairview is served by Williamson County Schools, consistently rated among the strongest public districts in Tennessee. Attendance zones can shift as new schools come online — always confirm zones with the district before committing.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Bowie Nature Park is the headliner — 722 acres of trails, fishing lakes, and nature programs right in the middle of town. Montgomery Bell State Park and the Natchez Trace Parkway are both within a 20-minute drive.',
+      },
+      {
+        heading: 'Why House Haven knows Fairview',
+        body: 'We help Williamson County buyers regularly compare Fairview against Franklin, Thompsons Station, and Bellevue. Each of those markets has different commute and price math, and we can walk you through the tradeoffs with real closed-deal context.',
+      },
+    ],
+    nearby: ['thompsons-station', 'kingston-springs', 'burns'],
+  },
+  {
+    slug: 'watertown',
+    name: 'Watertown',
+    county: 'Wilson',
+    state: 'TN',
+    zips: ['37184'],
+    tier: 1,
+    tagline: 'The small Wilson County town with a postcard-perfect square.',
+    distanceFromNashville: '~45 min to downtown Nashville',
+    lat: 36.0972,
+    lng: -86.1361,
+    metaDescription:
+      'Watertown, TN real estate and community guide. A historic Wilson County town with a classic downtown square and affordable homes — from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Watertown',
+        body: 'Watertown is the Wilson County town people rediscover every time they drive its historic square. Antique shops, a restored train depot, and a town-wide calendar of festivals give Watertown a character that bigger Middle Tennessee suburbs simply cannot replicate. Life here moves at a pace that feels intentional rather than slow.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Watertown sits along I-40 at Exit 232, about 45 minutes east of downtown Nashville. Lebanon is about 15 minutes west, and Mount Juliet is 25 minutes closer to Nashville for buyers who commute a few days a week.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Watertown has a mix of historic homes near the square, newer subdivision builds, and rural acreage properties on the surrounding county roads. Entry-level homes start in the high $200s to low $300s, with newer construction in the $400s and acreage properties going higher.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Watertown is served by Wilson County Schools, including the Watertown High School campus right in town. Buyers should verify zones with the district.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Watertown&rsquo;s square is the social center, but Cedars of Lebanon State Park is a short drive away and offers hiking, camping, and a spring-fed pool. The town hosts regular festivals and the Tennessee Central Railway Museum&rsquo;s excursion trains.',
+      },
+      {
+        heading: 'Why House Haven knows Watertown',
+        body: 'Wilson County real estate moves on relationships and market timing. We know which Watertown streets hold the best resale value, which subdivisions are well-run, and where a rural acreage property is really worth the extra commute.',
+      },
+    ],
+    nearby: ['lebanon'],
+  },
+  {
+    slug: 'lebanon',
+    name: 'Lebanon',
+    county: 'Wilson',
+    state: 'TN',
+    zips: ['37087'],
+    tier: 1,
+    tagline: 'Wilson County&rsquo;s growth engine on the I-40 corridor.',
+    distanceFromNashville: '~35 min to downtown Nashville',
+    lat: 36.2081,
+    lng: -86.2911,
+    metaDescription:
+      'Lebanon, TN real estate and market guide. A fast-growing Wilson County city on the I-40 corridor with strong commuter access to Nashville — from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Lebanon',
+        body: 'Lebanon is the Wilson County seat and one of the most active growth markets in Middle Tennessee. Historic downtown blocks sit next to modern retail on South Hartmann, and the neighborhoods around them range from century-old craftsman homes to brand-new subdivisions. Cumberland University anchors the education scene and adds a real college-town dimension to daily life.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Lebanon sits on I-40 at Exit 238, about 35 minutes east of downtown Nashville. Mount Juliet is 15 minutes west, and BNA airport is about 25 minutes away. Many Lebanon residents work locally — Tractor Supply&rsquo;s headquarters and Cumberland University are both major employers.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Lebanon has one of the widest housing ranges in Wilson County: historic homes near the square, mid-century ranches, active new construction subdivisions along Highway 109, and acreage properties in the outlying countryside. Entry-level single family starts in the $300s, with newer subdivisions in the $400s and $500s.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Lebanon is served by Lebanon Special School District (K-8) and Wilson County Schools (9-12). This split is unusual for the area and important to understand before you buy — verify zones for your specific address.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Cedars of Lebanon State Park offers over 9,000 acres of hiking, camping, and a spring-fed pool just south of town. Don Fox Park and Timberlake Nature Park handle everyday outdoor needs inside the city.',
+      },
+      {
+        heading: 'Why House Haven knows Lebanon',
+        body: 'Lebanon closings often hinge on the same questions: which side of town, which school district, and how to price against fast-moving new construction inventory. We help buyers and sellers navigate all three with real comparative data.',
+      },
+    ],
+    nearby: ['watertown'],
+  },
+  {
+    slug: 'inglewood',
+    name: 'Inglewood',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37216'],
+    tier: 1,
+    tagline: 'East Nashville&rsquo;s quieter, more affordable neighbor.',
+    distanceFromNashville: '~10 min to downtown Nashville',
+    lat: 36.2146,
+    lng: -86.7275,
+    metaDescription:
+      'Inglewood, TN (37216) real estate and neighborhood guide. East Nashville&rsquo;s more affordable neighbor, with character and strong commuter access — from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Inglewood',
+        body: 'Inglewood is East Nashville&rsquo;s quieter, more residential neighbor. It has the same mid-century brick cottages and bungalows, many of the same tree-lined streets, and a slower vibe that appeals to buyers who love the East Nashville character but want more yard, less bar noise, and a better price per square foot. Riverside Village anchors the walkable part of the neighborhood.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Inglewood is minutes from Briley Parkway and I-65, with downtown Nashville about 10 minutes away. BNA airport is roughly 15 minutes. For commuters, the combination of proximity and lower entry prices is one of the strongest value plays inside Davidson County.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Inglewood&rsquo;s housing stock is dominated by brick cottages, ranches, and bungalows from the 1940s-1960s, many sitting on generous lots. Entry-level homes run in the mid-to-high $400s, with renovated properties and infill new construction in the $600s and above. Compared to Five Points or Lockeland Springs, Inglewood still offers meaningful savings.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Inglewood is served by Metro Nashville Public Schools with MNPS choice access. Confirm current zones directly with the district before committing.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Shelby Park, Shelby Bottoms Greenway, and the Cumberland River are all within minutes. Riverside Village anchors a small but growing walkable commercial strip with coffee, restaurants, and independent shops.',
+      },
+      {
+        heading: 'Why House Haven knows Inglewood',
+        body: 'Inglewood closings require knowing the foundations, the lot grading, and which streets are seeing the best appreciation. We have closed enough homes here to tell you exactly which questions to ask at an inspection.',
+      },
+    ],
+    nearby: ['madison', 'donelson', 'bordeaux'],
+  },
+  {
+    slug: 'donelson',
+    name: 'Donelson',
+    county: 'Davidson',
+    state: 'TN',
+    zips: ['37214'],
+    tier: 1,
+    tagline: 'The Davidson County neighborhood closest to BNA.',
+    distanceFromNashville: '~15 min to downtown Nashville',
+    lat: 36.1722,
+    lng: -86.6706,
+    metaDescription:
+      'Donelson, TN (37214) homes for sale and neighborhood guide. Davidson County living next to BNA airport and Percy Priest Lake — from House Haven Realty.',
+    content: [
+      {
+        heading: 'What it feels like to live in Donelson',
+        body: 'Donelson is the Davidson County neighborhood that spent decades being defined by its proximity to the airport and is now being redefined by new coffee shops, townhome development, and the transformation of the old Donelson Plaza into mixed-use space. It feels established but is visibly evolving, which is part of why both buyers and investors have been paying closer attention.',
+      },
+      {
+        heading: 'Location and commute',
+        body: 'Donelson sits on the east side of Davidson County along I-40, with downtown Nashville about 15 minutes west. BNA airport is essentially next door, which matters enormously for frequent travelers. Percy Priest Lake is a five-minute drive south.',
+      },
+      {
+        heading: 'Housing stock and price range',
+        body: 'Donelson has a mix of mid-century brick ranches, postwar bungalows, new infill single-family homes, and a growing number of detached townhomes. Entry-level homes run in the mid $400s; renovated and new construction typically sit in the $500s-$700s.',
+      },
+      {
+        heading: 'Schools',
+        body: 'Donelson is served by Metro Nashville Public Schools including Donelson Christian Academy as a private option. Verify public school zones with MNPS.',
+      },
+      {
+        heading: 'Parks and outdoor life',
+        body: 'Two Rivers Park, Percy Priest Lake, Hermitage Golf Course, and the Stones River Greenway are all within minutes. For outdoor-first households who also need a quick commute, Donelson is one of the best setups in the city.',
+      },
+      {
+        heading: 'Why House Haven knows Donelson',
+        body: 'We have helped Donelson buyers understand flight-path noise, Percy Priest Lake flood considerations, and which infill townhomes have been delivering real value versus rushed product. That local context is the difference between a good purchase and a regretted one.',
+      },
+    ],
+    nearby: ['inglewood', 'madison'],
+  },
+]
+
+export const communityBySlug = Object.fromEntries(
+  communities.map((c) => [c.slug, c]),
+)

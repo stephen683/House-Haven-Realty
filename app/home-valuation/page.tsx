@@ -1,13 +1,58 @@
+import type { Metadata } from 'next'
+import ValuationForm from '@/components/forms/ValuationForm'
+
+export const metadata: Metadata = {
+  title: "What's My Home Worth? Free Nashville Home Valuation",
+  description:
+    "Get a free, no-obligation Comparative Market Analysis of your Nashville or Middle Tennessee home. Real numbers from House Haven Realty — not just an automated Zestimate.",
+}
+
 export default function HomeValuationPage() {
   return (
-    <main>
-      <section className="min-h-screen flex items-center justify-center bg-househaven-surface">
-        <div className="text-center px-4">
-          <h1 className="text-5xl md:text-7xl font-serif text-househaven-navy mb-4">
+    <main className="bg-white">
+      <section className="bg-househaven-surface py-20 lg:py-28">
+        <div className="max-w-4xl mx-auto px-4 lg:px-6 text-center">
+          <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
             Home Valuation
+          </p>
+          <h1 className="font-serif text-5xl lg:text-6xl text-househaven-navy mt-3 leading-[1.05]">
+            What&rsquo;s your Nashville
+            <br />
+            home actually worth?
           </h1>
-          <p className="text-xl text-househaven-text-muted">
-            Coming soon
+          <p className="mt-6 max-w-2xl mx-auto text-lg text-househaven-text-muted">
+            Tell us about your property and we&rsquo;ll send you a free Comparative Market
+            Analysis (CMA) prepared by a licensed REALTOR® — based on the actual homes
+            that just sold in your neighborhood.
+          </p>
+
+          <ul className="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm text-househaven-text-muted">
+            <li>✓ 219+ closed sales</li>
+            <li>✓ Licensed since 2016</li>
+            <li>✓ No obligation, no spam</li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="max-w-3xl mx-auto px-4 lg:px-6 py-16 lg:py-20">
+        <div className="rounded-3xl border border-black/5 bg-white p-6 lg:p-10 shadow-sm">
+          <h2 className="font-serif text-3xl text-househaven-navy">
+            Request your free CMA
+          </h2>
+          <p className="text-sm text-househaven-text-muted mt-2 mb-8">
+            We read every request personally. Expect a reply within one business day.
+          </p>
+          <ValuationForm />
+        </div>
+
+        <div className="mt-10 rounded-2xl border border-househaven-accent/30 bg-househaven-surface p-6 text-sm text-househaven-text-muted leading-relaxed">
+          <p>
+            <strong className="text-househaven-navy">A note on automated estimates.</strong>{' '}
+            Online value tools (Zestimate, Redfin, etc.) are based on public records and
+            broad averages. They are not appraisals and should not be used as such. For an
+            accurate assessment of your home&rsquo;s market value, our team will prepare a
+            free, no-obligation Comparative Market Analysis based on real, recent sales in
+            your specific neighborhood.
           </p>
         </div>
       </section>

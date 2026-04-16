@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { DM_Sans, Playfair_Display } from 'next/font/google'
 import './globals.css'
 import SiteFooter from '@/components/compliance/SiteFooter'
+import Header from '@/components/layout/Header'
+import OrganizationJsonLd from '@/components/seo/OrganizationJsonLd'
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
@@ -38,8 +40,16 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${dmSans.variable} ${playfair.variable}`}>
       <body className="font-sans bg-white text-househaven-text antialiased">
-        {children}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:rounded-md focus:bg-househaven-navy focus:text-white"
+        >
+          Skip to content
+        </a>
+        <Header />
+        <div id="main-content">{children}</div>
         <SiteFooter />
+        <OrganizationJsonLd />
       </body>
     </html>
   )
