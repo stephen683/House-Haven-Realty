@@ -145,7 +145,7 @@ This document is kept in sync as Claude Code builds. Check it at the start of ev
 - [x] 22 Tier 2 communities shipped: Hendersonville, Gallatin, Goodlettsville, Portland, Hermitage, Antioch, Bellevue, Old Hickory, Murfreesboro, Smyrna, La Vergne, Franklin, Brentwood, Nolensville, Spring Hill, Mt. Juliet, Pleasant View, Cross Plains, Orlinda, Millersville, White Bluff
 
 ### Tier 3 (build last)
-- [ ] 20 Nashville core neighborhoods (see ROADMAP §7)
+- [x] 15 Nashville core neighborhoods: East Nashville, Germantown, The Gulch, 12 South, Sylvan Park, Green Hills, Berry Hill, Melrose, Wedgewood-Houston, Edgehill/Music Row, Hillsboro Village, West End/Midtown, Salemtown, The Nations, Lockeland Springs — **All 57 community pages live across 3 tiers.**
 
 ## Phase 6 — New Construction Permit Map (Flagship)
 
@@ -159,7 +159,7 @@ This document is kept in sync as Claude Code builds. Check it at the start of ev
 - [x] `MapFilters.tsx` — filter panel (date range, cost min/max, ZIP code)
 - [x] `PermitDetailPanel.tsx` — click detail with permit info + lead-capture CTA
 - [x] Full-page map layout with compact header, toolbar, responsive detail panel
-- [ ] `building_permits` table migration for historical caching
+- [x] `building_permits` table migration for historical caching (Supabase migration 002)
 - [ ] Daily Vercel Cron → upsert into Supabase (decouple from live API failures)
 - [ ] Permit alert email signup form (currently generic Contact CTA)
 - [ ] Surrounding counties (Sumner/Robertson/etc.) — research + add feeds
@@ -186,7 +186,7 @@ This document is kept in sync as Claude Code builds. Check it at the start of ev
 - [x] `/sellers` — 8-step selling process, staging checklist, CMA CTA
 - [x] Mortgage calculator widget on `/buyers#mortgage-calculator` — `components/buyers/MortgageCalculator.tsx` (client, live PITI math, editable price/down/rate/term/tax/insurance)
 - [x] `/property-management` — Door Collectors handoff page
-- [ ] Moving checklist accordion on /buyers
+- [x] Moving checklist accordion on /buyers — `MovingChecklist.tsx` (5-phase accordion with checkbox UI)
 
 ## Phase 9 — Reviews & Social Proof
 
@@ -208,18 +208,18 @@ This document is kept in sync as Claude Code builds. Check it at the start of ev
 - [x] Article schema on blog posts (`/blog/[slug]` — headline, author, publisher, datePublished, dateModified, mainEntityOfPage)
 - [x] OpenGraph article metadata on blog posts
 - [ ] RealEstateListing + BreadcrumbList on listings (blocked on Phase 3 IDX)
-- [ ] Full Breadcrumb component (currently inline on communities + blog)
+- [x] Full Breadcrumb component (`components/ui/Breadcrumbs.tsx`) with BreadcrumbList JSON-LD — used on community + blog pages
 - [ ] Image optimization audit (WebP + responsive) — pending local-hosted headshots
 
 ## Phase 11 — Lead Capture, CRM, Analytics
 
-- [ ] `leads` table migration (unified lead funnel)
-- [ ] All forms → unified lead pipeline
+- [x] `leads` table migration (unified lead funnel) — Supabase migration 002
+- [x] Contact + Valuation forms → unified leads pipeline with TCPA consent tracking
 - [ ] Resend — confirmation email to lead + notification to Stephen
 - [ ] HubSpot API push (fallback to Supabase if API fails)
 - [ ] GA4 via `next/script`
 - [ ] Custom events: form_submission, property_search, listing_view, valuation_request, community_page_view, permit_map_interaction, phone_click
-- [ ] Vercel Web Analytics
+- [x] Vercel Web Analytics + Speed Insights (added to root layout)
 
 ## Phase 12 — QA, Perf, A11y, Launch
 
