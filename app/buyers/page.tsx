@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import MortgageCalculator from '@/components/buyers/MortgageCalculator'
+import MovingChecklist from '@/components/buyers/MovingChecklist'
 
 export const metadata: Metadata = {
   title: 'Buying a Home in Nashville — The House Haven Process',
@@ -119,6 +120,11 @@ export default function BuyersPage() {
             Start a conversation
           </Link>
         </div>
+      </section>
+
+      {/* Moving checklist */}
+      <section className="max-w-4xl mx-auto px-4 lg:px-6 py-16 lg:py-20">
+        <MovingChecklist />
       </section>
 
       <section

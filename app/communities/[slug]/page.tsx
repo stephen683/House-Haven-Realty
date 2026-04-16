@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { communities, communityBySlug } from '@/data/communities'
+import Breadcrumbs from '@/components/ui/Breadcrumbs'
 import ContactForm from '@/components/forms/ContactForm'
 import IDXDisclaimer from '@/components/compliance/IDXDisclaimer'
 
@@ -74,27 +75,14 @@ export default function CommunityPage({ params }: CommunityPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      {/* Breadcrumb */}
-      <nav
-        aria-label="Breadcrumb"
-        className="max-w-5xl mx-auto px-4 lg:px-6 pt-8 text-xs text-househaven-text-muted"
-      >
-        <ol className="flex gap-2">
-          <li>
-            <Link href="/" className="hover:text-househaven-navy">
-              Home
-            </Link>
-          </li>
-          <li>›</li>
-          <li>
-            <Link href="/communities" className="hover:text-househaven-navy">
-              Communities
-            </Link>
-          </li>
-          <li>›</li>
-          <li className="text-househaven-navy">{c.name}</li>
-        </ol>
-      </nav>
+      <Breadcrumbs
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Communities', href: '/communities' },
+          { label: c.name },
+        ]}
+        className="max-w-5xl mx-auto px-4 lg:px-6 pt-8"
+      />
 
       {/* Hero with image */}
       <section className="relative bg-househaven-navy text-white overflow-hidden">

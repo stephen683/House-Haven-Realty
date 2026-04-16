@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import { blogPosts, blogPostBySlug } from '@/data/blog'
 import { teamMembers } from '@/data/team'
 import { communityBySlug } from '@/data/communities'
+import Breadcrumbs from '@/components/ui/Breadcrumbs'
 
 interface BlogPostPageProps {
   params: { slug: string }
@@ -77,27 +78,14 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
 
-      {/* Breadcrumb */}
-      <nav
-        aria-label="Breadcrumb"
-        className="max-w-3xl mx-auto px-4 lg:px-6 pt-8 text-xs text-househaven-text-muted"
-      >
-        <ol className="flex gap-2">
-          <li>
-            <Link href="/" className="hover:text-househaven-navy">
-              Home
-            </Link>
-          </li>
-          <li>›</li>
-          <li>
-            <Link href="/blog" className="hover:text-househaven-navy">
-              Blog
-            </Link>
-          </li>
-          <li>›</li>
-          <li className="text-househaven-navy truncate max-w-xs">{post.category}</li>
-        </ol>
-      </nav>
+      <Breadcrumbs
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Blog', href: '/blog' },
+          { label: post.category },
+        ]}
+        className="max-w-3xl mx-auto px-4 lg:px-6 pt-8"
+      />
 
       {/* Header */}
       <header className="max-w-3xl mx-auto px-4 lg:px-6 pt-8 pb-12">
