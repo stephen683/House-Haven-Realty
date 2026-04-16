@@ -247,35 +247,52 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* New Construction teaser */}
-      <section className="bg-white py-20 lg:py-28">
+      {/* NashBuilds — flagship product feature */}
+      <section className="bg-black text-white py-20 lg:py-28">
         <FadeIn>
         <div className="max-w-7xl mx-auto px-4 lg:px-6 grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
-              Exclusive tool
-            </p>
-            <h2 className="font-serif text-4xl lg:text-5xl text-househaven-navy mt-2">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="font-serif text-2xl font-bold tracking-tight">NashBuilds</span>
+              <span className="px-2 py-0.5 rounded bg-white/10 text-[10px] uppercase tracking-widest text-white/60">
+                Exclusive
+              </span>
+            </div>
+            <h2 className="font-serif text-4xl lg:text-5xl text-white mt-2 leading-tight">
               See what&rsquo;s being built
               <br />
               before it hits the market.
             </h2>
-            <p className="mt-4 text-househaven-text-muted max-w-md">
-              Our New Construction Map pulls every active residential building permit across
-              the Nashville metro. It&rsquo;s the kind of intel no other Nashville real estate
-              team publishes — and we built it for you.
+            <p className="mt-4 text-white/70 max-w-md">
+              Live building permits. Saturation scoring by ZIP. Builder profiles with
+              reputation signals. Filter by beds, baths, sqft, and property type.
+              No other Nashville brokerage has this.
             </p>
-            <Link
-              href="/new-construction"
-              className="inline-flex items-center mt-8 px-7 py-4 rounded-lg bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
-            >
-              Explore the map
-            </Link>
+            <div className="flex flex-wrap gap-3 mt-6 text-xs">
+              <span className="px-3 py-1.5 rounded-lg bg-white/10 text-white/80">Live permit data</span>
+              <span className="px-3 py-1.5 rounded-lg bg-white/10 text-white/80">Saturation scoring</span>
+              <span className="px-3 py-1.5 rounded-lg bg-white/10 text-white/80">Builder profiles</span>
+              <span className="px-3 py-1.5 rounded-lg bg-white/10 text-white/80">ZIP alerts</span>
+            </div>
+            <div className="flex gap-4 mt-8">
+              <Link
+                href="/new-builds"
+                className="inline-flex items-center px-7 py-4 rounded-lg bg-white text-black font-semibold hover:bg-househaven-accent transition"
+              >
+                Launch NashBuilds
+              </Link>
+              <Link
+                href="/new-builds/builders"
+                className="inline-flex items-center px-7 py-4 rounded-lg border border-white/20 text-white font-semibold hover:bg-white/10 transition"
+              >
+                View builders
+              </Link>
+            </div>
           </div>
-          <div className="aspect-[4/3] rounded-xl bg-gradient-to-br from-househaven-navy to-househaven-navy-light p-1">
-            <div className="relative h-full w-full rounded-[22px] overflow-hidden">
+          <div className="aspect-[4/3] rounded-xl bg-gradient-to-br from-white/10 to-white/5 p-1">
+            <div className="relative h-full w-full rounded-lg overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1400&q=70"
+                src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1440&q=70"
                 alt="New construction homes in Nashville"
                 fill
                 className="object-cover"
