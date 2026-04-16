@@ -72,9 +72,33 @@ export default function PermitDetailPanel({ permit, onClose }: PermitDetailPanel
           </p>
         </div>
 
+        {/* Property specs — beds/baths/sqft */}
+        {(permit.bedrooms || permit.bathrooms || permit.sqft) && (
+          <div className="flex gap-4 text-center">
+            {permit.bedrooms && (
+              <div className="flex-1 rounded-lg bg-househaven-surface p-3">
+                <p className="font-serif text-xl text-househaven-navy">{permit.bedrooms}</p>
+                <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">Beds</p>
+              </div>
+            )}
+            {permit.bathrooms && (
+              <div className="flex-1 rounded-lg bg-househaven-surface p-3">
+                <p className="font-serif text-xl text-househaven-navy">{permit.bathrooms}</p>
+                <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">Baths</p>
+              </div>
+            )}
+            {permit.sqft && (
+              <div className="flex-1 rounded-lg bg-househaven-surface p-3">
+                <p className="font-serif text-xl text-househaven-navy">{permit.sqft.toLocaleString()}</p>
+                <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">Sq Ft</p>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Key details */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-xl bg-househaven-surface p-3">
+          <div className="rounded-lg bg-househaven-surface p-3">
             <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
               Issued
             </p>
@@ -82,7 +106,7 @@ export default function PermitDetailPanel({ permit, onClose }: PermitDetailPanel
               {formatDate(permit.dateIssued)}
             </p>
           </div>
-          <div className="rounded-xl bg-househaven-surface p-3">
+          <div className="rounded-lg bg-househaven-surface p-3">
             <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
               Est. cost
             </p>
@@ -92,31 +116,47 @@ export default function PermitDetailPanel({ permit, onClose }: PermitDetailPanel
           </div>
         </div>
 
+        {/* Property type badge */}
+        {permit.propertyType && permit.propertyType !== 'unknown' && (
+          <div>
+            <span className="inline-block px-3 py-1 rounded-lg bg-househaven-navy/10 text-xs font-medium text-househaven-navy capitalize">
+              {permit.propertyType.replace(/_/g, ' ')}
+            </span>
+            {permit.subtype && (
+              <span className="inline-block ml-2 px-3 py-1 rounded-lg bg-househaven-surface text-xs text-househaven-text-muted">
+                {permit.subtype}
+              </span>
+            )}
+          </div>
+        )}
+
         {/* Permit info */}
         <div className="space-y-2">
           <div>
             <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
-              Permit type
+              Builder
             </p>
-            <p className="text-sm text-househaven-text mt-0.5">{permit.type}</p>
+            <p className="text-sm text-househaven-text mt-0.5 font-medium">
+              {permit.contractor || '—'}
+            </p>
           </div>
           {permit.description && (
             <div>
               <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
                 Description
               </p>
-              <p className="text-sm text-househaven-text mt-0.5">
+              <p className="text-sm text-househaven-text mt-0.5 line-clamp-3">
                 {permit.description}
               </p>
             </div>
           )}
-          {permit.contractor && (
+          {permit.subdivision && (
             <div>
               <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
-                Contractor
+                Subdivision
               </p>
               <p className="text-sm text-househaven-text mt-0.5">
-                {permit.contractor}
+                {permit.subdivision}
               </p>
             </div>
           )}

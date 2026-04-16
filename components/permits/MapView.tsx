@@ -10,12 +10,19 @@ export interface PermitFeatureProperties {
   city: string
   zip: string
   type: string
+  subtype: string
   description: string
   constructionCost: number | null
   contractor: string
   status: string
   dateIssued: string | null
   daysAgo: number
+  sqft: number | null
+  bedrooms: number | null
+  bathrooms: number | null
+  propertyType: string
+  parcel: string
+  subdivision: string
 }
 
 interface MapViewProps {
@@ -68,6 +75,13 @@ export default function MapView({ onPermitSelect, filterExpression }: MapViewPro
           status: String(props.status || ''),
           dateIssued: props.dateIssued ? String(props.dateIssued) : null,
           daysAgo: Number(props.daysAgo || 999),
+          sqft: props.sqft ? Number(props.sqft) : null,
+          bedrooms: props.bedrooms ? Number(props.bedrooms) : null,
+          bathrooms: props.bathrooms ? Number(props.bathrooms) : null,
+          propertyType: String(props.propertyType || 'unknown'),
+          parcel: String(props.parcel || ''),
+          subdivision: String(props.subdivision || ''),
+          subtype: String(props.subtype || ''),
         },
         geom.coordinates as [number, number],
       )

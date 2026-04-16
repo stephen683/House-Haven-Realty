@@ -8,6 +8,8 @@ export interface FilterState {
   costMin: string
   costMax: string
   zip: string
+  beds: string
+  propertyType: string
 }
 
 const DATE_OPTIONS = [
@@ -28,6 +30,8 @@ export default function MapFilters({ onChange, availableZips }: MapFiltersProps)
     costMin: '',
     costMax: '',
     zip: '',
+    beds: '',
+    propertyType: '',
   })
   const [expanded, setExpanded] = useState(false)
 
@@ -52,6 +56,16 @@ export default function MapFilters({ onChange, availableZips }: MapFiltersProps)
       conditions.push(['==', ['get', 'zip'], filters.zip])
     }
 
+    // Bedrooms
+    if (filters.beds) {
+      conditions.push(['>=', ['get', 'bedrooms'], Number(filters.beds)])
+    }
+
+    // Property type
+    if (filters.propertyType) {
+      conditions.push(['==', ['get', 'propertyType'], filters.propertyType])
+    }
+
     if (conditions.length === 0) {
       onChange(null)
     } else {
@@ -64,10 +78,12 @@ export default function MapFilters({ onChange, availableZips }: MapFiltersProps)
     filters.costMin !== '',
     filters.costMax !== '',
     filters.zip !== '',
+    filters.beds !== '',
+    filters.propertyType !== '',
   ].filter(Boolean).length
 
   const clearAll = () => {
-    setFilters({ dateRange: 'all', costMin: '', costMax: '', zip: '' })
+    setFilters({ dateRange: 'all', costMin: '', costMax: '', zip: '', beds: '', propertyType: '' })
   }
 
   return (
@@ -177,6 +193,47 @@ export default function MapFilters({ onChange, availableZips }: MapFiltersProps)
                   {z}
                 </option>
               ))}
+            </select>
+          </div>
+
+          {/* Bedrooms */}
+          <div>
+            <label className="block text-xs text-househaven-text-muted mb-1.5">
+              Bedrooms
+            </label>
+            <select
+              value={filters.beds}
+              onChange={(e) =>
+                setFilters((f) => ({ ...f, beds: e.target.value }))
+              }
+              className="w-full px-2.5 py-1.5 rounded-lg border border-black/10 text-xs bg-white focus:outline-none focus:ring-1 focus:ring-househaven-navy/30"
+            >
+              <option value="">Any</option>
+              <option value="2">2+</option>
+              <option value="3">3+</option>
+              <option value="4">4+</option>
+              <option value="5">5+</option>
+            </select>
+          </div>
+
+          {/* Property type */}
+          <div>
+            <label className="block text-xs text-househaven-text-muted mb-1.5">
+              Property type
+            </label>
+            <select
+              value={filters.propertyType}
+              onChange={(e) =>
+                setFilters((f) => ({ ...f, propertyType: e.target.value }))
+              }
+              className="w-full px-2.5 py-1.5 rounded-lg border border-black/10 text-xs bg-white focus:outline-none focus:ring-1 focus:ring-househaven-navy/30"
+            >
+              <option value="">All types</option>
+              <option value="single_family">Single Family</option>
+              <option value="townhome">Townhome</option>
+              <option value="condo">Condo</option>
+              <option value="duplex">Duplex</option>
+              <option value="multi_family">Multi-Family</option>
             </select>
           </div>
         </div>
