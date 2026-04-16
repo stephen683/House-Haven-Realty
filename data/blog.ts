@@ -569,6 +569,186 @@ export const blogPosts: BlogPost[] = [
     relatedCommunitySlugs: ['east-nashville', 'franklin', 'brentwood', 'green-hills', 'sylvan-park'],
     relatedPostSlugs: ['nashville-market-report-april-2026', 'rent-vs-buy-nashville-2026'],
   },
+  {
+    slug: 'nashville-property-tax-guide-2026',
+    title: 'Nashville Property Taxes Explained — What Homeowners Actually Pay in 2026',
+    excerpt:
+      'Property taxes in Nashville vary dramatically by county, city, and assessment. Here is what you need to know before you buy.',
+    authorSlug: 'stephen-delahoussaye',
+    publishedAt: '2026-04-01T10:00:00Z',
+    updatedAt: '2026-04-01T10:00:00Z',
+    readTimeMinutes: 8,
+    heroImage: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2400&q=70',
+    heroCaption: 'Understanding Nashville property taxes — county by county.',
+    category: 'Buyer Education',
+    tags: ['property-taxes', 'davidson-county', 'williamson-county', 'nashville'],
+    sections: [
+      {
+        heading: 'Why Nashville property taxes confuse everyone',
+        paragraphs: [
+          'Nashville property taxes are confusing because the metro area spans multiple counties, each with different tax rates, assessment schedules, and special districts. A home in Davidson County (Nashville proper) is taxed differently than an identical home in Williamson County (Franklin) or Sumner County (Hendersonville).',
+          'Add in the fact that Tennessee has no state income tax — property taxes and sales taxes carry more of the government funding burden — and the numbers start to matter more than in most states.',
+        ],
+      },
+      {
+        heading: 'How Nashville property taxes are calculated',
+        paragraphs: [
+          'Tennessee uses a two-part formula: assessed value times the tax rate. Residential property is assessed at 25% of appraised value. So a $400,000 home has an assessed value of $100,000. Multiply that by your county\'s tax rate to get your annual bill.',
+          'Davidson County\'s combined tax rate (county + city) is approximately $3.254 per $100 of assessed value. On a $400,000 home: $100,000 assessed x $3.254 / 100 = roughly $3,254 per year.',
+        ],
+        callout: { title: 'Key distinction', body: 'Williamson County\'s rate is lower — approximately $1.73 per $100 of assessed value. That same $400,000 home would cost roughly $1,730 per year in property taxes. This is why Williamson County communities like Franklin and Brentwood attract buyers despite higher home prices.' },
+      },
+      {
+        heading: 'County-by-county tax rate comparison',
+        paragraphs: [
+          'Davidson County (Nashville): ~$3.25 per $100 assessed. The highest in the metro due to combined city/county government. However, Nashville offers urban services that suburban counties do not.',
+          'Williamson County (Franklin, Brentwood, Nolensville): ~$1.73 per $100 assessed. Significantly lower, which partially offsets higher home prices.',
+          'Sumner County (Hendersonville, Gallatin): ~$2.30 per $100 assessed. A middle ground between Davidson and Williamson.',
+          'Rutherford County (Murfreesboro, Smyrna): ~$2.19 per $100 assessed. Combined with lower home prices, this makes Rutherford County attractive for budget-conscious buyers.',
+          'Wilson County (Mt. Juliet, Lebanon): ~$2.23 per $100 assessed. Competitive with strong schools.',
+        ],
+      },
+      {
+        heading: 'Reappraisal years — when your taxes change',
+        paragraphs: [
+          'Tennessee reappraises property values on a regular cycle — Davidson County reappraises every 4 years. The most recent reappraisal significantly increased assessed values across Nashville, which translates to higher tax bills even if the rate stays the same.',
+          'If you believe your assessment is too high, you can appeal to the county assessor\'s office. We help our clients understand the appeal process and whether it makes financial sense.',
+        ],
+      },
+      {
+        heading: 'Tax implications for home buyers',
+        paragraphs: [
+          'When comparing homes in different counties, always factor in the property tax difference. A $500,000 home in Franklin (Williamson) may have a lower total monthly cost than a $400,000 home in Nashville (Davidson) once you add property taxes to the mortgage payment.',
+          'Your House Haven agent will run the full monthly cost comparison — principal, interest, taxes, insurance, and HOA — for every property you consider. The sticker price is just the beginning.',
+        ],
+      },
+    ],
+    relatedCommunitySlugs: ['franklin', 'brentwood', 'hendersonville', 'murfreesboro', 'mt-juliet'],
+    relatedPostSlugs: ['first-time-buyer-programs-tn', 'rent-vs-buy-nashville-2026'],
+  },
+  {
+    slug: 'nashville-new-construction-what-to-know',
+    title: 'Buying New Construction in Nashville — The Complete 2026 Buyer\'s Guide',
+    excerpt:
+      'New construction in Nashville is booming, but not all builders and subdivisions are created equal. Here is what you need to know before signing a contract.',
+    authorSlug: 'stephen-delahoussaye',
+    publishedAt: '2026-03-25T10:00:00Z',
+    updatedAt: '2026-03-25T10:00:00Z',
+    readTimeMinutes: 12,
+    heroImage: 'https://images.unsplash.com/photo-1605276373954-0c4a0dac5b12?auto=format&fit=crop&w=2400&q=70',
+    heroCaption: 'New construction in Nashville — where opportunity meets due diligence.',
+    category: 'Buyer Education',
+    tags: ['new-construction', 'builders', 'nashville', 'contracts'],
+    sections: [
+      {
+        heading: 'Nashville\'s new construction landscape in 2026',
+        paragraphs: [
+          'Nashville\'s new construction market has been one of the most active in the Southeast for a decade. From infill townhomes in The Nations to master-planned communities in Spring Hill, new builds account for a significant share of transactions.',
+          'Our New Construction Map at househavenrealty.com/new-construction pulls live building permit data from Metro Nashville\'s open data portal — so you can see exactly where new homes are being built before they hit the MLS.',
+        ],
+      },
+      {
+        heading: 'Do you need an agent for new construction?',
+        paragraphs: [
+          'Yes. The builder\'s sales representative works for the builder, not for you. Having your own agent costs you nothing extra — the builder has already budgeted for buyer agent compensation. But having your own advocate during contract review, inspections, and negotiations can save you thousands.',
+          'We have represented buyers in transactions with every major Nashville builder. We know which builders deliver on promises and which ones cut corners.',
+        ],
+        callout: { title: 'Critical warning', body: 'If you visit a builder\'s model home without your agent the first time, many builders will refuse to pay your agent\'s commission later. Always register with your House Haven agent before your first visit to any new construction site.' },
+      },
+      {
+        heading: 'Understanding new construction contracts',
+        paragraphs: [
+          'New construction contracts in Tennessee are different from resale contracts. They typically include: a longer timeline (4-12 months from contract to close), builder-specific addenda that favor the builder, escalation clauses that allow price increases for material costs, and limited inspection rights.',
+          'We review every clause of the builder\'s contract and negotiate on your behalf. Common negotiation points include: closing cost credits, upgrade packages, lot premiums, and warranty terms.',
+        ],
+      },
+      {
+        heading: 'The inspection — yes, new homes need inspections',
+        paragraphs: [
+          'One of the biggest mistakes new construction buyers make is skipping the independent home inspection. Even brand-new homes have defects — missing insulation, improperly graded lots, HVAC issues, plumbing mistakes.',
+          'We recommend two inspections: a pre-drywall inspection (before walls are closed up) and a final inspection before closing. The pre-drywall inspection is your only chance to see the framing, wiring, and plumbing before it is hidden.',
+        ],
+      },
+      {
+        heading: 'Where to buy new construction in Nashville',
+        paragraphs: [
+          'The hottest new construction corridors in 2026: Spring Hill and Thompsons Station (master-planned communities), Nolensville (Williamson County schools), The Nations and Salemtown (urban infill), Hendersonville and Gallatin (Sumner County value), and Antioch (Davidson County affordability).',
+          'Each area has different builders, price points, and trade-offs. We help buyers evaluate which corridor and which builder best matches their priorities.',
+        ],
+      },
+      {
+        heading: 'Builder reputation matters',
+        paragraphs: [
+          'Not all Nashville builders are equal. We track builder quality across warranty responsiveness, construction timelines, material choices, and client satisfaction. We will share our honest assessment of any builder you are considering.',
+          'Questions to ask: How many homes has this builder completed in Nashville? What is their average construction timeline? What does their standard warranty cover? Can I bring my own inspector?',
+        ],
+      },
+    ],
+    relatedCommunitySlugs: ['spring-hill', 'thompsons-station', 'nolensville', 'the-nations', 'hendersonville'],
+    relatedPostSlugs: ['new-construction-contracts-nashville', 'nashville-home-inspection-guide'],
+  },
+  {
+    slug: 'nashville-investment-property-guide-2026',
+    title: 'Investing in Nashville Real Estate — A 2026 Guide for First-Time Investors',
+    excerpt:
+      'Nashville remains one of the strongest real estate investment markets in the country. Here is how to evaluate properties, neighborhoods, and returns.',
+    authorSlug: 'stephen-delahoussaye',
+    publishedAt: '2026-03-18T10:00:00Z',
+    updatedAt: '2026-03-18T10:00:00Z',
+    readTimeMinutes: 11,
+    heroImage: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=2400&q=70',
+    heroCaption: 'Nashville investment properties — where data drives decisions.',
+    category: 'Investing',
+    tags: ['investing', 'rental-properties', 'nashville', 'roi'],
+    sections: [
+      {
+        heading: 'Why Nashville for real estate investment',
+        paragraphs: [
+          'Nashville\'s investment case is built on fundamentals: sustained population growth (roughly 80 people per day move to the Nashville metro), a diversified economy anchored by healthcare, music, tech, and tourism, and a regulatory environment that generally favors property owners.',
+          'The numbers: Nashville metro home values have appreciated over 80% in the last decade. Rent growth has outpaced the national average. And Tennessee\'s lack of state income tax makes the after-tax returns more attractive than many competing markets.',
+        ],
+      },
+      {
+        heading: 'Long-term rental vs. short-term rental',
+        paragraphs: [
+          'Nashville\'s short-term rental (STR) regulations have tightened significantly. Only owner-occupied properties in most residential zones can operate as STRs, and enforcement has increased. Non-owner-occupied STR permits are limited and no longer being issued in many areas.',
+          'For most first-time investors in 2026, long-term rentals are the more predictable play. The cash flow may be lower than a STR, but the regulatory risk is near zero and tenant demand in Nashville is strong.',
+        ],
+        callout: { title: 'Regulatory warning', body: 'Before purchasing any Nashville property for short-term rental use, verify the current STR permit status with Metro Nashville codes. Permit rules change frequently and violations carry significant fines.' },
+      },
+      {
+        heading: 'How to evaluate a Nashville investment property',
+        paragraphs: [
+          'We evaluate investment properties on four metrics: cash-on-cash return (annual cash flow divided by total cash invested), cap rate (net operating income divided by purchase price), appreciation potential (based on neighborhood trajectory and development pipeline), and rent-to-price ratio (monthly rent divided by purchase price — look for 0.7% or higher).',
+          'In Nashville\'s current market, most single-family investment properties in desirable areas will not generate strong cash flow at purchase. The play is usually appreciation plus moderate cash flow, not pure cash-flow investing.',
+        ],
+      },
+      {
+        heading: 'Best neighborhoods for Nashville investment in 2026',
+        paragraphs: [
+          'For appreciation: East Nashville, Wedgewood-Houston, The Nations, and Germantown continue to show the strongest price growth. These are urban neighborhoods where demand consistently exceeds supply.',
+          'For cash flow: Antioch, La Vergne, Madison, and Hermitage offer lower entry points with strong rental demand. The rent-to-price ratio is more favorable in these areas.',
+          'For long-term value: Gallatin, Murfreesboro, and Mt. Juliet offer suburban growth corridors where both rents and values are appreciating steadily.',
+        ],
+      },
+      {
+        heading: 'Financing investment properties',
+        paragraphs: [
+          'Investment property loans typically require 20-25% down and carry interest rates 0.5-1% higher than primary residence loans. DSCR (Debt Service Coverage Ratio) loans have become popular for investors — they qualify based on the property\'s rental income rather than your personal income.',
+          'We work with lenders who specialize in Nashville investment properties and can structure creative financing for portfolio builders.',
+        ],
+      },
+      {
+        heading: 'Working with House Haven on investment properties',
+        paragraphs: [
+          'We help Nashville investors evaluate properties with the same rigor we apply to every transaction — plus the additional analysis that investment purchases require. Comps, rent estimates, expense projections, and neighborhood trajectory are all part of our process.',
+          'Whether you are buying your first rental or your tenth, we bring the local knowledge that makes the difference between a good investment and a regretted one.',
+        ],
+      },
+    ],
+    relatedCommunitySlugs: ['east-nashville', 'antioch', 'madison', 'gallatin', 'wedgewood-houston'],
+    relatedPostSlugs: ['nashville-market-report-april-2026', 'rent-vs-buy-nashville-2026'],
+  },
 ]
 
 export const blogPostBySlug = Object.fromEntries(
