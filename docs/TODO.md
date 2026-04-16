@@ -160,7 +160,7 @@ This document is kept in sync as Claude Code builds. Check it at the start of ev
 - [x] `PermitDetailPanel.tsx` — click detail with permit info + lead-capture CTA
 - [x] Full-page map layout with compact header, toolbar, responsive detail panel
 - [x] `building_permits` table migration for historical caching (Supabase migration 002)
-- [ ] Daily Vercel Cron → upsert into Supabase (decouple from live API failures)
+- [x] Daily Vercel Cron `/api/cron/sync-permits` → upserts 180 days of permits into Supabase building_permits table (6am UTC daily)
 - [ ] Permit alert email signup form (currently generic Contact CTA)
 - [ ] Surrounding counties (Sumner/Robertson/etc.) — research + add feeds
 

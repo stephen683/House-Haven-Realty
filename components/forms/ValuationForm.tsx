@@ -28,6 +28,7 @@ export default function ValuationForm() {
       email: fd.get('email'),
       phone: fd.get('phone'),
       timeline: fd.get('timeline'),
+      tcpaConsent: fd.get('tcpa_consent') === 'on',
     }
     try {
       const res = await fetch('/api/valuation', {

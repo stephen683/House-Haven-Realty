@@ -28,6 +28,7 @@ export default function ContactForm({ source = 'contact' }: { source?: string })
       interest: data.get('interest'),
       message: data.get('message'),
       source,
+      tcpaConsent: data.get('tcpa_consent') === 'on',
     }
     try {
       const res = await fetch('/api/contact', {
