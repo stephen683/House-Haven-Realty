@@ -45,6 +45,12 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
     .map((slug) => blogPostBySlug[slug])
     .filter(Boolean)
 
+  // Calculate word count from all paragraphs
+  const wordCount = post.sections.reduce(
+    (sum, s) => sum + s.paragraphs.join(' ').split(/\s+/).length,
+    0,
+  )
+
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -53,11 +59,18 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
     image: [post.heroImage],
     datePublished: post.publishedAt,
     dateModified: post.updatedAt,
+    wordCount,
     author: author
       ? {
           '@type': 'Person',
           name: author.name,
+          jobTitle: author.title,
+          description: author.bio,
           url: `https://househavenrealty.com/team/${author.slug}`,
+          worksFor: {
+            '@type': 'Organization',
+            name: 'House Haven Realty',
+          },
         }
       : undefined,
     publisher: {
@@ -65,10 +78,15 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
       name: 'House Haven Realty',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://househavenrealty.com/images/logo-dark.svg',
+        url: 'https://househavenrealty.com/images/logo/logo-dark.png',
       },
     },
     mainEntityOfPage: `https://househavenrealty.com/blog/${post.slug}`,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: 'House Haven Realty',
+      url: 'https://househavenrealty.com',
+    },
   }
 
   return (

@@ -9,9 +9,31 @@ export const metadata: Metadata = {
   alternates: { canonical: '/property-management' },
 }
 
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Nashville Property Management',
+  description: 'Professional property management services for Nashville rental property owners, provided by Door Collectors — a sister company of House Haven Realty.',
+  provider: {
+    '@type': 'RealEstateAgent',
+    name: 'House Haven Realty',
+    url: 'https://househavenrealty.com',
+  },
+  areaServed: {
+    '@type': 'City',
+    name: 'Nashville',
+    addressRegion: 'TN',
+  },
+  serviceType: 'Property Management',
+}
+
 export default function PropertyManagementPage() {
   return (
     <main className="bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
       <section className="relative bg-househaven-navy text-white overflow-hidden">
         <Image src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1440&q=70" alt="" fill priority className="object-cover opacity-20" sizes="(max-width: 1280px) 100vw, 1280px" />
         <div className="absolute inset-0 bg-gradient-to-b from-househaven-navy/50 via-househaven-navy/75 to-househaven-navy" />
