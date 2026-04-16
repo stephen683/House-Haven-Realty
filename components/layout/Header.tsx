@@ -96,7 +96,7 @@ export default function Header() {
 
           <div className="hidden md:flex items-center gap-4">
             <a
-              href="tel:+16156244766"
+              data-event="phone_click" href="tel:+16156244766"
               className="text-sm font-medium text-househaven-navy hover:text-househaven-accent transition"
             >
               (615) 624-4766
@@ -142,7 +142,7 @@ export default function Header() {
             ))}
             <div className="pt-3 mt-3 border-t border-black/5 flex items-center justify-between">
               <a
-                href="tel:+16156244766"
+                data-event="phone_click" href="tel:+16156244766"
                 className="text-sm font-semibold text-househaven-navy"
               >
                 (615) 624-4766

@@ -82,7 +82,7 @@ export default function AgentProfilePage({ params }: AgentPageProps) {
           <div className="mt-10 flex flex-wrap gap-4 text-sm">
             {agent.phone && (
               <a
-                href={`tel:${agent.phone.replace(/[^0-9]/g, '')}`}
+                data-event="phone_click" href={`tel:${agent.phone.replace(/[^0-9]/g, '')}`}
                 className="inline-flex items-center px-5 py-3 rounded-lg bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
               >
                 {agent.phone}

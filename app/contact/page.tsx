@@ -55,7 +55,7 @@ export default function ContactPage() {
               Phone
             </p>
             <a
-              href="tel:+16156244766"
+              data-event="phone_click" href="tel:+16156244766"
               className="mt-2 block font-serif text-2xl text-househaven-navy hover:text-househaven-accent"
             >
               (615) 624-4766

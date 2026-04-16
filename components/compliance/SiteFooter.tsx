@@ -57,7 +57,7 @@ export default function SiteFooter() {
               <p>5016 Centennial Blvd Suite 200</p>
               <p>Nashville, TN 37209</p>
               <p>
-                <a href="tel:+16156244766" className="hover:text-white underline-offset-2 hover:underline">
+                <a data-event="phone_click" href="tel:+16156244766" className="hover:text-white underline-offset-2 hover:underline">
                   (615) 624-4766
                 </a>
               </p>
@@ -135,7 +135,7 @@ export default function SiteFooter() {
               </span>
               <p className="leading-relaxed">
                 <span className="font-semibold text-white">House Haven Realty</span> ·{' '}
-                <a href="tel:+16156244766" className="hover:text-white">
+                <a data-event="phone_click" href="tel:+16156244766" className="hover:text-white">
                   (615) 624-4766
                 </a>{' '}
                 · 5016 Centennial Blvd Suite 200, Nashville, TN 37209 · Licensed &amp;
