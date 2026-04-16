@@ -1,31 +1,32 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import TCPAConsent from './TCPAConsent'
 
 export default function NewsletterSignup() {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'ok' | 'error'>('idle')
+  const formRef = useRef<HTMLFormElement>(null)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setStatus('submitting')
     const formData = new FormData(e.currentTarget)
-    const res = await fetch('/api/contact', {
+    const tcpaConsent = formData.get('newsletter_tcpa') === 'on'
+
+    const res = await fetch('/api/newsletter', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name: 'Newsletter subscriber',
         email: formData.get('email'),
-        message: 'Newsletter signup',
-        source: 'newsletter',
+        tcpaConsent,
       }),
     })
     setStatus(res.ok ? 'ok' : 'error')
-    if (res.ok) (e.target as HTMLFormElement).reset()
+    if (res.ok) formRef.current?.reset()
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-lg mx-auto space-y-4">
+    <form ref={formRef} onSubmit={handleSubmit} className="max-w-lg mx-auto space-y-4">
       <div className="flex flex-col sm:flex-row gap-3">
         <label className="sr-only" htmlFor="newsletter-email">
           Email address
