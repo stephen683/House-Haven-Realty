@@ -40,7 +40,11 @@ This document is kept in sync as Claude Code builds. Check it at the start of ev
 - [x] Privacy Policy — real content
 - [x] `.eslintrc.json` (next/core-web-vitals)
 - [x] `next.config.mjs` remote image hosts (agentaprd, unsplash, chime, supabase)
-- [ ] Download logo SVG to `public/images/logo-dark.svg` (using text mark for now)
+- [x] Logo package placed — landscape dark/light, vertical, icon mark in `public/images/logo/`
+- [x] Brand fonts (Modulus Bold + Medium) copied to `public/fonts/`
+- [x] Header: real landscape dark logo via next/image
+- [x] Footer: real landscape light logo on navy
+- [x] Favicon: house icon mark as `app/icon.png`
 - [ ] Download Equal Housing Opportunity logo image to `public/images/` (text badge in footer for now)
 - [ ] Download 11 team headshots to `public/images/team/` (currently remote-hosted via Next/Image unoptimized)
 - [x] `/terms-of-service` route — full content
@@ -138,7 +142,7 @@ This document is kept in sync as Claude Code builds. Check it at the start of ev
 - [x] Donelson — **All 20 Tier 1 communities live.**
 
 ### Tier 2 (build second)
-- [ ] 25 communities (see ROADMAP §7)
+- [x] 22 Tier 2 communities shipped: Hendersonville, Gallatin, Goodlettsville, Portland, Hermitage, Antioch, Bellevue, Old Hickory, Murfreesboro, Smyrna, La Vergne, Franklin, Brentwood, Nolensville, Spring Hill, Mt. Juliet, Pleasant View, Cross Plains, Orlinda, Millersville, White Bluff
 
 ### Tier 3 (build last)
 - [ ] 20 Nashville core neighborhoods (see ROADMAP §7)
@@ -148,13 +152,17 @@ This document is kept in sync as Claude Code builds. Check it at the start of ev
 - [x] `lib/permits.ts` — Nashville Socrata client with residential filter
 - [x] `/api/permits` route with days/limit params, 6-hour ISR
 - [x] `/new-construction` page — SSR from Socrata, stats bar, permit grid, lead CTA
-- [x] MapLibre interactive map via `components/permits/PermitMap.tsx` (react-map-gl/maplibre): markers colored by recency, click-to-popup, navigation control, legend overlay
-- [ ] Filter sidebar (date range, ZIP, type, cost)
+- [x] **MapView rebuilt** — direct MapLibre GL JS with CARTO light tiles (free, no key), GeoJSON circle layer (GPU-rendered), data-driven recency colors, hover highlight, click→detail panel
+- [x] `/api/permits/geojson` route — GeoJSON FeatureCollection endpoint for MapLibre
+- [x] `/api/suggest` + `/api/geocode` — ArcGIS Nashville address search (no API key)
+- [x] `MapSearch.tsx` — debounced autocomplete with flyTo on select
+- [x] `MapFilters.tsx` — filter panel (date range, cost min/max, ZIP code)
+- [x] `PermitDetailPanel.tsx` — click detail with permit info + lead-capture CTA
+- [x] Full-page map layout with compact header, toolbar, responsive detail panel
 - [ ] `building_permits` table migration for historical caching
 - [ ] Daily Vercel Cron → upsert into Supabase (decouple from live API failures)
 - [ ] Permit alert email signup form (currently generic Contact CTA)
 - [ ] Surrounding counties (Sumner/Robertson/etc.) — research + add feeds
-- [ ] Swap MapLibre demo tiles for a branded MapTiler/Mapbox style
 
 ## Phase 7 — Blog & Market Reports
 
@@ -232,3 +240,4 @@ This document is kept in sync as Claude Code builds. Check it at the start of ev
 - **2026-04-15 (session 1)** — Big push. Added Header + mobile nav + skip link, TCPAConsent, NewsletterSignup, ContactForm, ValuationForm, AgentCard, TestimonialCarousel. Wrote real content for Home, About, Team (index + 11 dynamic profiles), Contact (with working POST /api/contact), Home Valuation (with POST /api/valuation), Communities index + 5 Tier 1 guides (Joelton, Ashland City, Greenbrier, Springfield, Thompsons Station) with JSON-LD Place schema, Buyers, Sellers, Blog shell, Homes-for-sale + listing detail shells. Built New Construction page with live Socrata permit fetch + stats bar + `/api/permits` route. Seeded `data/team.ts` (11 agents), `data/communities.ts`, `data/testimonials.ts`. Added `.eslintrc.json`. Fixed strict-mode types in `lib/supabase/server.ts`. `npm run type-check`, `npm run lint`, and `npm run build` all green — 34 routes generated (11 static team pages, 5 static community pages, 3 dynamic API routes).
 - **2026-04-15 (session 2)** — Content & SEO push. Added 15 more Tier 1 community guides (Bordeaux, Whites Creek, Madison, Pegram, Kingston Springs, White House, Coopertown, Dickson, Burns, Charlotte, Fairview, Watertown, Lebanon, Inglewood, Donelson) — **all 20 Tier 1 communities now live**. Shipped `app/sitemap.ts` (auto-generates from team + communities data), `app/robots.ts`, sitewide `OrganizationJsonLd` component (RealEstateAgent + WebSite+SearchAction schema). Built `/terms-of-service`, `/market-reports` (county snapshot table), `/property-management` (Door Collectors handoff). Added 20+ 301 redirects in `next.config.mjs` covering legacy Blok/AgentA URLs (meet-the-team, meet-*, whats-my-home-worth, homes-for-sale-featured, calculate-my-payments, property-organizer-login, etc.). Build clean: **54 routes generated** (20 static community pages, 11 static team pages, sitemap.xml, robots.txt, 3 API routes).
 - **2026-04-15 (session 3)** — Flagship + content push. Shipped `components/permits/PermitMap.tsx` — interactive MapLibre map on `/new-construction` via react-map-gl/maplibre, markers colored by permit recency (green ≤30d / navy ≤90d / gray older), click-to-popup with address/cost/contractor, NavigationControl, legend overlay. Wrote 5 real long-form blog posts in `data/blog.ts` (Moving to Nashville 2026 · April 2026 market report · Tennessee first-time buyer programs · Rent-vs-buy 2026 · New construction contracts) — 8-14 min reads each with callouts and internal links. Rebuilt `/blog` as a featured-post + grid layout and `/blog/[slug]` as a full template with breadcrumbs, hero image, structured body sections, author card, related communities (5 per post), related posts, Article JSON-LD, and OpenGraph article metadata. Added `RealEstateAgent` Person JSON-LD to `/team/[slug]` pages linked via `@id` to the Organization. Built `components/buyers/MortgageCalculator.tsx` — client component with live PITI math (P&I amortization + tax + insurance), editable price/down/rate/term/tax/insurance, mounted at `/buyers#mortgage-calculator`. Build clean: **59 routes generated** (20 static community pages, 11 static team pages, 5 static blog posts, 3 API routes, sitemap, robots). Fixed one type error in PermitMap (attributionControl boolean vs object).
+- **2026-04-16 (session 4)** — Vercel deployment fixed + major feature push. Diagnosed all 20 failed Vercel deploys — root cause was `framework: null` in project settings; fixed with `vercel.json` containing `"framework": "nextjs"`. First successful production deploy at project-bmq0e.vercel.app. Rebuilt new construction map using PermitPilot architecture: direct MapLibre GL JS with CARTO light tiles, GeoJSON circle layer, ArcGIS address search (/api/suggest + /api/geocode), filter panel, click→detail panel with lead CTA. Added logo package: landscape dark/light in header/footer, icon as favicon, brand fonts to public/fonts/. Shipped 22 Tier 2 community pages (Hendersonville, Gallatin, Goodlettsville, Portland, Hermitage, Antioch, Bellevue, Old Hickory, Murfreesboro, Smyrna, La Vergne, Franklin, Brentwood, Nolensville, Spring Hill, Mt. Juliet, Pleasant View, Cross Plains, Orlinda, Millersville, White Bluff). Upgraded homepage images to next/image with hover effects. Build clean: **82 routes generated** (42 community pages, 11 team, 5 blog, 6 API routes, sitemap, robots, icon).
