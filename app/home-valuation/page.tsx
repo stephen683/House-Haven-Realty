@@ -37,7 +37,7 @@ export default function HomeValuationPage() {
           </p>
 
           <ul className="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm text-white/80">
-            <li>✓ 219+ closed sales</li>
+            <li>✓ 500+ closed sales</li>
             <li>✓ Licensed since 2016</li>
             <li>✓ No obligation, no spam</li>
           </ul>

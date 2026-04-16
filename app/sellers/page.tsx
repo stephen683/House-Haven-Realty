@@ -5,7 +5,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Selling Your Home in Nashville — House Haven Realty',
   description:
-    'Sell your Nashville home with House Haven Realty. Free CMA, professional marketing, and a proven process built on 219+ closed sales.',
+    'Sell your Nashville home with House Haven Realty. Free CMA, professional marketing, and a proven process built on 500+ closed sales.',
 }
 
 const sellSteps = [
@@ -53,7 +53,7 @@ export default function SellersPage() {
             priced with receipts.
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-lg text-white/70">
-            219+ closed transactions and $124M+ in volume. Here&rsquo;s how we get your
+            500+ closed transactions and $250M+ in volume. Here&rsquo;s how we get your
             home sold — with marketing, negotiation, and follow-through that feels like
             family, not a factory.
           </p>

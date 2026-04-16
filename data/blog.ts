@@ -370,6 +370,205 @@ export const blogPosts: BlogPost[] = [
     relatedCommunitySlugs: ['bordeaux', 'madison', 'donelson', 'thompsons-station'],
     relatedPostSlugs: ['moving-to-nashville-2026', 'first-time-buyer-programs-tn'],
   },
+  {
+    slug: 'best-neighborhoods-nashville-families-2026',
+    title: 'Best Nashville Neighborhoods for Families in 2026',
+    excerpt:
+      'Where to raise a family in Nashville depends on your priorities — schools, yard space, commute, or community feel. Here are our top picks for 2026.',
+    authorSlug: 'stephen-delahoussaye',
+    publishedAt: '2026-04-14T10:00:00Z',
+    updatedAt: '2026-04-14T10:00:00Z',
+    readTimeMinutes: 10,
+    heroImage: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2400&q=70',
+    heroCaption: 'Family homes in Middle Tennessee — where community meets convenience.',
+    category: 'Neighborhood Guides',
+    tags: ['families', 'schools', 'neighborhoods', 'nashville'],
+    sections: [
+      {
+        heading: 'What makes a neighborhood family-friendly?',
+        paragraphs: [
+          'Every family defines "family-friendly" differently. Some prioritize school ratings above everything. Others want a cul-de-sac and a big backyard. Some need a short commute so they can make it to daycare pickup by 5:30. And some just want neighbors who wave.',
+          'In Nashville, the good news is that you have options across every price range. The challenge is that the best family neighborhoods are often the most competitive — and the ones that seem affordable sometimes come with trade-offs that are not obvious from a Zillow listing.',
+          'Here is our honest assessment of where to look in 2026, based on actually helping families buy homes in these neighborhoods — not aggregated data or sponsored content.',
+        ],
+      },
+      {
+        heading: 'Nolensville — the new-construction family magnet',
+        paragraphs: [
+          'Nolensville has become the default answer for families who want Williamson County schools and are willing to pay for new construction. Nolensville High School opened in 2016 and the feeder schools are strong. The town itself has invested in a walkable Main Street with restaurants and shops.',
+          'The trade-off is price — most family homes start in the low $500s and push past $700k in premium subdivisions. Nolensville Road traffic during rush hour is also a real consideration.',
+        ],
+        callout: { title: 'House Haven insight', body: 'We help Nolensville buyers evaluate which builders are actually delivering quality versus cutting corners. In a market with this much new construction, that distinction matters.' },
+      },
+      {
+        heading: 'Hendersonville — lake life with Sumner County schools',
+        paragraphs: [
+          'Hendersonville wraps around Old Hickory Lake and offers a suburban lifestyle with genuine outdoor recreation. Sumner County Schools is a strong district, and the Streets of Indian Lake provides retail and dining without driving to Cool Springs.',
+          'Entry-level family homes start in the mid $300s, making Hendersonville significantly more accessible than Williamson County options. Lakefront properties push into the $800s and beyond.',
+        ],
+      },
+      {
+        heading: 'Franklin — if the budget allows',
+        paragraphs: [
+          'Franklin is the gold standard for families who prioritize school district, downtown walkability, and community events. The Williamson County school system consistently ranks among the best in Tennessee. The downtown Main Street is genuinely charming.',
+          'The floor price for a family home in Franklin is roughly $500k, with most inventory in the $600k-$900k range. If your budget supports it, Franklin is hard to beat.',
+        ],
+      },
+      {
+        heading: 'Bellevue — west Nashville\'s family anchor',
+        paragraphs: [
+          'Bellevue offers Davidson County living with a suburban feel. The Harpeth River provides kayaking and outdoor recreation. Red Caboose Park is a neighborhood favorite. And the commute to downtown is about 20 minutes.',
+          'Prices range from the low $300s for starter homes to $600s+ for larger properties. For families who want to stay in Davidson County without paying East Nashville prices, Bellevue is worth a serious look.',
+        ],
+      },
+      {
+        heading: 'Mt. Juliet — Wilson County\'s family corridor',
+        paragraphs: [
+          'Mt. Juliet has transformed from a small town into one of Nashville\'s most desirable family suburbs. Wilson County Schools is strong, Providence Marketplace provides retail convenience, and the housing stock skews newer.',
+          'Prices range from the mid $300s for townhomes to $600s+ for larger family homes. The I-40 commute is the main trade-off.',
+        ],
+      },
+      {
+        heading: 'The bottom line',
+        paragraphs: [
+          'The best family neighborhood is the one that matches your specific priorities — not a ranking on a national website. School ratings matter, but so do commute times, lot sizes, community vibe, and monthly budget.',
+          'If you are evaluating family neighborhoods in Nashville, reach out. We will give you the real talk on each area — including the things that do not show up on listings.',
+        ],
+      },
+    ],
+    relatedCommunitySlugs: ['nolensville', 'hendersonville', 'franklin', 'bellevue', 'mt-juliet'],
+    relatedPostSlugs: ['moving-to-nashville-2026', 'first-time-buyer-programs-tn'],
+  },
+  {
+    slug: 'nashville-home-inspection-guide',
+    title: 'The Nashville Home Inspection Guide — What to Expect and What to Negotiate',
+    excerpt:
+      'Your home inspection is the most important 3 hours of the buying process. Here is what Nashville buyers need to know about inspections, repair requests, and when to walk away.',
+    authorSlug: 'stephen-delahoussaye',
+    publishedAt: '2026-04-10T10:00:00Z',
+    updatedAt: '2026-04-10T10:00:00Z',
+    readTimeMinutes: 9,
+    heroImage: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=2400&q=70',
+    heroCaption: 'Home inspection day — where preparation meets protection.',
+    category: 'Buyer Education',
+    tags: ['home-inspection', 'buyers', 'negotiation', 'nashville'],
+    sections: [
+      {
+        heading: 'Why the inspection matters more than the price',
+        paragraphs: [
+          'You can negotiate a purchase price. You cannot un-buy a house with a cracked foundation. The home inspection is your one window to understand what you are actually purchasing — and in Nashville\'s market, where competition can pressure buyers to skip contingencies, understanding this process is critical.',
+          'A standard home inspection in Nashville runs $400-$600 depending on the size of the home. It takes about 2-3 hours. And it is worth every penny.',
+        ],
+      },
+      {
+        heading: 'What a Nashville home inspection covers',
+        paragraphs: [
+          'A licensed Tennessee home inspector will evaluate the structural integrity, roof condition, HVAC systems, plumbing, electrical, foundation, grading and drainage, insulation, windows and doors, and general safety items.',
+          'In Nashville specifically, pay attention to: foundation issues (Nashville\'s clay soil causes movement), water intrusion (especially in older homes near creeks), HVAC age (systems wear out faster in our humid climate), and roof condition (hail damage is common).',
+        ],
+        callout: { title: 'Nashville-specific concern', body: 'Nashville\'s expansive clay soil causes more foundation issues than most cities. If the inspector flags cracks wider than 1/4 inch, or doors that won\'t close properly, get a structural engineer involved before making any decisions.' },
+      },
+      {
+        heading: 'The inspection report — how to read it',
+        paragraphs: [
+          'Inspection reports in Nashville typically run 30-50 pages with photos. Do not panic at the length — every house has issues. The question is whether the issues are cosmetic, maintenance-related, or structural.',
+          'We categorize findings into three buckets: safety issues (must fix), significant defects (negotiate), and cosmetic items (ignore for now). Your agent should walk you through the report line by line.',
+        ],
+      },
+      {
+        heading: 'What to negotiate and what to let go',
+        paragraphs: [
+          'In Tennessee, the inspection contingency gives you the right to request repairs, ask for a credit, or walk away. The standard TREC contract allows a specific number of days for this process.',
+          'Request repairs for: safety issues (electrical hazards, gas leaks), structural problems, roof leaks, HVAC failures, and plumbing issues. Do not request: cosmetic items, normal wear and tear, or items disclosed in the seller\'s property disclosure.',
+          'The goal is not to get a perfect house — it is to understand what you are buying and make an informed decision.',
+        ],
+      },
+      {
+        heading: 'When to walk away',
+        paragraphs: [
+          'Walking away is always an option during the inspection period. Consider it if: foundation issues require $20k+ in repairs, the seller refuses to address safety items, mold remediation costs exceed your budget, or the cumulative repair list fundamentally changes the value proposition.',
+          'We have walked clients away from homes they loved when the inspection revealed problems that would haunt them. That is what having an advocate means.',
+        ],
+      },
+      {
+        heading: 'Choosing a Nashville home inspector',
+        paragraphs: [
+          'We recommend inspectors we have worked with for years — professionals who are thorough, honest, and willing to explain findings in plain English. We never recommend inspectors who rush, minimize issues, or have conflicts of interest.',
+          'If you are buying in Nashville, ask us for our inspector recommendations. The right inspector can save you thousands or prevent a costly mistake.',
+        ],
+      },
+    ],
+    relatedCommunitySlugs: ['east-nashville', 'germantown', 'bellevue', 'hermitage', 'antioch'],
+    relatedPostSlugs: ['first-time-buyer-programs-tn', 'rent-vs-buy-nashville-2026'],
+  },
+  {
+    slug: 'selling-your-nashville-home-spring-2026',
+    title: 'Selling Your Nashville Home in Spring 2026 — Timing, Pricing, and Strategy',
+    excerpt:
+      'Spring is Nashville\'s strongest selling season. Here is how to time your listing, price it correctly, and avoid the mistakes that cost sellers thousands.',
+    authorSlug: 'stephen-delahoussaye',
+    publishedAt: '2026-04-05T10:00:00Z',
+    updatedAt: '2026-04-05T10:00:00Z',
+    readTimeMinutes: 11,
+    heroImage: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=2400&q=70',
+    heroCaption: 'Spring selling season in Nashville — when preparation meets opportunity.',
+    category: 'Seller Strategy',
+    tags: ['selling', 'spring-market', 'pricing', 'nashville'],
+    sections: [
+      {
+        heading: 'Why spring 2026 is different',
+        paragraphs: [
+          'Nashville\'s spring market in 2026 is shaped by three forces: interest rates that have stabilized in the mid-6% range, inventory that is slowly increasing from record lows, and buyer demand that remains strong due to continued corporate relocations and population growth.',
+          'For sellers, this means: you still have leverage, but less than you had in 2021-2022. Pricing correctly is more important than ever. Overpriced homes are sitting, while correctly priced homes are still moving quickly with multiple offers.',
+        ],
+      },
+      {
+        heading: 'When to list — the Nashville calendar',
+        paragraphs: [
+          'Nashville\'s selling season runs from mid-March through June, with a secondary window in September-October. The data consistently shows that homes listed in April and May sell faster and for higher prices than any other months.',
+          'The ideal timeline: start prep work in February, professional photos in March, list in early-to-mid April. This catches the wave of spring buyers before summer slowdown and school year concerns kick in.',
+        ],
+        callout: { title: 'Timing tip', body: 'List on a Thursday. Nashville buyers browse online over the weekend and schedule showings for Saturday and Sunday. A Thursday listing maximizes your first-weekend exposure.' },
+      },
+      {
+        heading: 'Pricing strategy — the biggest mistake sellers make',
+        paragraphs: [
+          'The single most common mistake Nashville sellers make is overpricing. An overpriced home does not sit quietly — it actively damages your leverage. Every day on market above 14 tells buyers something is wrong.',
+          'Your CMA (Comparative Market Analysis) should be based on actual closed sales within the last 90 days in your specific neighborhood — not Zillow estimates, not your neighbor\'s asking price, and not what you "need" to net.',
+          'We price to create competition. A correctly priced home generates multiple offers, and multiple offers push the final price above list. An overpriced home generates zero offers and eventually sells below where it should have been priced originally.',
+        ],
+      },
+      {
+        heading: 'Prep checklist — ROI-focused improvements',
+        paragraphs: [
+          'Not all pre-listing improvements are created equal. The highest-ROI items in Nashville\'s current market: professional cleaning (including windows), fresh exterior mulch and landscaping, neutral interior paint in bold rooms, and fixing deferred maintenance items that will show up in the buyer\'s inspection.',
+          'Do NOT invest in: kitchen remodels (you will not recoup the cost), pool installations, or trendy finishes that may not match buyer taste. The goal is to present a clean, well-maintained home — not a magazine spread.',
+        ],
+      },
+      {
+        heading: 'Marketing that actually sells homes',
+        paragraphs: [
+          'Professional photography is non-negotiable — smartphone photos cost you money. Drone photography matters for properties with land or views. 3D tours have become standard for serious listings.',
+          'At House Haven, every listing gets professional photography, custom copywriting, social media promotion, and strategic MLS positioning. We also leverage our network of active buyers who are already searching.',
+        ],
+      },
+      {
+        heading: 'Negotiation — protecting your bottom line',
+        paragraphs: [
+          'In a spring 2026 market, expect buyers to request inspection repairs and potentially ask for closing cost credits. The key is knowing what is reasonable and what is a negotiation tactic.',
+          'We pull apart every offer and explain it in plain English — price, contingencies, financing strength, timeline, and the things between the lines that most sellers miss. Our job is to maximize your net, not just accept the highest number.',
+        ],
+      },
+      {
+        heading: 'Ready to sell?',
+        paragraphs: [
+          'If you are thinking about selling your Nashville home this spring, the first step is a free CMA. We will tell you what your home is actually worth based on real data — not an algorithm. No obligation, no pressure.',
+        ],
+      },
+    ],
+    relatedCommunitySlugs: ['east-nashville', 'franklin', 'brentwood', 'green-hills', 'sylvan-park'],
+    relatedPostSlugs: ['nashville-market-report-april-2026', 'rent-vs-buy-nashville-2026'],
+  },
 ]
 
 export const blogPostBySlug = Object.fromEntries(

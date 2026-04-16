@@ -6,12 +6,12 @@ import { teamMembers } from '@/data/team'
 export const metadata: Metadata = {
   title: 'About House Haven Realty',
   description:
-    'House Haven Realty is a boutique Nashville brokerage founded by broker Stephen Delahoussaye. 219+ closed sales, $124M+ in volume, and a family-first approach to real estate across Middle Tennessee.',
+    'House Haven Realty is a boutique Nashville brokerage founded by broker Stephen Delahoussaye. 500+ closed sales, $250M+ in volume, and a family-first approach to real estate across Middle Tennessee.',
 }
 
 const stats = [
-  { value: '219+', label: 'Homes closed' },
-  { value: '$124.2M+', label: 'Total volume' },
+  { value: '500+', label: 'Homes closed' },
+  { value: '$250M+', label: 'Total volume' },
   { value: '$150K – $5.3M', label: 'Price range' },
   { value: 'Since 2016', label: 'Licensed in TN' },
 ]

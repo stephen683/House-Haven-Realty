@@ -9,8 +9,8 @@ import { visibleTeam } from '@/data/team'
 import { communities } from '@/data/communities'
 
 const heroStats = [
-  { value: '219+', label: 'Homes closed' },
-  { value: '$124M+', label: 'Volume sold' },
+  { value: '500+', label: 'Homes closed' },
+  { value: '$250M+', label: 'Volume sold' },
   { value: 'Since 2016', label: 'Licensed in TN' },
   { value: '40 mi', label: 'Radius we cover' },
 ]
