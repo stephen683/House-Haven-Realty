@@ -31,9 +31,52 @@ const stagingChecklist = [
   'Pet areas spotless before every showing',
 ]
 
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'How much does it cost to sell a house in Nashville?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Selling costs in Nashville typically total 7-9% of the sale price, including agent commissions (negotiable), Tennessee transfer tax ($0.37 per $100), title fees, and any agreed-upon buyer closing cost credits. A free CMA from House Haven Realty will help you estimate your net proceeds.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'When is the best time to sell a home in Nashville?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Nashville\'s strongest selling season runs from mid-March through June. Homes listed in April and May historically sell faster and for higher prices. A secondary window exists in September-October. Winter listings can work but typically take longer.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Do I need to stage my home before selling?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Full staging is not always necessary, but decluttering, deep cleaning, and strategic updates (fresh paint, landscaping, minor repairs) consistently yield higher sale prices. House Haven Realty provides a free staging checklist and walks you through high-ROI improvements.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How long does it take to sell a house in Nashville?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Properly priced homes in Nashville\'s current market typically receive offers within 7-14 days. The closing process adds another 30-45 days. Overpriced homes can sit for months, which actually hurts your final sale price. Pricing strategy is critical.',
+      },
+    },
+  ],
+}
+
 export default function SellersPage() {
   return (
     <main className="bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <section className="relative bg-househaven-navy text-white overflow-hidden">
         <Image
           src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=2400&q=70"

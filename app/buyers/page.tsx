@@ -54,9 +54,52 @@ const steps = [
   },
 ]
 
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Do I need a real estate agent to buy a home in Nashville?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'While not legally required, having a buyer\'s agent costs you nothing extra (the seller typically covers agent compensation) and provides professional representation during negotiations, inspections, and closing. Tennessee now requires a written Buyer Representation Agreement before touring homes.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How much do I need for a down payment in Nashville?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Down payments in Nashville range from 0% (VA and USDA loans) to 3% (conventional) to 3.5% (FHA). The average Nashville home price means you should plan for $10,000-$25,000 minimum for most programs, plus closing costs of 2-4% of the purchase price.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What are closing costs for buyers in Tennessee?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Buyer closing costs in Tennessee typically run 2-4% of the purchase price. This includes title insurance, attorney fees, recording fees, and prepaid items like homeowner\'s insurance and property taxes. Tennessee does charge a transfer tax of $0.37 per $100 of purchase price.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How long does it take to buy a house in Nashville?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'From pre-approval to closing, the typical Nashville home purchase takes 30-60 days. The pre-approval process takes 1-3 days, home search varies, and once under contract, closing typically occurs within 30-45 days depending on financing type.',
+      },
+    },
+  ],
+}
+
 export default function BuyersPage() {
   return (
     <main className="bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <section className="relative bg-househaven-navy text-white overflow-hidden">
         <Image
           src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=2400&q=70"

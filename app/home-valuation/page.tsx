@@ -9,9 +9,44 @@ export const metadata: Metadata = {
   alternates: { canonical: '/home-valuation' },
 }
 
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'How accurate is an online home value estimate?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Online estimates (like Zestimate) can be off by 5-15% or more in Nashville because they cannot account for renovations, lot characteristics, neighborhood micro-trends, or condition. A CMA prepared by a local agent uses actual comparable sales and adjustments for your specific property.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is a CMA and how is it different from an appraisal?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'A Comparative Market Analysis (CMA) is prepared by a licensed real estate agent using recent comparable sales to estimate your home\'s market value. An appraisal is performed by a licensed appraiser, typically ordered by a lender. Both use comparable sales, but appraisals are formal valuations required for lending purposes.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is the House Haven home valuation really free?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. Our CMA is 100% free with no obligation. We prepare a detailed analysis of your home\'s value based on recent sales in your neighborhood. There is no pressure to list — many homeowners use our CMA simply to understand their equity position.',
+      },
+    },
+  ],
+}
+
 export default function HomeValuationPage() {
   return (
     <main className="bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <section className="relative bg-househaven-navy text-white overflow-hidden">
         <Image
           src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2400&q=70"
