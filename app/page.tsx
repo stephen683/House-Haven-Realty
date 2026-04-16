@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import TestimonialCarousel from '@/components/sections/TestimonialCarousel'
 import NewsletterSignup from '@/components/forms/NewsletterSignup'
@@ -84,15 +85,13 @@ export default function HomePage() {
     <main>
       {/* Hero */}
       <section className="relative bg-househaven-navy text-white overflow-hidden">
-        <div
-          aria-hidden
-          className="absolute inset-0 opacity-40"
-          style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1568454537842-d933259bb258?auto=format&fit=crop&w=2400&q=70')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
+        <Image
+          src="https://images.unsplash.com/photo-1568454537842-d933259bb258?auto=format&fit=crop&w=2400&q=70"
+          alt=""
+          fill
+          priority
+          className="object-cover opacity-40"
+          sizes="100vw"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-househaven-navy/60 via-househaven-navy/80 to-househaven-navy" />
         <div className="relative max-w-7xl mx-auto px-4 lg:px-6 py-24 lg:py-36">
@@ -166,14 +165,15 @@ export default function HomePage() {
                 key={l.id}
                 className="group rounded-2xl overflow-hidden border border-black/5 hover:shadow-xl transition"
               >
-                <div
-                  className="aspect-[4/3] bg-househaven-surface"
-                  style={{
-                    backgroundImage: `url(${l.image})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                  }}
-                />
+                <div className="relative aspect-[4/3] bg-househaven-surface overflow-hidden">
+                  <Image
+                    src={l.image}
+                    alt={l.address}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
+                </div>
                 <div className="p-5">
                   <p className="font-serif text-2xl text-househaven-navy">{l.price}</p>
                   <p className="text-sm text-househaven-text mt-1">{l.address}</p>
@@ -267,13 +267,15 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="aspect-[4/3] rounded-3xl bg-gradient-to-br from-househaven-navy to-househaven-navy-light p-1">
-            <div
-              className="h-full w-full rounded-[22px] bg-cover bg-center"
-              style={{
-                backgroundImage:
-                  "url('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1400&q=70')",
-              }}
-            />
+            <div className="relative h-full w-full rounded-[22px] overflow-hidden">
+              <Image
+                src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1400&q=70"
+                alt="New construction homes in Nashville"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </div>
           </div>
         </div>
       </section>
