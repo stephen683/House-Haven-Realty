@@ -22,17 +22,19 @@ function toGeoJSON(permits: NormalizedPermit[]): GeoJSON.FeatureCollection {
           city: p.city || 'Nashville',
           zip: p.zip,
           type: p.type,
+          subtype: p.subtype,
           description: p.description,
           constructionCost: p.constructionCost,
           contractor: p.contractor,
           status: p.status,
           dateIssued: p.dateIssued,
-          daysAgo: p.dateIssued
-            ? Math.floor(
-                (Date.now() - new Date(p.dateIssued).getTime()) /
-                  (1000 * 60 * 60 * 24),
-              )
-            : 999,
+          daysAgo: p.daysAgo,
+          sqft: p.sqft,
+          bedrooms: p.bedrooms,
+          bathrooms: p.bathrooms,
+          propertyType: p.propertyType,
+          parcel: p.parcel,
+          subdivision: p.subdivision,
         },
       })),
   }

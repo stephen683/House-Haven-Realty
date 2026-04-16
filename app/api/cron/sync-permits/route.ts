@@ -47,6 +47,7 @@ export async function GET(request: Request) {
     const rows = permits.map((p) => ({
       permit_number: p.permitNumber,
       permit_type: p.type,
+      subtype: p.subtype,
       date_issued: p.dateIssued,
       address: p.address,
       city: p.city || 'Nashville',
@@ -57,6 +58,12 @@ export async function GET(request: Request) {
       status: p.status,
       lat: p.lat,
       lng: p.lng,
+      sqft: p.sqft,
+      bedrooms: p.bedrooms,
+      bathrooms: p.bathrooms,
+      property_type: p.propertyType,
+      parcel: p.parcel,
+      subdivision: p.subdivision,
       updated_at: new Date().toISOString(),
     }))
 
