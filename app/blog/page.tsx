@@ -43,7 +43,6 @@ export default function BlogIndexPage() {
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 className="object-cover group-hover:scale-[1.02] transition duration-500"
-                unoptimized
               />
             </div>
             <div>
@@ -85,7 +84,6 @@ export default function BlogIndexPage() {
                     fill
                     sizes="(min-width: 1024px) 50vw, 100vw"
                     className="object-cover"
-                    unoptimized
                   />
                 </div>
                 <div className="p-6">

@@ -55,7 +55,6 @@ export default function AgentProfilePage({ params }: AgentPageProps) {
               fill
               sizes="(min-width: 1024px) 40vw, 100vw"
               className="object-cover"
-              unoptimized
             />
           </div>
         </div>

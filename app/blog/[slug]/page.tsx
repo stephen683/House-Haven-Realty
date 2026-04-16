@@ -142,7 +142,6 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
               sizes="(min-width: 1024px) 80vw, 100vw"
               className="object-cover"
               priority
-              unoptimized
             />
           </div>
           <figcaption className="text-xs text-househaven-text-muted mt-3 text-center">
@@ -193,7 +192,6 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
                 fill
                 sizes="96px"
                 className="object-cover"
-                unoptimized
               />
             </Link>
             <div>
@@ -262,7 +260,6 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
                       fill
                       sizes="(min-width: 1024px) 50vw, 100vw"
                       className="object-cover"
-                      unoptimized
                     />
                   </div>
                   <div className="p-6">
