@@ -205,24 +205,42 @@ export default function NashBuildsApp({
                 Build Saturation Score
               </p>
             </div>
-            <div className="px-3 py-2 space-y-1.5 max-h-60 overflow-y-auto">
+            <div className="px-3 py-2 space-y-1 max-h-60 overflow-y-auto">
               {topScores.slice(0, 10).map((s) => (
-                <div key={s.zip} className="flex items-center justify-between text-xs">
+                <button
+                  key={s.zip}
+                  type="button"
+                  onClick={() => {
+                    // Filter map to this ZIP
+                    setFilterExpression(['==', ['get', 'zip'], s.zip] as FilterSpecification)
+                  }}
+                  className="w-full flex items-center justify-between text-xs px-1.5 py-1 rounded hover:bg-househaven-surface transition text-left"
+                >
                   <div className="flex items-center gap-2">
                     <span className={`h-2.5 w-2.5 rounded-sm ${scoreColor(s.score)}`} />
                     <span className="font-medium">{s.zip}</span>
+                    <span className="text-[10px] text-househaven-text-muted">{s.label}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-househaven-text-muted">{s.permitCount} permits</span>
-                    <span className="font-bold text-househaven-navy w-8 text-right">{s.score}</span>
+                    <span className="text-househaven-text-muted">{s.permitCount}</span>
+                    <span className="font-bold text-househaven-navy w-7 text-right">{s.score}</span>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
-            <div className="px-3 py-2 border-t border-black/5">
+            <div className="px-3 py-2 border-t border-black/5 flex items-center justify-between">
               <p className="text-[9px] text-househaven-text-muted">
-                Score: volume + value + recency (0&ndash;100)
+                Score: volume + value + recency
               </p>
+              {filterExpression && (
+                <button
+                  type="button"
+                  onClick={() => setFilterExpression(null)}
+                  className="text-[9px] font-medium text-househaven-navy hover:underline"
+                >
+                  Clear filter
+                </button>
+              )}
             </div>
           </div>
         </div>
