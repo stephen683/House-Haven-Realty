@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 
@@ -51,15 +52,17 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           <Link
             href="/"
-            className="flex items-center gap-3"
+            className="flex items-center"
             aria-label="House Haven Realty home"
           >
-            <span className="inline-flex items-center justify-center h-10 w-10 rounded-full bg-househaven-navy text-white font-serif text-lg">
-              HH
-            </span>
-            <span className="font-serif text-xl text-househaven-navy leading-tight">
-              House Haven<span className="block text-xs tracking-[0.18em] text-househaven-text-muted font-sans uppercase">Realty</span>
-            </span>
+            <Image
+              src="/images/logo/logo-dark.png"
+              alt="House Haven Realty"
+              width={200}
+              height={56}
+              className="h-10 w-auto"
+              priority
+            />
           </Link>
 
           <nav className="hidden lg:flex items-center gap-7" aria-label="Primary">

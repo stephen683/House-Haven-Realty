@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import dynamic from 'next/dynamic'
+import Image from 'next/image'
 import Link from 'next/link'
 import type { FilterSpecification } from 'maplibre-gl'
 import MapSearch from '@/components/permits/MapSearch'
@@ -75,6 +76,15 @@ export default function NewConstructionMap({
       {/* Compact header */}
       <header className="bg-househaven-navy text-white shrink-0">
         <div className="max-w-[1600px] mx-auto px-4 lg:px-6 py-4 flex flex-col lg:flex-row lg:items-center gap-4">
+          <Link href="/" className="shrink-0 hidden lg:block">
+            <Image
+              src="/images/logo/logo-light.png"
+              alt="House Haven Realty"
+              width={160}
+              height={44}
+              className="h-8 w-auto"
+            />
+          </Link>
           <div className="flex-1 min-w-0">
             <h1 className="font-serif text-2xl lg:text-3xl text-white leading-tight">
               New Construction &middot; Nashville Metro

@@ -3,6 +3,7 @@
 // Fair Housing Act — Equal Housing Opportunity logo/statement required.
 // This component is rendered server-side in the root layout — do not remove.
 
+import Image from 'next/image'
 import Link from 'next/link'
 
 const footerNav = {
@@ -38,9 +39,13 @@ export default function SiteFooter() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
           <div className="lg:col-span-2">
             {/* Firm name — TREC 1260-02-.12(5)(a) — must be conspicuous on every page */}
-            <p className="font-serif text-2xl text-white mb-3">
-              House Haven Realty
-            </p>
+            <Image
+              src="/images/logo/logo-light.png"
+              alt="House Haven Realty"
+              width={200}
+              height={56}
+              className="h-10 w-auto mb-3"
+            />
             <p className="text-sm text-white/70 leading-relaxed mb-4 max-w-xs">
               A small boutique local Nashville real estate brokerage. Our clients are our
               neighbors.
