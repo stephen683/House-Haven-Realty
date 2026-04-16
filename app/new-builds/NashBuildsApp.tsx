@@ -1,0 +1,264 @@
+'use client'
+
+import { useState, useCallback } from 'react'
+import dynamic from 'next/dynamic'
+import Image from 'next/image'
+import Link from 'next/link'
+import type { FilterSpecification } from 'maplibre-gl'
+import MapSearch from '@/components/permits/MapSearch'
+import MapFilters from '@/components/permits/MapFilters'
+import PermitDetailPanel from '@/components/permits/PermitDetailPanel'
+import type { PermitFeatureProperties } from '@/components/permits/MapView'
+import type { ZipSaturationScore } from '@/lib/saturation-score'
+
+const MapView = dynamic(
+  () => import('@/components/permits/MapView'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full bg-househaven-surface animate-pulse flex items-center justify-center">
+        <p className="text-sm text-househaven-text-muted">Loading map&hellip;</p>
+      </div>
+    ),
+  },
+)
+
+interface NashBuildsAppProps {
+  permitCount: number
+  avgCost: number
+  avgSqft: number
+  availableZips: string[]
+  topBuilders: [string, number][]
+  topScores: ZipSaturationScore[]
+}
+
+function scoreColor(score: number) {
+  if (score >= 80) return 'bg-red-500'
+  if (score >= 60) return 'bg-orange-500'
+  if (score >= 40) return 'bg-yellow-500'
+  if (score >= 20) return 'bg-blue-400'
+  return 'bg-gray-400'
+}
+
+export default function NashBuildsApp({
+  permitCount,
+  avgCost,
+  avgSqft,
+  availableZips,
+  topBuilders,
+  topScores,
+}: NashBuildsAppProps) {
+  const [selectedPermit, setSelectedPermit] = useState<{
+    properties: PermitFeatureProperties
+    lngLat: [number, number]
+  } | null>(null)
+  const [filterExpression, setFilterExpression] =
+    useState<FilterSpecification | null>(null)
+
+  const handlePermitSelect = useCallback(
+    (properties: PermitFeatureProperties, lngLat: [number, number]) => {
+      setSelectedPermit({ properties, lngLat })
+    },
+    [],
+  )
+
+  const handleFilterChange = useCallback(
+    (filter: FilterSpecification | null) => {
+      setFilterExpression(filter)
+    },
+    [],
+  )
+
+  const handleSearchSelect = useCallback(
+    (_address: string, _coords: { lng: number; lat: number }) => {
+      window.dispatchEvent(
+        new CustomEvent('map-fly-to', {
+          detail: { lng: _coords.lng, lat: _coords.lat, zoom: 14 },
+        }),
+      )
+    },
+    [],
+  )
+
+  return (
+    <div className="flex flex-col h-[100dvh]">
+      {/* NashBuilds branded header */}
+      <header className="bg-black text-white shrink-0">
+        <div className="max-w-[1600px] mx-auto px-4 lg:px-6 py-3 flex items-center gap-4">
+          <Link href="/" className="shrink-0">
+            <Image
+              src="/images/logo/logo-light.png"
+              alt="House Haven Realty"
+              width={120}
+              height={34}
+              className="h-6 w-auto opacity-70 hover:opacity-100 transition"
+            />
+          </Link>
+          <div className="h-5 w-px bg-white/20" />
+          <Link href="/new-builds" className="flex items-center gap-2">
+            <span className="font-serif text-xl font-bold tracking-tight">
+              NashBuilds
+            </span>
+            <span className="hidden sm:inline text-[10px] uppercase tracking-widest text-white/50 mt-0.5">
+              New Construction Intelligence
+            </span>
+          </Link>
+          <div className="flex-1" />
+
+          {/* Stats */}
+          <div className="hidden md:flex items-center gap-4 text-xs">
+            <div className="px-3 py-1 rounded-lg bg-white/10">
+              <span className="text-white/50">Permits:</span>{' '}
+              <span className="font-bold">{permitCount.toLocaleString()}</span>
+            </div>
+            <div className="px-3 py-1 rounded-lg bg-white/10">
+              <span className="text-white/50">Avg cost:</span>{' '}
+              <span className="font-bold">${Math.round(avgCost).toLocaleString()}</span>
+            </div>
+            {avgSqft > 0 && (
+              <div className="px-3 py-1 rounded-lg bg-white/10">
+                <span className="text-white/50">Avg sqft:</span>{' '}
+                <span className="font-bold">{avgSqft.toLocaleString()}</span>
+              </div>
+            )}
+          </div>
+
+          <Link
+            href="/new-builds/builders"
+            className="hidden lg:inline-flex text-xs text-white/70 hover:text-white transition"
+          >
+            Builders
+          </Link>
+        </div>
+      </header>
+
+      {/* Toolbar */}
+      <div className="bg-white border-b border-black/5 shrink-0">
+        <div className="max-w-[1600px] mx-auto px-4 lg:px-6 py-2.5 flex items-center gap-3">
+          <MapSearch onSelect={handleSearchSelect} />
+          <MapFilters
+            onChange={handleFilterChange}
+            availableZips={availableZips}
+          />
+
+          {/* Saturation score pills */}
+          <div className="hidden lg:flex items-center gap-2 ml-4">
+            <span className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
+              Hot ZIPs:
+            </span>
+            {topScores.slice(0, 3).map((s) => (
+              <span
+                key={s.zip}
+                className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-househaven-surface text-xs"
+              >
+                <span className={`h-2 w-2 rounded-sm ${scoreColor(s.score)}`} />
+                <span className="font-medium text-househaven-navy">{s.zip}</span>
+                <span className="text-househaven-text-muted">{s.score}</span>
+              </span>
+            ))}
+          </div>
+
+          <div className="flex-1" />
+          <p className="text-[10px] text-househaven-text-muted hidden lg:block">
+            Live data &middot; Metro Nashville Codes
+          </p>
+        </div>
+      </div>
+
+      {/* Map + detail panel */}
+      <div className="flex-1 flex min-h-0 relative">
+        <div
+          className={`flex-1 min-w-0 relative ${
+            selectedPermit ? 'hidden md:block' : ''
+          }`}
+        >
+          <MapView
+            onPermitSelect={handlePermitSelect}
+            filterExpression={filterExpression}
+          />
+
+          {/* Legend */}
+          <div className="absolute left-4 bottom-4 bg-white/95 backdrop-blur rounded-lg px-4 py-3 shadow text-xs text-househaven-text space-y-1.5 pointer-events-none">
+            <p className="font-bold text-househaven-navy mb-1">Permit age</p>
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-sm bg-emerald-500" />
+              Last 7 days
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-sm bg-blue-500" />
+              8 &ndash; 30 days
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-sm bg-black" />
+              31 &ndash; 90 days
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-sm bg-gray-400" />
+              Older
+            </div>
+          </div>
+
+          {/* Saturation score panel */}
+          <div className="absolute right-4 top-4 bg-white/95 backdrop-blur rounded-lg shadow w-56 pointer-events-auto">
+            <div className="px-3 py-2 border-b border-black/5">
+              <p className="text-[10px] uppercase tracking-wider font-bold text-househaven-navy">
+                Build Saturation Score
+              </p>
+            </div>
+            <div className="px-3 py-2 space-y-1.5 max-h-60 overflow-y-auto">
+              {topScores.slice(0, 10).map((s) => (
+                <div key={s.zip} className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    <span className={`h-2.5 w-2.5 rounded-sm ${scoreColor(s.score)}`} />
+                    <span className="font-medium">{s.zip}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-househaven-text-muted">{s.permitCount} permits</span>
+                    <span className="font-bold text-househaven-navy w-8 text-right">{s.score}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="px-3 py-2 border-t border-black/5">
+              <p className="text-[9px] text-househaven-text-muted">
+                Score: volume + value + recency (0&ndash;100)
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Detail panel */}
+        {selectedPermit && (
+          <div className="w-full md:w-[380px] lg:w-[420px] shrink-0 border-l border-black/5 bg-white overflow-hidden">
+            <PermitDetailPanel
+              permit={selectedPermit.properties}
+              onClose={() => setSelectedPermit(null)}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="bg-black text-white shrink-0">
+        <div className="max-w-[1600px] mx-auto px-4 lg:px-6 py-2.5 flex items-center justify-between gap-4 text-[10px]">
+          <div className="flex items-center gap-4">
+            <span className="text-white/50">
+              House Haven Realty &middot; (615) 624-4766
+            </span>
+            <span className="text-white/30">
+              Data: Metro Nashville Codes &middot; Updated every 6h
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link href="/new-builds/builders" className="text-white/50 hover:text-white transition">
+              Builders
+            </Link>
+            <Link href="/contact" className="px-3 py-1 rounded-lg bg-white/10 text-white/80 hover:bg-white/20 transition">
+              Get alerts
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
