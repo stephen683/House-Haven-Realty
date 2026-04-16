@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import IDXDisclaimer from '@/components/compliance/IDXDisclaimer'
+import { communities } from '@/data/communities'
 
 export const metadata: Metadata = {
   title: 'Homes for Sale in Nashville & Middle Tennessee',
@@ -11,17 +13,28 @@ export const metadata: Metadata = {
 const propertyTypes = ['Single Family', 'Condo', 'Townhouse', 'Multi-Family', 'Land']
 
 export default function HomesForSalePage() {
+  const featuredCommunities = communities.filter((c) => c.tier === 1).slice(0, 8)
+
   return (
     <main className="bg-white">
-      <section className="bg-househaven-surface py-16 lg:py-20">
-        <div className="max-w-5xl mx-auto px-4 lg:px-6">
+      <section className="relative bg-househaven-navy text-white overflow-hidden">
+        <Image
+          src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2400&q=70"
+          alt=""
+          fill
+          priority
+          className="object-cover opacity-25"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-househaven-navy/50 via-househaven-navy/75 to-househaven-navy" />
+        <div className="relative max-w-5xl mx-auto px-4 lg:px-6 py-24 lg:py-32">
           <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
             Property search
           </p>
-          <h1 className="font-serif text-5xl text-househaven-navy mt-3">
+          <h1 className="font-serif text-5xl lg:text-6xl text-white mt-3">
             Homes for sale.
           </h1>
-          <p className="mt-4 max-w-2xl text-lg text-househaven-text-muted">
+          <p className="mt-4 max-w-2xl text-lg text-white/70">
             Live MLS listings across Nashville, Middle Tennessee, and every community in
             our 40-mile radius.
           </p>
@@ -78,7 +91,7 @@ export default function HomesForSalePage() {
               <button
                 key={t}
                 type="button"
-                className="px-3 py-1.5 rounded-full border border-black/10 text-xs font-medium text-househaven-text-muted hover:bg-househaven-surface"
+                className="px-3 py-1.5 rounded-full border border-black/10 text-xs font-medium text-househaven-text-muted hover:bg-househaven-surface transition"
               >
                 {t}
               </button>
@@ -114,6 +127,42 @@ export default function HomesForSalePage() {
 
         <div className="mt-10">
           <IDXDisclaimer />
+        </div>
+      </section>
+
+      {/* Browse by community */}
+      <section className="bg-househaven-surface py-16 lg:py-20">
+        <div className="max-w-7xl mx-auto px-4 lg:px-6">
+          <div className="text-center mb-10">
+            <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
+              Browse by area
+            </p>
+            <h2 className="font-serif text-3xl text-househaven-navy mt-2">
+              Explore our communities
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {featuredCommunities.map((c) => (
+              <Link
+                key={c.slug}
+                href={`/communities/${c.slug}`}
+                className="block rounded-xl bg-white border border-black/5 p-4 hover:shadow-lg hover:border-househaven-navy/10 transition text-center"
+              >
+                <p className="font-serif text-lg text-househaven-navy">{c.name}</p>
+                <p className="text-xs text-househaven-text-muted mt-1">
+                  {c.county} County
+                </p>
+              </Link>
+            ))}
+          </div>
+          <div className="text-center mt-6">
+            <Link
+              href="/communities"
+              className="text-sm font-semibold text-househaven-navy hover:text-househaven-accent"
+            >
+              View all {communities.length} communities →
+            </Link>
+          </div>
         </div>
       </section>
     </main>
