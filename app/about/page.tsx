@@ -22,17 +22,26 @@ export default function AboutPage() {
   return (
     <main className="bg-white">
       {/* Hero */}
-      <section className="bg-househaven-surface py-20 lg:py-28">
-        <div className="max-w-5xl mx-auto px-4 lg:px-6 text-center">
+      <section className="relative bg-househaven-navy text-white overflow-hidden">
+        <Image
+          src="https://images.unsplash.com/photo-1568454537842-d933259bb258?auto=format&fit=crop&w=2400&q=70"
+          alt=""
+          fill
+          priority
+          className="object-cover opacity-25"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-househaven-navy/50 via-househaven-navy/75 to-househaven-navy" />
+        <div className="relative max-w-5xl mx-auto px-4 lg:px-6 py-24 lg:py-32 text-center">
           <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
             About us
           </p>
-          <h1 className="font-serif text-5xl lg:text-6xl text-househaven-navy mt-3 leading-tight">
+          <h1 className="font-serif text-5xl lg:text-6xl text-white mt-3 leading-tight">
             A small boutique brokerage
             <br />
             with Nashville in its bones.
           </h1>
-          <p className="mt-6 max-w-2xl mx-auto text-lg text-househaven-text-muted">
+          <p className="mt-6 max-w-2xl mx-auto text-lg text-white/70">
             House Haven Realty was built to feel less like a transaction and more like a
             neighbor walking you home. That was true on day one, and it&rsquo;s still the
             blueprint today.

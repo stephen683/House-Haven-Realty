@@ -15,15 +15,24 @@ export default function BlogIndexPage() {
 
   return (
     <main className="bg-white">
-      <section className="bg-househaven-surface py-20 lg:py-28">
-        <div className="max-w-5xl mx-auto px-4 lg:px-6 text-center">
+      <section className="relative bg-househaven-navy text-white overflow-hidden">
+        <Image
+          src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2400&q=70"
+          alt=""
+          fill
+          priority
+          className="object-cover opacity-20"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-househaven-navy/50 via-househaven-navy/75 to-househaven-navy" />
+        <div className="relative max-w-5xl mx-auto px-4 lg:px-6 py-24 lg:py-32 text-center">
           <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
-            Blog
+            Blog &middot; {posts.length} articles
           </p>
-          <h1 className="font-serif text-5xl lg:text-6xl text-househaven-navy mt-3">
+          <h1 className="font-serif text-5xl lg:text-6xl text-white mt-3">
             Insights from the field.
           </h1>
-          <p className="mt-6 max-w-2xl mx-auto text-lg text-househaven-text-muted">
+          <p className="mt-6 max-w-2xl mx-auto text-lg text-white/70">
             Real estate writing that actually helps. No AI sludge, no filler — just
             honest takes from a team that does this every day.
           </p>

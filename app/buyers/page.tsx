@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import MortgageCalculator from '@/components/buyers/MortgageCalculator'
 
@@ -54,17 +55,26 @@ const steps = [
 export default function BuyersPage() {
   return (
     <main className="bg-white">
-      <section className="bg-househaven-surface py-20 lg:py-28">
-        <div className="max-w-5xl mx-auto px-4 lg:px-6 text-center">
+      <section className="relative bg-househaven-navy text-white overflow-hidden">
+        <Image
+          src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=2400&q=70"
+          alt=""
+          fill
+          priority
+          className="object-cover opacity-25"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-househaven-navy/50 via-househaven-navy/75 to-househaven-navy" />
+        <div className="relative max-w-5xl mx-auto px-4 lg:px-6 py-24 lg:py-32 text-center">
           <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
             For buyers
           </p>
-          <h1 className="font-serif text-5xl lg:text-6xl text-househaven-navy mt-3">
+          <h1 className="font-serif text-5xl lg:text-6xl text-white mt-3">
             Buying in Nashville,
             <br />
             without the overwhelm.
           </h1>
-          <p className="mt-6 max-w-2xl mx-auto text-lg text-househaven-text-muted">
+          <p className="mt-6 max-w-2xl mx-auto text-lg text-white/70">
             Eight steps. One advocate. No pressure. Here&rsquo;s exactly what working with
             House Haven Realty looks like from day one through closing day.
           </p>
