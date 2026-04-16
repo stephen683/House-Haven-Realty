@@ -10,19 +10,19 @@ import IDXDisclaimer from '@/components/compliance/IDXDisclaimer'
 
 // Hero images by county — using Nashville/TN landscape photography
 const countyHeroImages: Record<string, string> = {
-  Davidson: 'https://images.unsplash.com/photo-1545419913-775543f3d8b4?auto=format&fit=crop&w=2400&q=70',
-  Sumner: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2400&q=70',
-  Robertson: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=2400&q=70',
-  Cheatham: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=2400&q=70',
-  Dickson: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2400&q=70',
-  Williamson: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2400&q=70',
-  Wilson: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=2400&q=70',
-  Rutherford: 'https://images.unsplash.com/photo-1605276373954-0c4a0dac5b12?auto=format&fit=crop&w=2400&q=70',
-  Maury: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=2400&q=70',
-  'Davidson/Sumner': 'https://images.unsplash.com/photo-1545419913-775543f3d8b4?auto=format&fit=crop&w=2400&q=70',
-  'Williamson/Maury': 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2400&q=70',
+  Davidson: 'https://images.unsplash.com/photo-1545419913-775543f3d8b4?auto=format&fit=crop&w=1440&q=70',
+  Sumner: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1440&q=70',
+  Robertson: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=1440&q=70',
+  Cheatham: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1440&q=70',
+  Dickson: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1440&q=70',
+  Williamson: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1440&q=70',
+  Wilson: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1440&q=70',
+  Rutherford: 'https://images.unsplash.com/photo-1605276373954-0c4a0dac5b12?auto=format&fit=crop&w=1440&q=70',
+  Maury: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1440&q=70',
+  'Davidson/Sumner': 'https://images.unsplash.com/photo-1545419913-775543f3d8b4?auto=format&fit=crop&w=1440&q=70',
+  'Williamson/Maury': 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1440&q=70',
 }
-const defaultHero = 'https://images.unsplash.com/photo-1568454537842-d933259bb258?auto=format&fit=crop&w=2400&q=70'
+const defaultHero = 'https://images.unsplash.com/photo-1568454537842-d933259bb258?auto=format&fit=crop&w=1440&q=70'
 
 interface CommunityPageProps {
   params: { slug: string }
@@ -93,7 +93,7 @@ export default function CommunityPage({ params }: CommunityPageProps) {
           fill
           priority
           className="object-cover opacity-30"
-          sizes="100vw"
+          sizes="(max-width: 1280px) 100vw, 1280px"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-househaven-navy/40 via-househaven-navy/70 to-househaven-navy" />
         <div className="relative max-w-5xl mx-auto px-4 lg:px-6 pt-20 pb-16">

@@ -27,12 +27,12 @@ export default function CommunitiesIndexPage() {
       {/* Hero */}
       <section className="relative bg-househaven-navy text-white overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1545419913-775543f3d8b4?auto=format&fit=crop&w=2400&q=70"
+          src="https://images.unsplash.com/photo-1545419913-775543f3d8b4?auto=format&fit=crop&w=1440&q=70"
           alt=""
           fill
           priority
           className="object-cover opacity-25"
-          sizes="100vw"
+          sizes="(max-width: 1280px) 100vw, 1280px"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-househaven-navy/50 via-househaven-navy/75 to-househaven-navy" />
         <div className="relative max-w-5xl mx-auto px-4 lg:px-6 py-24 lg:py-32 text-center">
