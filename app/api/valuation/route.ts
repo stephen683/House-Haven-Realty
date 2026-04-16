@@ -11,10 +11,17 @@ interface ValuationPayload {
   email?: string
   phone?: string
   timeline?: string
+  tcpaConsent?: boolean
 }
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
+
+function splitName(fullName: string): { first: string; last: string } {
+  const parts = fullName.trim().split(/\s+/)
+  if (parts.length === 1) return { first: parts[0], last: '' }
+  return { first: parts[0], last: parts.slice(1).join(' ') }
 }
 
 export async function POST(request: NextRequest) {
@@ -32,6 +39,7 @@ export async function POST(request: NextRequest) {
   const email = body.email?.toString().trim()
   const phone = body.phone?.toString().trim() || null
   const timeline = body.timeline?.toString().trim() || null
+  const tcpaConsent = body.tcpaConsent === true
 
   if (!address || !zip || !name || !email) {
     return NextResponse.json(
@@ -43,24 +51,33 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid email address.' }, { status: 400 })
   }
 
+  const { first, last } = splitName(name)
+  const fullAddress = `${address}, ${city}, TN ${zip}`
+
+  // Write to unified leads table
   try {
     const supabase = await createServerClient()
-    const { error } = await supabase.from('valuation_requests').insert({
-      address,
-      city,
-      state: 'TN',
-      zip,
-      name,
+    const { error } = await supabase.from('leads').insert({
+      first_name: first,
+      last_name: last,
       email,
       phone,
-      timeline,
+      form_type: 'valuation',
       source: 'website',
+      interest: 'selling',
+      timeline,
+      property_address: fullAddress,
+      tcpa_consent: tcpaConsent,
+      tcpa_consent_at: tcpaConsent ? new Date().toISOString() : null,
+      page_url: request.headers.get('referer') || null,
+      form_data: { address, city, state: 'TN', zip },
     })
     if (error) console.error('[valuation] supabase insert failed', error.message)
   } catch (err) {
     console.error('[valuation] supabase client failed', err)
   }
 
+  // Notify Stephen via Resend if configured
   const resendKey = process.env.RESEND_API_KEY
   if (resendKey) {
     try {
@@ -81,7 +98,7 @@ export async function POST(request: NextRequest) {
             `Name: ${name}`,
             `Email: ${email}`,
             phone ? `Phone: ${phone}` : null,
-            `Address: ${address}, ${city}, TN ${zip}`,
+            `Address: ${fullAddress}`,
             timeline ? `Timeline: ${timeline}` : null,
           ]
             .filter(Boolean)

@@ -10,10 +10,17 @@ interface ContactPayload {
   message?: string
   interest?: string
   source?: string
+  tcpaConsent?: boolean
 }
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
+
+function splitName(fullName: string): { first: string; last: string } {
+  const parts = fullName.trim().split(/\s+/)
+  if (parts.length === 1) return { first: parts[0], last: '' }
+  return { first: parts[0], last: parts.slice(1).join(' ') }
 }
 
 export async function POST(request: NextRequest) {
@@ -30,6 +37,7 @@ export async function POST(request: NextRequest) {
   const phone = body.phone?.toString().trim() || null
   const source = body.source?.toString().trim() || 'website'
   const interest = body.interest?.toString().trim() || null
+  const tcpaConsent = body.tcpaConsent === true
 
   if (!name || !email || !message) {
     return NextResponse.json(
@@ -41,15 +49,23 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid email address.' }, { status: 400 })
   }
 
-  // Persist to Supabase if configured
+  const { first, last } = splitName(name)
+
+  // Write to unified leads table
   try {
     const supabase = await createServerClient()
-    const { error } = await supabase.from('contact_submissions').insert({
-      name,
+    const { error } = await supabase.from('leads').insert({
+      first_name: first,
+      last_name: last,
       email,
       phone,
-      message: interest ? `[${interest}] ${message}` : message,
-      source_page: source,
+      form_type: 'contact',
+      source,
+      interest,
+      message,
+      tcpa_consent: tcpaConsent,
+      tcpa_consent_at: tcpaConsent ? new Date().toISOString() : null,
+      page_url: request.headers.get('referer') || null,
     })
     if (error) {
       console.error('[contact] supabase insert failed', error.message)
