@@ -171,11 +171,7 @@ export default function NashBuildsApp({
 
       {/* Map + detail panel */}
       <div className="flex-1 flex min-h-0 relative">
-        <div
-          className={`flex-1 min-w-0 relative ${
-            selectedPermit ? 'hidden md:block' : ''
-          }`}
-        >
+        <div className="flex-1 min-w-0 relative">
           <MapView
             onPermitSelect={handlePermitSelect}
             filterExpression={filterExpression}
@@ -249,14 +245,38 @@ export default function NashBuildsApp({
           </div>
         </div>
 
-        {/* Detail panel */}
+        {/* Detail panel — desktop: side panel, mobile: bottom drawer */}
         {selectedPermit && (
-          <div className="w-full md:w-[380px] lg:w-[420px] shrink-0 border-l border-black/5 bg-white overflow-hidden">
-            <PermitDetailPanel
-              permit={selectedPermit.properties}
-              onClose={() => setSelectedPermit(null)}
-            />
-          </div>
+          <>
+            {/* Desktop side panel */}
+            <div className="hidden md:block w-[380px] lg:w-[420px] shrink-0 border-l border-black/5 bg-white overflow-hidden">
+              <PermitDetailPanel
+                permit={selectedPermit.properties}
+                onClose={() => setSelectedPermit(null)}
+              />
+            </div>
+
+            {/* Mobile bottom drawer */}
+            <div className="md:hidden fixed inset-x-0 bottom-0 z-50">
+              {/* Backdrop */}
+              <button
+                type="button"
+                className="fixed inset-0 bg-black/30"
+                onClick={() => setSelectedPermit(null)}
+                aria-label="Close detail panel"
+              />
+              {/* Drawer */}
+              <div className="relative bg-white rounded-t-xl shadow-2xl max-h-[70vh] overflow-y-auto animate-slide-up">
+                <div className="sticky top-0 bg-white px-4 pt-3 pb-2 border-b border-black/5 flex items-center justify-between">
+                  <div className="w-10 h-1 rounded-full bg-black/10 mx-auto" />
+                </div>
+                <PermitDetailPanel
+                  permit={selectedPermit.properties}
+                  onClose={() => setSelectedPermit(null)}
+                />
+              </div>
+            </div>
+          </>
         )}
       </div>
 
