@@ -9,9 +9,49 @@ export const metadata: Metadata = {
   alternates: { canonical: '/contact' },
 }
 
+const localBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'RealEstateAgent',
+  name: 'House Haven Realty',
+  telephone: '+1-615-624-4766',
+  email: 'Stephen@househavenrealty.com',
+  url: 'https://househavenrealty.com',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '5016 Centennial Blvd Suite 200',
+    addressLocality: 'Nashville',
+    addressRegion: 'TN',
+    postalCode: '37209',
+    addressCountry: 'US',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 36.1447,
+    longitude: -86.8487,
+  },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      opens: '09:00',
+      closes: '18:00',
+    },
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Saturday'],
+      opens: '10:00',
+      closes: '16:00',
+    },
+  ],
+}
+
 export default function ContactPage() {
   return (
     <main className="bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+      />
       <section className="relative bg-househaven-navy text-white overflow-hidden">
         <Image
           src="https://images.unsplash.com/photo-1545419913-775543f3d8b4?auto=format&fit=crop&w=2400&q=70"
