@@ -110,13 +110,13 @@ export default function HomePage() {
           <div className="mt-10 flex flex-col sm:flex-row gap-4">
             <Link
               href="/homes-for-sale"
-              className="inline-flex items-center justify-center px-7 py-4 rounded-full bg-househaven-accent text-househaven-navy font-semibold hover:bg-white transition"
+              className="inline-flex items-center justify-center px-7 py-4 rounded-lg bg-househaven-accent text-househaven-navy font-semibold hover:bg-white transition"
             >
               Find Your Home
             </Link>
             <Link
               href="/home-valuation"
-              className="inline-flex items-center justify-center px-7 py-4 rounded-full border border-white/40 text-white font-semibold hover:bg-white/10 transition"
+              className="inline-flex items-center justify-center px-7 py-4 rounded-lg border border-white/40 text-white font-semibold hover:bg-white/10 transition"
             >
               What&rsquo;s My Home Worth?
             </Link>
@@ -166,7 +166,7 @@ export default function HomePage() {
             {featuredPlaceholderListings.map((l) => (
               <article
                 key={l.id}
-                className="group rounded-2xl overflow-hidden border border-black/5 hover:shadow-xl transition"
+                className="group rounded-lg overflow-hidden border border-black/5 hover:shadow-xl transition"
               >
                 <div className="relative aspect-[4/3] bg-househaven-surface overflow-hidden">
                   <Image
@@ -219,7 +219,7 @@ export default function HomePage() {
               <Link
                 key={c.slug}
                 href={`/communities/${c.slug}`}
-                className="group relative block rounded-2xl overflow-hidden bg-white border border-black/5 hover:shadow-xl transition p-6"
+                className="group relative block rounded-lg overflow-hidden bg-white border border-black/5 hover:shadow-xl transition p-6"
               >
                 <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
                   {c.county} County
@@ -239,7 +239,7 @@ export default function HomePage() {
           <div className="text-center mt-10">
             <Link
               href="/communities"
-              className="inline-flex items-center px-6 py-3 rounded-full border border-househaven-navy/20 text-househaven-navy font-semibold hover:bg-househaven-navy hover:text-white transition"
+              className="inline-flex items-center px-6 py-3 rounded-lg border border-househaven-navy/20 text-househaven-navy font-semibold hover:bg-househaven-navy hover:text-white transition"
             >
               View all communities
             </Link>
@@ -267,12 +267,12 @@ export default function HomePage() {
             </p>
             <Link
               href="/new-construction"
-              className="inline-flex items-center mt-8 px-7 py-4 rounded-full bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
+              className="inline-flex items-center mt-8 px-7 py-4 rounded-lg bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
             >
               Explore the map
             </Link>
           </div>
-          <div className="aspect-[4/3] rounded-3xl bg-gradient-to-br from-househaven-navy to-househaven-navy-light p-1">
+          <div className="aspect-[4/3] rounded-xl bg-gradient-to-br from-househaven-navy to-househaven-navy-light p-1">
             <div className="relative h-full w-full rounded-[22px] overflow-hidden">
               <Image
                 src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1400&q=70"

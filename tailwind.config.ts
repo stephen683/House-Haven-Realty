@@ -10,19 +10,19 @@ const config: Config = {
     extend: {
       colors: {
         househaven: {
-          navy: '#1a1a2e',
-          'navy-light': '#2d2d4e',
-          accent: '#c9a96e',
-          'accent-dark': '#a07c45',
-          surface: '#F8F9FA',
-          text: '#1a1a1a',
-          'text-muted': '#6b7280',
+          navy: '#000000',
+          'navy-light': '#1a1a1a',
+          accent: '#C6C4C4',
+          'accent-dark': '#999999',
+          surface: '#F5F5F5',
+          text: '#000000',
+          'text-muted': '#6b6b6b',
           success: '#2E7D32',
         },
       },
       fontFamily: {
-        serif: ['Playfair Display', 'Georgia', 'serif'],
-        sans: ['DM Sans', 'system-ui', 'sans-serif'],
+        serif: ['Modulus', 'system-ui', 'sans-serif'],
+        sans: ['Modulus', 'system-ui', 'sans-serif'],
       },
     },
   },

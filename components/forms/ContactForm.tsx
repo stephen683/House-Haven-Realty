@@ -121,7 +121,7 @@ export default function ContactForm({ source = 'contact' }: { source?: string })
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="w-full sm:w-auto inline-flex items-center justify-center px-7 py-4 rounded-full bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition disabled:opacity-60"
+        className="w-full sm:w-auto inline-flex items-center justify-center px-7 py-4 rounded-lg bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition disabled:opacity-60"
       >
         {status === 'submitting' ? 'Sending…' : 'Send message'}
       </button>

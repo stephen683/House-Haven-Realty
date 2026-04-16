@@ -42,7 +42,7 @@ export default function TestimonialCarousel() {
             key={i}
             aria-label={`Show testimonial ${i + 1}`}
             onClick={() => setIndex(i)}
-            className={`h-2 rounded-full transition-all ${
+            className={`h-2 rounded-lg transition-all ${
               i === index ? 'w-8 bg-househaven-navy' : 'w-2 bg-househaven-text-muted/30'
             }`}
           />

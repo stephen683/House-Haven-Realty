@@ -82,7 +82,7 @@ export default function AboutPage() {
       {/* Stephen bio */}
       <section className="max-w-6xl mx-auto px-4 lg:px-6 py-20 lg:py-28 grid lg:grid-cols-5 gap-12">
         <div className="lg:col-span-2">
-          <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-househaven-surface">
+          <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-househaven-surface">
             <Image
               src={stephen.headshotUrl}
               alt={`${stephen.name}, Broker and Owner of House Haven Realty`}
@@ -115,7 +115,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="mt-10 rounded-2xl border border-househaven-accent/30 bg-househaven-surface p-6">
+          <div className="mt-10 rounded-lg border border-househaven-accent/30 bg-househaven-surface p-6">
             <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
               Initiative
             </p>
@@ -133,13 +133,13 @@ export default function AboutPage() {
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
               href="/team"
-              className="inline-flex items-center px-6 py-3 rounded-full bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
+              className="inline-flex items-center px-6 py-3 rounded-lg bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
             >
               Meet the team
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center px-6 py-3 rounded-full border border-househaven-navy/20 text-househaven-navy font-semibold hover:bg-househaven-navy hover:text-white transition"
+              className="inline-flex items-center px-6 py-3 rounded-lg border border-househaven-navy/20 text-househaven-navy font-semibold hover:bg-househaven-navy hover:text-white transition"
             >
               Contact us
             </Link>

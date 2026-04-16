@@ -36,12 +36,12 @@ export default function NewsletterSignup() {
           name="email"
           required
           placeholder="you@email.com"
-          className="flex-1 px-4 py-3 rounded-full border border-white/30 bg-white/10 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-househaven-accent"
+          className="flex-1 px-4 py-3 rounded-lg border border-white/30 bg-white/10 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-househaven-accent"
         />
         <button
           type="submit"
           disabled={status === 'submitting'}
-          className="px-6 py-3 rounded-full bg-househaven-accent text-househaven-navy font-semibold hover:bg-white transition disabled:opacity-60"
+          className="px-6 py-3 rounded-lg bg-househaven-accent text-househaven-navy font-semibold hover:bg-white transition disabled:opacity-60"
         >
           {status === 'submitting' ? 'Signing up…' : 'Subscribe'}
         </button>

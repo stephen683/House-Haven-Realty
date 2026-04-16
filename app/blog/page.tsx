@@ -45,7 +45,7 @@ export default function BlogIndexPage() {
             href={`/blog/${featured.slug}`}
             className="group grid lg:grid-cols-2 gap-10 items-center"
           >
-            <div className="relative aspect-[4/3] rounded-3xl overflow-hidden bg-househaven-surface">
+            <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-househaven-surface">
               <Image
                 src={featured.heroImage}
                 alt={featured.heroCaption}
@@ -84,7 +84,7 @@ export default function BlogIndexPage() {
               <Link
                 key={p.slug}
                 href={`/blog/${p.slug}`}
-                className="group block rounded-2xl overflow-hidden bg-white border border-black/5 hover:shadow-xl transition"
+                className="group block rounded-lg overflow-hidden bg-white border border-black/5 hover:shadow-xl transition"
               >
                 <div className="relative aspect-[16/9] bg-househaven-surface">
                   <Image

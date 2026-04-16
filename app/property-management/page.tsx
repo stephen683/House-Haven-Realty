@@ -34,13 +34,13 @@ export default function PropertyManagementPage() {
               href="https://doorcollectors.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-7 py-4 rounded-full bg-househaven-accent text-househaven-navy font-semibold hover:bg-white transition"
+              className="inline-flex items-center px-7 py-4 rounded-lg bg-househaven-accent text-househaven-navy font-semibold hover:bg-white transition"
             >
               Visit Door Collectors
             </a>
             <Link
               href="/contact"
-              className="inline-flex items-center px-7 py-4 rounded-full border border-white/30 text-white font-semibold hover:bg-white hover:text-househaven-navy transition"
+              className="inline-flex items-center px-7 py-4 rounded-lg border border-white/30 text-white font-semibold hover:bg-white hover:text-househaven-navy transition"
             >
               Talk to House Haven first
             </Link>

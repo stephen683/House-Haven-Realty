@@ -122,7 +122,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
       {/* Hero image */}
       <div className="max-w-4xl mx-auto px-4 lg:px-6">
         <figure>
-          <div className="relative aspect-[16/9] rounded-3xl overflow-hidden bg-househaven-surface">
+          <div className="relative aspect-[16/9] rounded-xl overflow-hidden bg-househaven-surface">
             <Image
               src={post.heroImage}
               alt={post.heroCaption}
@@ -153,7 +153,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
               ))}
             </div>
             {section.callout && (
-              <aside className="mt-6 rounded-2xl border border-househaven-accent/30 bg-househaven-surface p-6">
+              <aside className="mt-6 rounded-lg border border-househaven-accent/30 bg-househaven-surface p-6">
                 <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
                   {section.callout.title}
                 </p>
@@ -169,10 +169,10 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
       {/* Author card */}
       {author && (
         <section className="max-w-3xl mx-auto px-4 lg:px-6 pb-16">
-          <div className="rounded-3xl border border-black/5 bg-househaven-surface p-6 lg:p-8 flex gap-6 items-start">
+          <div className="rounded-xl border border-black/5 bg-househaven-surface p-6 lg:p-8 flex gap-6 items-start">
             <Link
               href={`/team/${author.slug}`}
-              className="relative h-20 w-20 lg:h-24 lg:w-24 rounded-2xl overflow-hidden shrink-0 bg-white"
+              className="relative h-20 w-20 lg:h-24 lg:w-24 rounded-lg overflow-hidden shrink-0 bg-white"
             >
               <Image
                 src={author.headshotUrl}
@@ -239,7 +239,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
                 <Link
                   key={p.slug}
                   href={`/blog/${p.slug}`}
-                  className="group block rounded-2xl overflow-hidden bg-white border border-black/5 hover:shadow-xl transition"
+                  className="group block rounded-lg overflow-hidden bg-white border border-black/5 hover:shadow-xl transition"
                 >
                   <div className="relative aspect-[16/9] bg-househaven-surface">
                     <Image
@@ -279,7 +279,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center mt-8 px-7 py-4 rounded-full bg-househaven-accent text-househaven-navy font-semibold hover:bg-white transition"
+            className="inline-flex items-center mt-8 px-7 py-4 rounded-lg bg-househaven-accent text-househaven-navy font-semibold hover:bg-white transition"
           >
             Contact the team
           </Link>

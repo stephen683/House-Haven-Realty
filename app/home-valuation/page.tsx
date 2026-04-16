@@ -45,7 +45,7 @@ export default function HomeValuationPage() {
       </section>
 
       <section className="max-w-3xl mx-auto px-4 lg:px-6 py-16 lg:py-20">
-        <div className="rounded-3xl border border-black/5 bg-white p-6 lg:p-10 shadow-sm">
+        <div className="rounded-xl border border-black/5 bg-white p-6 lg:p-10 shadow-sm">
           <h2 className="font-serif text-3xl text-househaven-navy">
             Request your free CMA
           </h2>
@@ -55,7 +55,7 @@ export default function HomeValuationPage() {
           <ValuationForm />
         </div>
 
-        <div className="mt-10 rounded-2xl border border-househaven-accent/30 bg-househaven-surface p-6 text-sm text-househaven-text-muted leading-relaxed">
+        <div className="mt-10 rounded-lg border border-househaven-accent/30 bg-househaven-surface p-6 text-sm text-househaven-text-muted leading-relaxed">
           <p>
             <strong className="text-househaven-navy">A note on automated estimates.</strong>{' '}
             Online value tools (Zestimate, Redfin, etc.) are based on public records and

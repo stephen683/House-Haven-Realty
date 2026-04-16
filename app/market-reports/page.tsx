@@ -56,7 +56,7 @@ export default function MarketReportsPage() {
           </p>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border border-black/5">
+        <div className="overflow-hidden rounded-lg border border-black/5">
           <table className="w-full text-sm">
             <thead className="bg-househaven-surface">
               <tr>
@@ -91,7 +91,7 @@ export default function MarketReportsPage() {
           </table>
         </div>
 
-        <div className="mt-12 rounded-3xl border border-dashed border-black/10 bg-househaven-surface p-10 text-center">
+        <div className="mt-12 rounded-xl border border-dashed border-black/10 bg-househaven-surface p-10 text-center">
           <p className="font-serif text-2xl text-househaven-navy">
             Live market data wires in with our MLS integration.
           </p>
@@ -101,7 +101,7 @@ export default function MarketReportsPage() {
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center mt-6 px-6 py-3 rounded-full bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
+            className="inline-flex items-center mt-6 px-6 py-3 rounded-lg bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
           >
             Get this month&rsquo;s report
           </Link>
@@ -122,7 +122,7 @@ export default function MarketReportsPage() {
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center mt-8 px-6 py-3 rounded-full bg-househaven-accent text-househaven-navy font-semibold hover:bg-white transition"
+            className="inline-flex items-center mt-8 px-6 py-3 rounded-lg bg-househaven-accent text-househaven-navy font-semibold hover:bg-white transition"
           >
             Subscribe to the report
           </Link>

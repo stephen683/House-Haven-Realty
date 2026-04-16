@@ -42,7 +42,7 @@ export default function HomesForSalePage() {
       </section>
 
       <section className="max-w-7xl mx-auto px-4 lg:px-6 py-12 lg:py-16">
-        <form className="grid md:grid-cols-5 gap-4 p-6 rounded-3xl border border-black/5 bg-white shadow-sm">
+        <form className="grid md:grid-cols-5 gap-4 p-6 rounded-xl border border-black/5 bg-white shadow-sm">
           <div className="md:col-span-2">
             <label className="block text-xs font-medium text-househaven-text-muted mb-1">
               Location
@@ -91,7 +91,7 @@ export default function HomesForSalePage() {
               <button
                 key={t}
                 type="button"
-                className="px-3 py-1.5 rounded-full border border-black/10 text-xs font-medium text-househaven-text-muted hover:bg-househaven-surface transition"
+                className="px-3 py-1.5 rounded-lg border border-black/10 text-xs font-medium text-househaven-text-muted hover:bg-househaven-surface transition"
               >
                 {t}
               </button>
@@ -101,14 +101,14 @@ export default function HomesForSalePage() {
             <button
               type="button"
               disabled
-              className="inline-flex items-center px-6 py-3 rounded-full bg-househaven-navy text-white font-semibold disabled:opacity-60"
+              className="inline-flex items-center px-6 py-3 rounded-lg bg-househaven-navy text-white font-semibold disabled:opacity-60"
             >
               Search — launching with IDX
             </button>
           </div>
         </form>
 
-        <div className="mt-12 rounded-3xl border border-dashed border-black/10 bg-househaven-surface p-10 text-center">
+        <div className="mt-12 rounded-xl border border-dashed border-black/10 bg-househaven-surface p-10 text-center">
           <h2 className="font-serif text-3xl text-househaven-navy">
             Live MLS search launches with Phase 3.
           </h2>
@@ -119,7 +119,7 @@ export default function HomesForSalePage() {
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center mt-6 px-6 py-3 rounded-full bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
+            className="inline-flex items-center mt-6 px-6 py-3 rounded-lg bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
           >
             Request a custom search
           </Link>

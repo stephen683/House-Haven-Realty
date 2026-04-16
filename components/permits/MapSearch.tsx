@@ -117,7 +117,7 @@ export default function MapSearch({ onSelect }: MapSearchProps) {
           role="combobox"
         />
         {loading && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 border-2 border-househaven-navy/30 border-t-househaven-navy rounded-full animate-spin" />
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 border-2 border-househaven-navy/30 border-t-househaven-navy rounded-lg animate-spin" />
         )}
       </div>
 

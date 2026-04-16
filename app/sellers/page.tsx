@@ -59,7 +59,7 @@ export default function SellersPage() {
           </p>
           <Link
             href="/home-valuation"
-            className="inline-flex items-center mt-8 px-7 py-4 rounded-full bg-white text-househaven-navy font-semibold hover:bg-househaven-accent transition"
+            className="inline-flex items-center mt-8 px-7 py-4 rounded-lg bg-white text-househaven-navy font-semibold hover:bg-househaven-accent transition"
           >
             Get my free home value
           </Link>
@@ -77,7 +77,7 @@ export default function SellersPage() {
         <ol className="mt-10 space-y-6">
           {sellSteps.map((s, i) => (
             <li key={s} className="flex gap-5">
-              <div className="shrink-0 h-10 w-10 rounded-full bg-househaven-navy text-white flex items-center justify-center font-serif text-base">
+              <div className="shrink-0 h-10 w-10 rounded-lg bg-househaven-navy text-white flex items-center justify-center font-serif text-base">
                 {i + 1}
               </div>
               <p className="text-househaven-text leading-relaxed">{s}</p>
@@ -114,7 +114,7 @@ export default function SellersPage() {
           <div className="mt-12 text-center">
             <Link
               href="/home-valuation"
-              className="inline-flex items-center px-7 py-4 rounded-full bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
+              className="inline-flex items-center px-7 py-4 rounded-lg bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
             >
               Get my free CMA
             </Link>

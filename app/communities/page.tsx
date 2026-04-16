@@ -58,7 +58,7 @@ export default function CommunitiesIndexPage() {
             <a
               key={county}
               href={`#county-${county.toLowerCase().replace(/[^a-z]/g, '-')}`}
-              className="shrink-0 px-3 py-1.5 rounded-full bg-househaven-surface text-xs font-medium text-househaven-navy hover:bg-househaven-navy hover:text-white transition"
+              className="shrink-0 px-3 py-1.5 rounded-lg bg-househaven-surface text-xs font-medium text-househaven-navy hover:bg-househaven-navy hover:text-white transition"
             >
               {county} ({byCounty[county].length})
             </a>
@@ -93,14 +93,14 @@ export default function CommunitiesIndexPage() {
                   <Link
                     key={c.slug}
                     href={`/communities/${c.slug}`}
-                    className="group block rounded-2xl border border-black/5 bg-white p-6 hover:shadow-xl hover:border-househaven-navy/10 transition"
+                    className="group block rounded-lg border border-black/5 bg-white p-6 hover:shadow-xl hover:border-househaven-navy/10 transition"
                   >
                     <div className="flex items-center justify-between">
                       <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
                         {c.zips.join(', ')}
                       </p>
                       {c.tier === 1 && (
-                        <span className="text-[9px] uppercase tracking-wider font-bold text-househaven-accent bg-househaven-accent/10 px-2 py-0.5 rounded-full">
+                        <span className="text-[9px] uppercase tracking-wider font-bold text-househaven-accent bg-househaven-accent/10 px-2 py-0.5 rounded-lg">
                           Core
                         </span>
                       )}
@@ -124,7 +124,7 @@ export default function CommunitiesIndexPage() {
           )
         })}
 
-        <div className="rounded-3xl bg-househaven-surface border border-black/5 p-8 text-center">
+        <div className="rounded-xl bg-househaven-surface border border-black/5 p-8 text-center">
           <p className="font-serif text-2xl text-househaven-navy">
             More communities on the way.
           </p>
@@ -135,7 +135,7 @@ export default function CommunitiesIndexPage() {
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center mt-6 px-6 py-3 rounded-full bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
+            className="inline-flex items-center mt-6 px-6 py-3 rounded-lg bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
           >
             Suggest a community
           </Link>

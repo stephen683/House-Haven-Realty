@@ -103,7 +103,7 @@ export default function ContactPage() {
               </a>
             </div>
           </div>
-          <div className="rounded-2xl overflow-hidden border border-black/5">
+          <div className="rounded-lg overflow-hidden border border-black/5">
             <iframe
               title="House Haven Realty office"
               aria-label="Map of the House Haven Realty office"
@@ -117,7 +117,7 @@ export default function ContactPage() {
           </div>
         </aside>
 
-        <div className="lg:col-span-3 rounded-3xl border border-black/5 bg-white p-8 lg:p-10 shadow-sm">
+        <div className="lg:col-span-3 rounded-xl border border-black/5 bg-white p-8 lg:p-10 shadow-sm">
           <h2 className="font-serif text-3xl text-househaven-navy mb-6">
             Send us a message
           </h2>

@@ -43,7 +43,7 @@ export default function PermitDetailPanel({ permit, onClose }: PermitDetailPanel
       <div className="flex items-start justify-between p-4 border-b border-black/5">
         <div className="flex items-center gap-2">
           <span
-            className={`inline-block h-2.5 w-2.5 rounded-full ${recencyColor(permit.daysAgo)}`}
+            className={`inline-block h-2.5 w-2.5 rounded-lg ${recencyColor(permit.daysAgo)}`}
           />
           <span className="text-[11px] text-househaven-text-muted">
             {recencyLabel(permit.daysAgo)}

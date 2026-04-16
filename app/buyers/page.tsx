@@ -86,7 +86,7 @@ export default function BuyersPage() {
         <ol className="space-y-10">
           {steps.map((s, i) => (
             <li key={s.title} className="flex gap-6">
-              <div className="shrink-0 h-14 w-14 rounded-full bg-househaven-navy text-white flex items-center justify-center font-serif text-xl">
+              <div className="shrink-0 h-14 w-14 rounded-lg bg-househaven-navy text-white flex items-center justify-center font-serif text-xl">
                 {i + 1}
               </div>
               <div>
@@ -97,7 +97,7 @@ export default function BuyersPage() {
           ))}
         </ol>
 
-        <div className="mt-16 rounded-2xl border border-househaven-accent/30 bg-househaven-surface p-6">
+        <div className="mt-16 rounded-lg border border-househaven-accent/30 bg-househaven-surface p-6">
           <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
             Important for 2025/2026 buyers
           </p>
@@ -115,7 +115,7 @@ export default function BuyersPage() {
         <div className="mt-14 text-center">
           <Link
             href="/contact"
-            className="inline-flex items-center px-7 py-4 rounded-full bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
+            className="inline-flex items-center px-7 py-4 rounded-lg bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
           >
             Start a conversation
           </Link>

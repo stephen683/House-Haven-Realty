@@ -103,7 +103,7 @@ export default function Header() {
             </a>
             <Link
               href="/home-valuation"
-              className="inline-flex items-center px-4 py-2 rounded-full bg-househaven-navy text-white text-sm font-medium hover:bg-househaven-navy-light transition"
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-househaven-navy text-white text-sm font-medium hover:bg-househaven-navy-light transition"
             >
               Home Value
             </Link>
@@ -150,7 +150,7 @@ export default function Header() {
               <Link
                 href="/home-valuation"
                 onClick={() => setOpen(false)}
-                className="inline-flex items-center px-4 py-2 rounded-full bg-househaven-navy text-white text-sm font-medium"
+                className="inline-flex items-center px-4 py-2 rounded-lg bg-househaven-navy text-white text-sm font-medium"
               >
                 Home Value
               </Link>

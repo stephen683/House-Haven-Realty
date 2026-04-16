@@ -83,7 +83,7 @@ export default function MapFilters({ onChange, availableZips }: MapFiltersProps)
         </svg>
         Filters
         {activeCount > 0 && (
-          <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-househaven-navy text-white text-[10px] font-bold">
+          <span className="inline-flex items-center justify-center h-5 w-5 rounded-lg bg-househaven-navy text-white text-[10px] font-bold">
             {activeCount}
           </span>
         )}
@@ -91,7 +91,7 @@ export default function MapFilters({ onChange, availableZips }: MapFiltersProps)
 
       {/* Filter panel */}
       {expanded && (
-        <div className="absolute top-full left-0 mt-2 w-72 bg-white border border-black/10 rounded-2xl shadow-xl p-4 space-y-4 z-50">
+        <div className="absolute top-full left-0 mt-2 w-72 bg-white border border-black/10 rounded-lg shadow-xl p-4 space-y-4 z-50">
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-wider text-househaven-navy">
               Filter permits

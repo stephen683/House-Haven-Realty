@@ -10,7 +10,7 @@ export default function OGImage() {
     (
       <div
         style={{
-          background: 'linear-gradient(135deg, #1a1a2e 0%, #2d2d4e 100%)',
+          background: 'linear-gradient(135deg, #000000 0%, #1a1a1a 100%)',
           width: '100%',
           height: '100%',
           display: 'flex',
@@ -42,7 +42,7 @@ export default function OGImage() {
           <div
             style={{
               fontSize: '28px',
-              color: '#c9a96e',
+              color: '#C6C4C4',
               letterSpacing: '0.15em',
               textTransform: 'uppercase' as const,
             }}

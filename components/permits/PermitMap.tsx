@@ -36,7 +36,7 @@ export default function PermitMap({ permits }: PermitMapProps) {
   )
 
   return (
-    <div className="relative w-full h-[560px] rounded-3xl overflow-hidden border border-black/10">
+    <div className="relative w-full h-[560px] rounded-xl overflow-hidden border border-black/10">
       <Map
         initialViewState={NASHVILLE}
         mapStyle={MAP_STYLE}

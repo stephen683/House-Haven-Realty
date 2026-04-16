@@ -29,7 +29,7 @@ export default function ListingDetailPage({ params }: ListingDetailProps) {
           Realtracs MLS. Until then, contact us directly for full details on any address.
         </p>
 
-        <div className="mt-10 rounded-3xl border border-dashed border-black/10 bg-househaven-surface p-10 text-center">
+        <div className="mt-10 rounded-xl border border-dashed border-black/10 bg-househaven-surface p-10 text-center">
           <p className="font-serif text-2xl text-househaven-navy">
             Want details on this property?
           </p>
@@ -38,7 +38,7 @@ export default function ListingDetailPage({ params }: ListingDetailProps) {
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center mt-6 px-6 py-3 rounded-full bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
+            className="inline-flex items-center mt-6 px-6 py-3 rounded-lg bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
           >
             Contact an agent
           </Link>

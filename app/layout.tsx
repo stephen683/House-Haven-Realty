@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { DM_Sans, Playfair_Display } from 'next/font/google'
+import localFont from 'next/font/local'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
@@ -7,15 +7,17 @@ import SiteFooter from '@/components/compliance/SiteFooter'
 import Header from '@/components/layout/Header'
 import OrganizationJsonLd from '@/components/seo/OrganizationJsonLd'
 
-const dmSans = DM_Sans({
-  subsets: ['latin'],
-  variable: '--font-dm-sans',
+const modulusBold = localFont({
+  src: '../public/fonts/Modulus-Bold.otf',
+  variable: '--font-modulus-bold',
+  weight: '700',
   display: 'swap',
 })
 
-const playfair = Playfair_Display({
-  subsets: ['latin'],
-  variable: '--font-playfair',
+const modulusRegular = localFont({
+  src: '../public/fonts/Modulus_Medium.ttf',
+  variable: '--font-modulus',
+  weight: '500',
   display: 'swap',
 })
 
@@ -40,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${playfair.variable}`}>
+    <html lang="en" className={`${modulusRegular.variable} ${modulusBold.variable}`}>
       <body className="font-sans bg-white text-househaven-text antialiased">
         <a
           href="#main-content"

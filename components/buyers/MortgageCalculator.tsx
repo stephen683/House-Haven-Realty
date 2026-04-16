@@ -94,7 +94,7 @@ export default function MortgageCalculator() {
   }, [price, downPct, rate, years, taxRate, insuranceAnnual])
 
   return (
-    <div className="rounded-3xl border border-black/5 bg-white p-6 lg:p-10 shadow-sm">
+    <div className="rounded-xl border border-black/5 bg-white p-6 lg:p-10 shadow-sm">
       <div className="flex items-start justify-between flex-wrap gap-4 mb-8">
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
@@ -167,7 +167,7 @@ export default function MortgageCalculator() {
           />
         </div>
 
-        <div className="lg:col-span-2 rounded-2xl bg-househaven-navy text-white p-6 lg:p-8 flex flex-col justify-center">
+        <div className="lg:col-span-2 rounded-lg bg-househaven-navy text-white p-6 lg:p-8 flex flex-col justify-center">
           <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
             Estimated monthly
           </p>

@@ -80,7 +80,7 @@ export default function MovingChecklist() {
         return (
           <div
             key={cat.title}
-            className="rounded-2xl border border-black/5 bg-white overflow-hidden"
+            className="rounded-lg border border-black/5 bg-white overflow-hidden"
           >
             <button
               type="button"

@@ -14,7 +14,7 @@ export default function AgentCard({ agent, compact = false }: AgentCardProps) {
       className="group block text-center"
     >
       <div
-        className={`relative mx-auto overflow-hidden rounded-2xl bg-househaven-surface ${
+        className={`relative mx-auto overflow-hidden rounded-lg bg-househaven-surface ${
           compact ? 'aspect-square w-40' : 'aspect-[4/5]'
         }`}
       >

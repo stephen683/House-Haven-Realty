@@ -96,12 +96,12 @@ export default function NewConstructionMap({
 
           {/* Stats pills */}
           <div className="flex flex-wrap gap-3 text-xs">
-            <div className="px-3 py-1.5 rounded-full bg-white/10">
+            <div className="px-3 py-1.5 rounded-lg bg-white/10">
               <span className="text-white/60">Permits:</span>{' '}
               <span className="font-semibold">{permitCount.toLocaleString()}</span>
             </div>
             {avgCost > 0 && (
-              <div className="px-3 py-1.5 rounded-full bg-white/10">
+              <div className="px-3 py-1.5 rounded-lg bg-white/10">
                 <span className="text-white/60">Avg cost:</span>{' '}
                 <span className="font-semibold">
                   ${Math.round(avgCost).toLocaleString()}
@@ -111,7 +111,7 @@ export default function NewConstructionMap({
             {topZips.slice(0, 3).map(([zip, count]) => (
               <div
                 key={zip}
-                className="px-3 py-1.5 rounded-full bg-white/10 hidden md:block"
+                className="px-3 py-1.5 rounded-lg bg-white/10 hidden md:block"
               >
                 <span className="text-white/60">{zip}:</span>{' '}
                 <span className="font-semibold">{count}</span>
@@ -153,19 +153,19 @@ export default function NewConstructionMap({
           <div className="absolute left-4 bottom-4 bg-white/95 backdrop-blur rounded-xl px-4 py-3 shadow text-xs text-househaven-text space-y-1.5 pointer-events-none">
             <p className="font-semibold text-househaven-navy mb-1">Permit age</p>
             <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full bg-emerald-500" />
+              <span className="h-3 w-3 rounded-lg bg-emerald-500" />
               Last 7 days
             </div>
             <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full bg-blue-500" />
+              <span className="h-3 w-3 rounded-lg bg-blue-500" />
               8–30 days
             </div>
             <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full bg-househaven-navy" />
+              <span className="h-3 w-3 rounded-lg bg-househaven-navy" />
               31–90 days
             </div>
             <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full bg-gray-400" />
+              <span className="h-3 w-3 rounded-lg bg-gray-400" />
               Older
             </div>
           </div>
@@ -191,7 +191,7 @@ export default function NewConstructionMap({
           </p>
           <Link
             href="/contact"
-            className="shrink-0 px-3 py-1.5 rounded-full bg-househaven-navy text-white text-[10px] font-semibold hover:bg-househaven-navy-light transition"
+            className="shrink-0 px-3 py-1.5 rounded-lg bg-househaven-navy text-white text-[10px] font-semibold hover:bg-househaven-navy-light transition"
           >
             Set up permit alerts
           </Link>

@@ -109,13 +109,13 @@ export default function CommunityPage({ params }: CommunityPageProps) {
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
             <Link
               href={`/homes-for-sale?city=${encodeURIComponent(c.name)}`}
-              className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-white text-househaven-navy font-semibold hover:bg-househaven-accent transition text-sm"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-white text-househaven-navy font-semibold hover:bg-househaven-accent transition text-sm"
             >
               Search {c.name} homes
             </Link>
             <Link
               href="/home-valuation"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white/30 text-white font-semibold hover:bg-white/10 transition text-sm"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-white/30 text-white font-semibold hover:bg-white/10 transition text-sm"
             >
               What&rsquo;s my home worth?
             </Link>
@@ -154,7 +154,7 @@ export default function CommunityPage({ params }: CommunityPageProps) {
               Search all {c.name} homes →
             </Link>
           </div>
-          <div className="rounded-2xl border border-dashed border-black/10 bg-white p-10 text-center text-househaven-text-muted">
+          <div className="rounded-lg border border-dashed border-black/10 bg-white p-10 text-center text-househaven-text-muted">
             <p>
               Live MLS listings for {c.name} launch with our Phase 3 IDX integration.
               Meanwhile, reach out and we&rsquo;ll send you hand-picked active listings the
@@ -201,7 +201,7 @@ export default function CommunityPage({ params }: CommunityPageProps) {
               Interested in {c.name}? Let&rsquo;s find your perfect home.
             </h2>
           </div>
-          <div className="bg-white rounded-3xl p-6 lg:p-10">
+          <div className="bg-white rounded-xl p-6 lg:p-10">
             <ContactForm source={`community:${c.slug}`} />
           </div>
         </div>

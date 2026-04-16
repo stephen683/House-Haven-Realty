@@ -48,7 +48,7 @@ export default function AgentProfilePage({ params }: AgentPageProps) {
       />
       <section className="max-w-6xl mx-auto px-4 lg:px-6 py-16 lg:py-24 grid lg:grid-cols-5 gap-12">
         <div className="lg:col-span-2">
-          <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-househaven-surface">
+          <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-househaven-surface">
             <Image
               src={agent.headshotUrl}
               alt={`${agent.name}, ${agent.title} at House Haven Realty`}
@@ -83,7 +83,7 @@ export default function AgentProfilePage({ params }: AgentPageProps) {
             {agent.phone && (
               <a
                 href={`tel:${agent.phone.replace(/[^0-9]/g, '')}`}
-                className="inline-flex items-center px-5 py-3 rounded-full bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
+                className="inline-flex items-center px-5 py-3 rounded-lg bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
               >
                 {agent.phone}
               </a>
@@ -91,14 +91,14 @@ export default function AgentProfilePage({ params }: AgentPageProps) {
             {agent.email && (
               <a
                 href={`mailto:${agent.email}`}
-                className="inline-flex items-center px-5 py-3 rounded-full border border-househaven-navy/20 text-househaven-navy font-semibold hover:bg-househaven-navy hover:text-white transition"
+                className="inline-flex items-center px-5 py-3 rounded-lg border border-househaven-navy/20 text-househaven-navy font-semibold hover:bg-househaven-navy hover:text-white transition"
               >
                 Email {agent.name.split(' ')[0]}
               </a>
             )}
             <Link
               href="/contact"
-              className="inline-flex items-center px-5 py-3 rounded-full border border-househaven-navy/20 text-househaven-navy font-semibold hover:bg-househaven-navy hover:text-white transition"
+              className="inline-flex items-center px-5 py-3 rounded-lg border border-househaven-navy/20 text-househaven-navy font-semibold hover:bg-househaven-navy hover:text-white transition"
             >
               Send a message
             </Link>
