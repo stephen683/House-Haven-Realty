@@ -17,11 +17,46 @@ const stats = [
   { value: 'Since 2016', label: 'Licensed in TN' },
 ]
 
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Who is House Haven Realty?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'House Haven Realty is a boutique Nashville real estate brokerage founded by Stephen Delahoussaye in 2016. With 500+ homes closed and $250M+ in volume, we serve Nashville and Middle Tennessee within a 40-mile radius of downtown.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How many agents does House Haven Realty have?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'House Haven Realty is a team of 11 licensed agents. We are intentionally small — every agent is someone Stephen personally trusts with his own family\'s biggest decisions. Our boutique size means personalized service and direct broker access.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What areas does House Haven Realty cover?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'We cover everything within a 40-mile radius of downtown Nashville, including Davidson, Williamson, Sumner, Rutherford, Wilson, Robertson, Cheatham, and Dickson counties. That\'s 57+ communities from East Nashville to Spring Hill, Hendersonville to Murfreesboro.',
+      },
+    },
+  ],
+}
+
 export default function AboutPage() {
   const stephen = teamMembers.find((m) => m.slug === 'stephen-delahoussaye')!
 
   return (
     <main className="bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       {/* Hero */}
       <section className="relative bg-househaven-navy text-white overflow-hidden">
         <Image

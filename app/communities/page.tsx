@@ -10,6 +10,45 @@ export const metadata: Metadata = {
   alternates: { canonical: '/communities' },
 }
 
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What are the best suburbs of Nashville?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'The best Nashville suburbs depend on your priorities. For top schools: Franklin, Brentwood, and Nolensville (Williamson County). For affordability: Gallatin, La Vergne, and Antioch. For lake life: Hendersonville. For commuters: Mt. Juliet, Smyrna, and Bellevue. House Haven Realty covers 57 communities across the Nashville metro.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How far is the Nashville commute from surrounding suburbs?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Commute times vary: Brentwood and Bellevue are 20 minutes, Franklin is 25 minutes, Hendersonville is 25 minutes, Mt. Juliet is 25 minutes, Murfreesboro is 35 minutes, and Gallatin is 30 minutes. Rush hour can add 15-30 minutes on I-65 and I-24.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What Nashville neighborhoods have the best schools?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Williamson County (Franklin, Brentwood, Nolensville) consistently ranks as the top school district in Tennessee. Sumner County (Hendersonville, Gallatin) and Wilson County (Mt. Juliet, Lebanon) are also strong performers. Within Davidson County, magnet programs like Hume-Fogg and MLK are highly competitive.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Where are the most affordable homes near Nashville?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'The most affordable Nashville-area communities include La Vergne (mid $200s), Antioch (mid $200s), Portland (low $200s), Gallatin (mid $200s-$300s), and Goodlettsville (low $300s). These areas offer the lowest entry points while remaining within commuting distance of Nashville.',
+      },
+    },
+  ],
+}
+
 export default function CommunitiesIndexPage() {
   const byCounty = communities.reduce<Record<string, typeof communities>>(
     (acc, c) => {
@@ -24,6 +63,10 @@ export default function CommunitiesIndexPage() {
 
   return (
     <main className="bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       {/* Hero */}
       <section className="relative bg-househaven-navy text-white overflow-hidden">
         <Image
