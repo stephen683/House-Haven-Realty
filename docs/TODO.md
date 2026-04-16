@@ -161,20 +161,28 @@ This document is kept in sync as Claude Code builds. Check it at the start of ev
 - [x] Full-page map layout with compact header, toolbar, responsive detail panel
 - [x] `building_permits` table migration for historical caching (Supabase migration 002)
 - [x] Daily Vercel Cron `/api/cron/sync-permits` → upserts 180 days of permits into Supabase building_permits table (6am UTC daily)
-- [ ] Permit alert email signup form (currently generic Contact CTA)
+- [x] Permit alert email signup — AlertSignup component on NashBuilds toolbar
 - [ ] Surrounding counties (Sumner/Robertson/etc.) — research + add feeds
 
-### Phase 6B — "New Builds in Nash" Product Upgrade (FLAGSHIP)
-**Goal:** Elevate from permit viewer to a PermitPilot-quality product that beats Zillow for Nashville new construction.
-- [ ] Brand research: "New Builds in Nash", "NashBuilds", or similar
-- [ ] Enrich permit data with property details (sqft, beds, baths, type) — cross-reference Nashville property records API
-- [ ] New Build Saturation Score (like PermitPilot eligibility) — activity density per ZIP/neighborhood
-- [ ] Advanced filtering: price range, beds/baths, property type, builder, ZIP, construction status (pre-construction / under construction / move-in ready)
-- [ ] Builder profiles with reputation signals
+### Phase 6B — NashBuilds Flagship Product ✅ SHIPPED
+**Branded as "NashBuilds" — standalone product at /new-builds**
+- [x] Brand: "NashBuilds" — shorter, punchier, domain-friendly
+- [x] Live ArcGIS API: services2.arcgis.com Nashville permits (29,460 records, daily refresh)
+- [x] Property detail parsing: sqft, beds, baths parsed from permit Purpose field via regex
+- [x] Property type classification: single_family, townhome, condo, duplex, multi_family, etc.
+- [x] Saturation Score algorithm: per-ZIP scoring (0-100) based on volume + value + recency
+- [x] Advanced filters: date range, cost, ZIP, beds, property type (6 dimensions)
+- [x] Builder profiles: /new-builds/builders index + /new-builds/builders/[slug] dynamic pages
+- [x] Email alert signup: AlertSignup component → leads table with target_zip + source='nashbuilds_alert'
+- [x] Standalone product UI: /new-builds with own branded header/footer (black bg, NashBuilds branding)
+- [x] Mobile bottom drawer: slide-up animation with backdrop, map stays visible
+- [x] 15 ZIP landing pages: /new-builds/[zip] with saturation hero, builders, stats, embedded map
+- [x] Homepage NashBuilds hero: flagship product showcase section
+- [x] Dynamic OG images: NashBuilds, ZIP pages, About
+- [x] Sitemap: all NashBuilds routes with daily/weekly priorities
+- [x] 15 Market Report ZIP pages: /market-reports/[zip] with 6-month pipeline trend
 - [ ] Photo integration for completed/in-progress builds
-- [ ] Email alert signup for new permits in user's target ZIP
-- [ ] Standalone product-quality UI with its own nav/branding
-- [ ] Mobile-optimized map experience with drawer detail panel
+- [ ] Surrounding county data feeds
 
 ## Phase 7 — Blog & Market Reports
 
