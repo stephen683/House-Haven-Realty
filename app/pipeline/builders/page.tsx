@@ -3,10 +3,10 @@ import Link from 'next/link'
 import { fetchAllPermits } from '@/lib/permits'
 
 export const metadata: Metadata = {
-  title: 'Nashville Builders — NashBuilds',
+  title: 'Nashville Builders — Nashville Pipeline',
   description:
     'Every builder active in Nashville new construction, ranked by permit volume, average build cost, and market presence. By House Haven Realty.',
-  alternates: { canonical: '/new-builds/builders' },
+  alternates: { canonical: '/pipeline/builders' },
 }
 
 export const revalidate = 21600
@@ -90,8 +90,8 @@ export default async function BuildersPage() {
     <main className="bg-white min-h-screen">
       <section className="bg-black text-white py-16 lg:py-20">
         <div className="max-w-5xl mx-auto px-4 lg:px-6">
-          <Link href="/new-builds" className="text-xs text-white/50 hover:text-white transition">
-            &larr; Back to NashBuilds Map
+          <Link href="/pipeline" className="text-xs text-white/50 hover:text-white transition">
+            &larr; Back to the Nashville Pipeline map
           </Link>
           <h1 className="font-serif text-4xl lg:text-5xl text-white mt-4">
             Nashville Builders
@@ -111,7 +111,7 @@ export default async function BuildersPage() {
           {builders.slice(0, 50).map((b, i) => (
             <Link
               key={b.slug}
-              href={`/new-builds/builders/${b.slug}`}
+              href={`/pipeline/builders/${b.slug}`}
               className="block rounded-lg border border-black/5 bg-white p-5 hover:shadow-lg hover:border-black/10 transition"
             >
               <div className="flex items-start justify-between gap-4">

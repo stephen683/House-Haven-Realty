@@ -73,7 +73,6 @@ export default function ZipMapEmbed({ zip, lat, lng }: ZipMapEmbedProps) {
         },
       })
 
-      // Popup on click
       map.on('click', 'permits-circle', (e) => {
         if (!e.features?.length) return
         const props = e.features[0].properties as Record<string, string>
@@ -83,15 +82,20 @@ export default function ZipMapEmbed({ zip, lat, lng }: ZipMapEmbedProps) {
         const baths = props.bathrooms ? `${props.bathrooms} bath` : ''
         const sqft = props.sqft ? `${Number(props.sqft).toLocaleString()} sqft` : ''
         const specs = [beds, baths, sqft].filter(Boolean).join(' · ')
+        const issued = props.dateIssued
+          ? new Date(props.dateIssued).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+          : ''
+        const cost = props.constructionCost ? Number(props.constructionCost).toLocaleString() : null
 
-        new maplibregl.Popup({ maxWidth: '280px' })
+        new maplibregl.Popup({ maxWidth: '300px' })
           .setLngLat(coords)
           .setHTML(`
-            <div style="font-family:system-ui;font-size:13px">
-              <strong>${props.address || 'Address withheld'}</strong><br/>
-              <span style="color:#666;font-size:11px">${specs}</span><br/>
-              ${props.constructionCost ? `<span style="font-weight:600">$${Number(props.constructionCost).toLocaleString()}</span><br/>` : ''}
-              <span style="color:#888;font-size:10px">${props.contractor || ''}</span>
+            <div style="font-family:system-ui;font-size:13px;line-height:1.45">
+              <div style="font-size:14px;font-weight:600;color:#000">${props.address || 'Address withheld'}</div>
+              <div style="font-size:11px;color:#666;margin-top:2px">Residential new construction${issued ? ` · Permit issued ${issued}` : ''}</div>
+              ${cost ? `<div style="margin-top:6px;font-weight:600">Estimated construction cost: $${cost}</div>` : ''}
+              ${props.contractor ? `<div style="margin-top:2px;font-size:11px;color:#444">Builder: ${props.contractor}</div>` : ''}
+              ${specs ? `<div style="margin-top:2px;font-size:11px;color:#444">${specs}</div>` : ''}
             </div>
           `)
           .addTo(map)

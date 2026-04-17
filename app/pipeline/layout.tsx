@@ -1,14 +1,12 @@
-// NashBuilds standalone product layout
-// Hides the main site Header/Footer by rendering a full-viewport overlay
+// Standalone full-viewport map experience — hide site Header/Footer.
 
-export default function NashBuildsLayout({
+export default function PipelineLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
     <>
-      {/* Hide parent Header and Footer for standalone product experience */}
       <style dangerouslySetInnerHTML={{ __html: `
         header.sticky { display: none !important; }
         footer[role="contentinfo"] { display: none !important; }

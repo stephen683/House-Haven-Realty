@@ -3,12 +3,12 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { fetchAllPermits } from '@/lib/permits'
 import { computeSaturationScores } from '@/lib/saturation-score'
-import { NASHBUILDS_ZIPS, ZIP_META_MAP } from '@/lib/nashbuilds-zips'
+import { PIPELINE_ZIPS, ZIP_META_MAP } from '@/lib/pipeline-zips'
 
 export const revalidate = 21600
 
 export function generateStaticParams() {
-  return NASHBUILDS_ZIPS.map((z) => ({ zip: z.zip }))
+  return PIPELINE_ZIPS.map((z) => ({ zip: z.zip }))
 }
 
 interface MarketReportPageProps {
@@ -70,7 +70,7 @@ export default async function MarketReportZipPage({ params }: MarketReportPagePr
 
   const maxMonthCount = Math.max(...monthlyTrend.map((m) => m.count), 1)
 
-  const siblingZips = NASHBUILDS_ZIPS.filter((z) => z.zip !== params.zip)
+  const siblingZips = PIPELINE_ZIPS.filter((z) => z.zip !== params.zip)
 
   return (
     <main className="bg-white min-h-screen">
@@ -130,7 +130,6 @@ export default async function MarketReportZipPage({ params }: MarketReportPagePr
         </div>
       </section>
 
-      {/* Saturation + NashBuilds link */}
       {zipScore && (
         <section className="max-w-5xl mx-auto px-4 lg:px-6 pb-10">
           <div className="rounded-lg bg-black text-white p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -142,10 +141,10 @@ export default async function MarketReportZipPage({ params }: MarketReportPagePr
               </div>
             </div>
             <Link
-              href={`/new-builds/${params.zip}`}
+              href={`/pipeline/${params.zip}`}
               className="px-5 py-2.5 rounded-lg bg-white text-black text-sm font-semibold hover:bg-househaven-accent transition"
             >
-              View on NashBuilds map →
+              View on the Nashville Pipeline map →
             </Link>
           </div>
         </section>

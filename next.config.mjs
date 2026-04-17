@@ -43,7 +43,7 @@ const nextConfig = {
       { source: '/meet-stephen-delahoussaye', destination: '/team/stephen-delahoussaye', permanent: true },
       { source: '/meet-camil-medina', destination: '/team/camil-medina', permanent: true },
       { source: '/meet-sarah-harris', destination: '/team/sarah-harris', permanent: true },
-      { source: '/meet-olivia-mortensen', destination: '/team/olivia-mortensen', permanent: true },
+      { source: '/meet-olivia-mortensen', destination: '/team', permanent: true },
       { source: '/meet-james-belote', destination: '/team/james-belote', permanent: true },
       { source: '/meet-josh-zehring', destination: '/team/josh-zehring', permanent: true },
       { source: '/meet-matthew-valluzzi', destination: '/team/matthew-valluzzi', permanent: true },
@@ -68,6 +68,15 @@ const nextConfig = {
 
       // Account / auth on the legacy site
       { source: '/property-organizer-login', destination: '/contact', permanent: true },
+
+      // Internal rebrand: NashBuilds → Nashville Pipeline
+      { source: '/new-builds', destination: '/pipeline', permanent: true },
+      { source: '/new-builds/:path*', destination: '/pipeline/:path*', permanent: true },
+      { source: '/api/nashbuilds', destination: '/api/pipeline', permanent: true },
+      { source: '/api/nashbuilds/:path*', destination: '/api/pipeline/:path*', permanent: true },
+
+      // Consolidate older duplicate route into Pipeline
+      { source: '/new-construction', destination: '/pipeline', permanent: true },
     ]
   },
 }

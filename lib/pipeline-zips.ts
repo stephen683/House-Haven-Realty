@@ -1,4 +1,4 @@
-// Top 15 Nashville ZIPs for NashBuilds landing pages
+// Top 15 Nashville ZIPs for Nashville Pipeline landing pages
 
 export interface ZipMeta {
   zip: string
@@ -8,7 +8,7 @@ export interface ZipMeta {
   lng: number
 }
 
-export const NASHBUILDS_ZIPS: ZipMeta[] = [
+export const PIPELINE_ZIPS: ZipMeta[] = [
   { zip: '37013', name: 'Antioch', area: 'Southeast Nashville', lat: 36.059, lng: -86.672 },
   { zip: '37027', name: 'Brentwood', area: 'Williamson County', lat: 36.033, lng: -86.783 },
   { zip: '37203', name: 'Midtown / The Gulch', area: 'Downtown Nashville', lat: 36.153, lng: -86.788 },
@@ -27,5 +27,5 @@ export const NASHBUILDS_ZIPS: ZipMeta[] = [
 ]
 
 export const ZIP_META_MAP = Object.fromEntries(
-  NASHBUILDS_ZIPS.map((z) => [z.zip, z]),
+  PIPELINE_ZIPS.map((z) => [z.zip, z]),
 )

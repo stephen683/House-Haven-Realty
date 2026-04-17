@@ -1,4 +1,4 @@
-// NashBuilds Saturation Score
+// Nashville Pipeline — Build Saturation Score
 // Measures new construction activity density per ZIP code.
 // Higher score = more building activity = hotter construction market.
 //

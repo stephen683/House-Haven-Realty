@@ -22,7 +22,7 @@ export default function AlertSignup({ availableZips }: AlertSignupProps) {
       body: JSON.stringify({
         email: fd.get('email'),
         tcpaConsent: fd.get('alert_tcpa') === 'on',
-        source: 'nashbuilds_alert',
+        source: 'pipeline_alert',
         targetZip: fd.get('target_zip'),
       }),
     })

@@ -10,7 +10,7 @@ const primaryNav = [
     href: '/homes-for-sale',
     children: [
       { label: 'Property Search', href: '/homes-for-sale' },
-      { label: 'NashBuilds — New Construction', href: '/new-builds' },
+      { label: 'Nashville Pipeline — New Construction', href: '/pipeline' },
       { label: 'Market Reports', href: '/market-reports' },
     ],
   },

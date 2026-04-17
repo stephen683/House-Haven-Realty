@@ -34,8 +34,9 @@ export async function generateMetadata({ params }: BuilderPageProps): Promise<Me
   const name = builderPermits[0]?.contractor || params.slug
 
   return {
-    title: `${name} — Nashville Builder Profile | NashBuilds`,
+    title: `${name} — Nashville Builder Profile | Nashville Pipeline`,
     description: `${name} has ${builderPermits.length} building permits in Nashville. View all projects, average build cost, and active zones.`,
+    alternates: { canonical: `/pipeline/builders/${params.slug}` },
   }
 }
 
@@ -80,7 +81,7 @@ export default async function BuilderProfilePage({ params }: BuilderPageProps) {
     <main className="bg-white min-h-screen">
       <section className="bg-black text-white py-16 lg:py-20">
         <div className="max-w-5xl mx-auto px-4 lg:px-6">
-          <Link href="/new-builds/builders" className="text-xs text-white/50 hover:text-white transition">
+          <Link href="/pipeline/builders" className="text-xs text-white/50 hover:text-white transition">
             &larr; All Builders
           </Link>
           <h1 className="font-serif text-4xl lg:text-5xl text-white mt-4">

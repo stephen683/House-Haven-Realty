@@ -115,6 +115,7 @@ export default function MapSearch({ onSelect }: MapSearchProps) {
           aria-label="Search Nashville addresses"
           aria-expanded={open}
           aria-autocomplete="list"
+          aria-controls="map-search-suggestions"
           role="combobox"
         />
         {loading && (
@@ -124,6 +125,7 @@ export default function MapSearch({ onSelect }: MapSearchProps) {
 
       {open && suggestions.length > 0 && (
         <ul
+          id="map-search-suggestions"
           className="absolute z-50 mt-1 w-full bg-white border border-black/10 rounded-xl shadow-lg overflow-hidden"
           role="listbox"
         >

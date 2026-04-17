@@ -39,13 +39,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: true, message: 'Already subscribed' }, { status: 200 })
     }
 
+    const isPipelineAlert = source === 'pipeline_alert' || source === 'nashbuilds_alert'
     const { error } = await supabase.from('leads').insert({
       first_name: '',
       last_name: '',
       email,
-      form_type: source === 'nashbuilds_alert' ? 'nashbuilds_alert' : 'newsletter',
+      form_type: isPipelineAlert ? 'pipeline_alert' : 'newsletter',
       source,
-      interest: source === 'nashbuilds_alert' ? 'new_construction' : 'newsletter',
+      interest: isPipelineAlert ? 'new_construction' : 'newsletter',
       tcpa_consent: tcpaConsent,
       tcpa_consent_at: tcpaConsent ? new Date().toISOString() : null,
       page_url: request.headers.get('referer') || null,

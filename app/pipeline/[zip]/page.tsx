@@ -3,14 +3,14 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { fetchAllPermits } from '@/lib/permits'
 import { computeSaturationScores } from '@/lib/saturation-score'
-import { NASHBUILDS_ZIPS, ZIP_META_MAP } from '@/lib/nashbuilds-zips'
+import { PIPELINE_ZIPS, ZIP_META_MAP } from '@/lib/pipeline-zips'
 import type { NormalizedPermit } from '@/lib/permits'
 import ZipMapEmbed from './ZipMapEmbed'
 
 export const revalidate = 21600
 
 export function generateStaticParams() {
-  return NASHBUILDS_ZIPS.map((z) => ({ zip: z.zip }))
+  return PIPELINE_ZIPS.map((z) => ({ zip: z.zip }))
 }
 
 interface ZipPageProps {
@@ -21,9 +21,9 @@ export async function generateMetadata({ params }: ZipPageProps): Promise<Metada
   const meta = ZIP_META_MAP[params.zip]
   if (!meta) return { title: 'ZIP Not Found' }
   return {
-    title: `New Construction in ${params.zip} (${meta.name}) — NashBuilds`,
-    description: `${meta.name} (${params.zip}) new construction activity: live building permits, saturation score, top builders, and average build costs. By House Haven Realty.`,
-    alternates: { canonical: `/new-builds/${params.zip}` },
+    title: `New Construction in ${params.zip} (${meta.name}) — Nashville Pipeline`,
+    description: `${meta.name} (${params.zip}) new construction activity: live building permits, saturation score, top builders, and average build costs. From Nashville Pipeline by House Haven Realty.`,
+    alternates: { canonical: `/pipeline/${params.zip}` },
   }
 }
 
@@ -102,19 +102,40 @@ export default async function ZipPage({ params }: ZipPageProps) {
   }
   const typeBreakdown = Array.from(typeCounts.entries()).sort((a, b) => b[1] - a[1])
 
-  // Sibling ZIPs (other NashBuilds ZIPs)
-  const siblingZips = NASHBUILDS_ZIPS.filter((z) => z.zip !== params.zip)
+  const siblingZips = PIPELINE_ZIPS.filter((z) => z.zip !== params.zip)
 
-  // Structured data
   const schemaData = [
     {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://househavenrealty.com' },
-        { '@type': 'ListItem', position: 2, name: 'NashBuilds', item: 'https://househavenrealty.com/new-builds' },
+        { '@type': 'ListItem', position: 2, name: 'Nashville Pipeline', item: 'https://househavenrealty.com/pipeline' },
         { '@type': 'ListItem', position: 3, name: `${params.zip} — ${meta.name}` },
       ],
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Dataset',
+      name: `Nashville Pipeline — ${params.zip} ${meta.name}`,
+      description: `Residential building permits issued in ZIP ${params.zip} (${meta.name}, Nashville TN), updated daily from Metro Nashville Codes Department.`,
+      url: `https://househavenrealty.com/pipeline/${params.zip}`,
+      keywords: [
+        `${params.zip} new construction`,
+        `${meta.name} new homes`,
+        `Nashville ${params.zip} building permits`,
+      ],
+      creator: {
+        '@type': 'Organization',
+        name: 'House Haven Realty',
+        url: 'https://househavenrealty.com',
+      },
+      isAccessibleForFree: true,
+      spatialCoverage: {
+        '@type': 'Place',
+        name: `${meta.name}, Nashville TN ${params.zip}`,
+        geo: { '@type': 'GeoCoordinates', latitude: meta.lat, longitude: meta.lng },
+      },
     },
     {
       '@context': 'https://schema.org',
@@ -143,7 +164,7 @@ export default async function ZipPage({ params }: ZipPageProps) {
       <section className="bg-black text-white py-14 lg:py-20">
         <div className="max-w-5xl mx-auto px-4 lg:px-6">
           <div className="flex items-center gap-2 text-xs text-white/50 mb-4">
-            <Link href="/new-builds" className="hover:text-white transition">NashBuilds</Link>
+            <Link href="/pipeline" className="hover:text-white transition">Nashville Pipeline</Link>
             <span>/</span>
             <span className="text-white/80">{params.zip}</span>
           </div>
@@ -219,7 +240,7 @@ export default async function ZipPage({ params }: ZipPageProps) {
                 {topBuilders.map((b, i) => (
                   <Link
                     key={b.slug}
-                    href={`/new-builds/builders/${b.slug}`}
+                    href={`/pipeline/builders/${b.slug}`}
                     className="flex items-center justify-between p-4 rounded-lg border border-black/5 hover:shadow-md transition"
                   >
                     <div className="flex items-center gap-3">
@@ -257,36 +278,55 @@ export default async function ZipPage({ params }: ZipPageProps) {
             </div>
           )}
 
-          {/* Recent permits */}
           <div>
             <h2 className="font-serif text-2xl text-househaven-navy mb-4">
               Recent permits
             </h2>
-            <div className="space-y-2">
-              {zipPermits.slice(0, 10).map((p) => (
-                <div key={p.permitNumber} className="rounded-lg border border-black/5 p-3 text-sm">
-                  <div className="flex justify-between">
-                    <p className="font-medium text-househaven-navy">{p.address || 'Address withheld'}</p>
-                    {p.constructionCost && (
-                      <p className="font-serif text-househaven-navy">${Math.round(p.constructionCost).toLocaleString()}</p>
-                    )}
-                  </div>
-                  <div className="flex gap-3 mt-1 text-xs text-househaven-text-muted">
-                    <span>{formatDate(p.dateIssued)}</span>
-                    {p.bedrooms && <span>{p.bedrooms} bed</span>}
-                    {p.bathrooms && <span>{p.bathrooms} bath</span>}
-                    {p.sqft && <span>{p.sqft.toLocaleString()} sqft</span>}
-                    <span className="capitalize">{p.propertyType.replace(/_/g, ' ')}</span>
-                  </div>
+            {zipPermits.length === 0 ? (
+              <div className="rounded-lg border border-dashed border-black/10 p-6 text-center">
+                <p className="text-sm text-househaven-text">
+                  No permits in {params.zip} in the last 12 months.
+                </p>
+                <p className="text-xs text-househaven-text-muted mt-2">
+                  This ZIP can stay quiet for stretches. Check back, or set an alert and we&rsquo;ll
+                  email you when new permits are issued here.
+                </p>
+                <Link
+                  href="/pipeline"
+                  className="inline-flex items-center mt-4 text-sm font-semibold text-househaven-navy hover:text-househaven-accent transition"
+                >
+                  See active ZIPs on the map →
+                </Link>
+              </div>
+            ) : (
+              <>
+                <div className="space-y-2">
+                  {zipPermits.slice(0, 10).map((p) => (
+                    <div key={p.permitNumber} className="rounded-lg border border-black/5 p-3 text-sm">
+                      <div className="flex justify-between">
+                        <p className="font-medium text-househaven-navy">{p.address || 'Address withheld'}</p>
+                        {p.constructionCost && (
+                          <p className="font-serif text-househaven-navy">${Math.round(p.constructionCost).toLocaleString()}</p>
+                        )}
+                      </div>
+                      <div className="flex gap-3 mt-1 text-xs text-househaven-text-muted">
+                        <span>{formatDate(p.dateIssued)}</span>
+                        {p.bedrooms && <span>{p.bedrooms} bed</span>}
+                        {p.bathrooms && <span>{p.bathrooms} bath</span>}
+                        {p.sqft && <span>{p.sqft.toLocaleString()} sqft</span>}
+                        <span className="capitalize">{p.propertyType.replace(/_/g, ' ')}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <Link
-              href={`/new-builds?zip=${params.zip}`}
-              className="inline-flex items-center mt-4 text-sm font-semibold text-househaven-navy hover:text-househaven-accent transition"
-            >
-              View all on map →
-            </Link>
+                <Link
+                  href={`/pipeline?zip=${params.zip}`}
+                  className="inline-flex items-center mt-4 text-sm font-semibold text-househaven-navy hover:text-househaven-accent transition"
+                >
+                  View all on map →
+                </Link>
+              </>
+            )}
           </div>
         </div>
 
@@ -317,7 +357,7 @@ export default async function ZipPage({ params }: ZipPageProps) {
                 return (
                   <Link
                     key={z.zip}
-                    href={`/new-builds/${z.zip}`}
+                    href={`/pipeline/${z.zip}`}
                     className="flex items-center gap-2 px-3 py-2 rounded-lg bg-househaven-surface text-xs hover:shadow-sm transition"
                   >
                     {zScore && (
@@ -339,8 +379,8 @@ export default async function ZipPage({ params }: ZipPageProps) {
           <p className="text-white/50">
             House Haven Realty &middot; (615) 624-4766 &middot; Data: Metro Nashville Codes
           </p>
-          <Link href="/new-builds" className="text-white/50 hover:text-white transition">
-            &larr; Back to NashBuilds
+          <Link href="/pipeline" className="text-white/50 hover:text-white transition">
+            &larr; Back to the Pipeline map
           </Link>
         </div>
       </div>

@@ -9,7 +9,7 @@ import Link from 'next/link'
 const footerNav = {
   Explore: [
     { label: 'Homes for Sale', href: '/homes-for-sale' },
-    { label: 'New Construction Map', href: '/new-construction' },
+    { label: 'Nashville Pipeline — New Construction', href: '/pipeline' },
     { label: 'Communities', href: '/communities' },
     { label: 'Market Reports', href: '/market-reports' },
     { label: 'Blog', href: '/blog' },
