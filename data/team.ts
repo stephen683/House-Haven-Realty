@@ -1,5 +1,4 @@
-// Team data — sourced from ROADMAP Section 2
-// TODO: bios are placeholders until live agent pages are scraped; see TODO.md
+// Bios are placeholders until live agent pages are scraped; see docs/TODO.md.
 
 export interface TeamMember {
   slug: string
@@ -47,17 +46,6 @@ export const teamMembers: TeamMember[] = [
     bio:
       "Sarah coordinates every House Haven transaction from contract to close, keeping deadlines, paperwork, and people moving in the same direction. Clients describe working with Sarah as the moment a complicated process starts to feel simple.",
     sortOrder: 3,
-  },
-  {
-    slug: 'olivia-mortensen',
-    name: 'Olivia Mortensen',
-    title: 'REALTOR®',
-    headshotUrl: 'https://media.agentaprd.com/sites/213/olivia-headshot.webp',
-    bioPageUrl: 'https://househavenrealty.com/meet-olivia-mortensen/',
-    bio:
-      'Olivia is a Nashville REALTOR® with House Haven Realty, guiding buyers and sellers through Middle Tennessee with the same warmth and attention to detail that defines the House Haven team.',
-    hidden: true, // confirm with Stephen whether to surface
-    sortOrder: 4,
   },
   {
     slug: 'james-belote',

@@ -1,270 +1,175 @@
-# House Haven Realty — Living Build TODO
+# House Haven Realty — Launch Tracker
 
-**Source of truth:** `docs/ROADMAP.md`
-**Status legend:** `[ ]` pending · `[~]` in progress · `[x]` done · `[!]` blocked (needs Stephen/credentials)
-
-This document is kept in sync as Claude Code builds. Check it at the start of every session.
-
----
-
-## Environment & Credentials (blocking external integrations)
-
-- [x] Next.js 14 + TS + Tailwind scaffolding
-- [x] Supabase clients (`lib/supabase/client.ts`, `server.ts`)
-- [x] Initial schema migration (`supabase/migrations/001_initial_schema.sql`)
-- [x] Brand tokens in Tailwind + Google Fonts (Playfair + DM Sans)
-- [ ] Confirm Supabase migration is applied to remote project
-- [!] `SUPABASE_SERVICE_ROLE_KEY` in Vercel env
-- [!] `RESEND_API_KEY` in Vercel env (for lead notification emails)
-- [!] `SIMPLYRETS_API_KEY` / `SIMPLYRETS_API_SECRET` (IDX)
-- [!] `RENTCAST_API_KEY` (home valuation)
-- [!] `GOOGLE_PLACES_API_KEY` (address autocomplete + reviews)
-- [!] `HUBSPOT_API_KEY` (CRM push)
-- [!] `NASHVILLE_DATA_APP_TOKEN` (Socrata rate limit bump — optional)
-- [!] Confirm office address (Centennial Blvd vs "THE DOJO" Brentwood)
-- [!] Confirm whether to include Olivia Mortensen (hidden on current site)
+**Source of truth:** `docs/ROADMAP.md` (Master Build Spec v2)
+**Goal:** Ship the 4 launch blockers, then domain cutover. Every other feature waits.
+**Status legend:** `[ ]` pending · `[~]` in progress · `[x]` done · `[!]` blocked (needs Stephen / credentials / external approval)
 
 ---
 
-## Phase 1 — Foundation, Compliance Shell
+## ⚠️ OPEN DECISIONS (gate launch)
 
-- [x] Project init, dependencies, Tailwind config, brand colors
-- [x] Google Fonts wired in `app/layout.tsx`
-- [x] `components/compliance/SiteFooter.tsx` (firm name + phone + EHO) — expanded with socials + nav columns
-- [x] `components/compliance/IDXDisclaimer.tsx`
-- [x] `components/compliance/ComplianceBanner.tsx`
-- [x] `components/compliance/FairHousingBadge.tsx`
-- [x] `components/layout/Header.tsx` — logo mark, nav, click-to-call, mobile menu, dropdown sub-nav
-- [x] Skip-to-content link in root layout
-- [x] `components/forms/TCPAConsent.tsx` — reusable consent checkbox with Privacy Policy link
-- [x] Privacy Policy — real content
-- [x] `.eslintrc.json` (next/core-web-vitals)
-- [x] `next.config.mjs` remote image hosts (agentaprd, unsplash, chime, supabase)
-- [x] Logo package placed — landscape dark/light, vertical, icon mark in `public/images/logo/`
-- [x] Brand fonts (Modulus Bold + Medium) copied to `public/fonts/`
-- [x] Header: real landscape dark logo via next/image
-- [x] Footer: real landscape light logo on navy
-- [x] Favicon: house icon mark as `app/icon.png`
-- [ ] Download Equal Housing Opportunity logo image to `public/images/` (text badge in footer for now)
-- [ ] Download 11 team headshots to `public/images/team/` (currently remote-hosted via Next/Image unoptimized)
-- [x] `/terms-of-service` route — full content
-- [x] `/market-reports` route — county table + subscribe CTA (live data awaits MLS)
-- [x] `/property-management` route — Door Collectors handoff
+- [!] **MLS Grid Realtracs pricing** — Real cost confirmed at MLS Grid application. Stephen to call Realtracs 615-385-0777 or email info@mlsgrid.com when submitting. Verified third-party listing shows ~$250/mo.
+- [!] **RentCast plan tier** — Cheapest tier with AVM + comps is Foundation $74/mo (1,000 calls). Stephen approves Foundation, or upgrades to Growth ($199/mo, 5,000 calls)?
 
-## Phase 2 — Core Pages
+## ✅ DECISIONS RESOLVED (2026-04-17)
 
-### Homepage
-- [x] Hero section with headline, subheadline, dual CTAs
-- [x] Featured Listings section (placeholder cards until IDX live) + IDX disclaimer
-- [x] "Explore Our Communities" grid
-- [x] Testimonials carousel (7 verbatim testimonials) — `TestimonialCarousel.tsx`
-- [x] New Construction Map teaser
-- [x] Meet the Team teaser
-- [x] Newsletter signup with TCPA consent — `NewsletterSignup.tsx`
+- **Brand kit always wins.** Locked: Modulus Bold + Regular fonts, B/W/Grey palette only, no accent color. v2 spec's serif/Inter Tight + warm accent proposals are dead.
+- **Hero stats: "500+ homes closed · $250M+ sold."** Use these everywhere. v2 spec's "219 closings · $124M" is dead.
+- **Office: 5016 Centennial Blvd Suite 200, Nashville TN 37209.** Already correct sitewide (footer, contact, privacy, terms, JSON-LD).
+- **Olivia Mortensen: removed.** Deleted from `data/team.ts`; `/meet-olivia-mortensen` Blok redirect now points to `/team` index instead of a 404. Visible team count = 10.
+- **NAR commission disclosure exact wording:** *"Broker commissions are not set by law and are fully negotiable."* Source: NAR settlement effective Aug 17 2024; same wording sitewide on seller-facing surfaces (Sellers page, Value page, listing-detail seller-info).
 
-### About
-- [x] Hero + boutique story copy
-- [x] Stephen personal bio block
-- [x] Stats bar (219+ sales, $124.2M, price range, since 2016)
-- [x] "Rent Less, Own More!" initiative block
-- [x] Team + contact CTAs
+---
 
-### Team
-- [x] `data/team.ts` — all 11 agents with headshots, titles, placeholder bios
-- [x] `app/team/page.tsx` — grid of `AgentCard`s
-- [x] `app/team/[slug]/page.tsx` — dynamic agent profile
-- [x] `generateStaticParams` — 11 static paths generated
-- [ ] **TODO: scrape live bios from current site (currently good-faith placeholders)**
-- [!] Confirm Olivia Mortensen visibility with Stephen
+## 🚦 LAUNCH BLOCKERS (the only 4 things that ship before cutover)
 
-### Contact
-- [x] Contact info block (address, phone, email, socials)
-- [x] Google Map embed (iframe)
-- [x] Contact form with TCPA consent + interest dropdown — `ContactForm.tsx`
-- [x] `app/api/contact/route.ts` — validates, writes to Supabase, sends Resend email if key present
+### Blocker 1 — Realtracs IDX via MLS Grid ✅ CODE SHIPPED, AWAITS API KEY
 
-## Phase 3 — IDX Property Search
+- [!] Stephen submits MLS Grid application (gates real data; ~2-day approval expected)
+- [!] Stephen sets `MLS_GRID_API_KEY` in Vercel
+- [x] `lib/mlsgrid.ts` — typed RESO Web API v2 client with mock fallback (returns 8 sample listings until API key is set)
+- [x] `supabase/migrations/004_listings_cache.sql` — `listings_cache` table (apply via Supabase MCP)
+- [x] `app/homes-for-sale/page.tsx` — full search with filters (city/zip/price/beds/type)
+- [x] `app/homes-for-sale/[id]/page.tsx` — full detail with hero + photo grid + listing attribution
+- [x] `components/listings/` — ListingCard, ListingGrid, SearchFilters
+- [x] NAR IDX compliance: Realtracs copyright, "deemed reliable" disclaimer, last-updated timestamp, listing brokerage attribution on every detail card, no buyer-agent compensation displayed
+- [x] **NAR 2026 commission-negotiable disclosure** in `IDXDisclaimer` and on listing detail
+- [x] Featured Listings strip on homepage pulls 8 cards live
+- [x] `RealEstateListing` + `BreadcrumbList` schema on detail pages
+- [ ] On API key arrival: smoke test live data, set `next.config.mjs` 15-min ISR if needed
+- [ ] Search-by-listing-status filtering (post-launch enhancement; current search defaults to Active)
 
-- [ ] `lib/simplyrets.ts` typed API client (gated on env var)
-- [x] `/homes-for-sale` page with filter UI shell (placeholder until IDX live) + IDX disclaimer
-- [x] `/homes-for-sale/[id]` listing detail shell + IDX disclaimer
-- [ ] Property card component (dynamic, once real listings wire in)
-- [ ] Listing attribution (listing agent/office) rendered
-- [ ] Map view toggle (MapLibre)
-- [ ] "Schedule a Showing" form with TCPA
-- [ ] Save search (Supabase account) — deferred
-- [!] Awaits MLS credentials
+### Blocker 2 — Homepage Rebuilt Brokerage-First ✅ SHIPPED
 
-## Phase 4 — Home Valuation (Seller Lead Gen)
+All 8 sections per ROADMAP §6.1. Composed inline in `app/page.tsx` (single-file kept simple — sections clearly delineated; can split into `components/homepage/` later if needed).
 
-- [x] `/home-valuation` page with trust indicators + CMA form
-- [x] CMA request form (name, email, phone, timeline, address, TCPA) — `ValuationForm.tsx`
-- [x] `/api/valuation` route — validates, writes Supabase, sends Resend email if key present
-- [x] Tennessee disclaimer copy
-- [x] SEO metadata
-- [ ] `lib/rentcast.ts` client for instant AVM preview (gated on env var)
-- [ ] Instant value-range UI after address lookup
-- [ ] Google Places / Mapbox address autocomplete
+- [x] Hero with locked tagline, two CTAs (Browse homes / What is my home worth), trust line ("500+ homes closed · $250M+ sold · since 2016")
+- [x] Featured Listings Strip (8 cards) pulling live via `searchListings` (mock fallback in place)
+- [x] House Haven Difference cards: Pipeline visually weighted (col-span-2 + photo hero), Value, Journey (Coming Soon with newsletter capture)
+- [x] Nashville Pipeline Preview section (full-width black) with CTA into `/pipeline`
+- [x] Communities grid — 12 featured (East Nashville, The Nations, 12 South, Germantown, Franklin, Brentwood, Mt Juliet, Hendersonville, Sylvan Park, Spring Hill, Nolensville, Thompson's Station)
+- [x] Stephen Moment — first-person paragraph + working headshot + tel: link
+- [x] Testimonials section using existing 7 verbatim
+- [x] Newsletter section (dark variant) with TCPA
+- [x] Build size: 3.57 kB / 105 kB First Load JS
+- [x] Verified TREC §5.1: firm name + phone in every-page footer; phone also in nav and Stephen Moment
+- [ ] Lighthouse Mobile Performance ≥ 90 (LCP ≤ 2.5s) — verify on Vercel preview after deploy
+- [ ] axe-core full sweep — verify on preview
+- [ ] If Stephen confirms a specific Nashville architectural photo for the hero, swap in (currently text-only hero per spec)
 
-## Phase 5 — Community Pages (Programmatic SEO)
+### Blocker 3 — House Haven Value ✅ CODE SHIPPED, AWAITS API KEYS
 
-- [x] `/communities` index — grouped by county
-- [x] `app/communities/[slug]/page.tsx` dynamic route
-- [x] `generateStaticParams` from `data/communities.ts`
-- [x] Community template sections: breadcrumbs, hero, long-form content, listings, nearby, lead capture
-- [x] Structured data (Place + geo coordinates)
-- [x] Fair-Housing-safe copy (no protected class references)
-- [ ] Map-based index with clickable pins
-- [ ] Live IDX listing embed per community (blocked on Phase 3)
-- [ ] Permit activity counter pulling from `/api/permits`
-- [ ] Market snapshot (median, DOM, trend) — blocked on MLS data
+Per ROADMAP §7. UI ships with mock-fallback estimates; real numbers activate the moment RentCast is connected.
 
-### Tier 1 community content (write first)
-- [x] Joelton
-- [x] Bordeaux / Brick Church Pike
-- [x] Whites Creek
-- [x] Madison
-- [x] Ashland City
-- [x] Pegram
-- [x] Kingston Springs
-- [x] Greenbrier
-- [x] Springfield
-- [x] White House
-- [x] Coopertown
-- [x] Dickson
-- [x] Burns
-- [x] Charlotte
-- [x] Fairview
-- [x] Thompsons Station
-- [x] Watertown
-- [x] Lebanon
-- [x] Inglewood
-- [x] Donelson — **All 20 Tier 1 communities live.**
+- [!] Stephen sets `RENTCAST_API_KEY` in Vercel (Foundation tier $74/mo confirmed)
+- [!] Stephen sets `HUBSPOT_PRIVATE_APP_TOKEN` (portal 242305648). Custom properties needed: `house_haven_source` (single-line text), `selling_timeline` (single-line text)
+- [!] Stephen sets `RESEND_API_KEY` and verifies `alerts@househavenrealty.com` sender domain
+- [ ] Stephen sets `GOOGLE_PLACES_API_KEY` (post-launch enhancement; current input is plain text and works fine without autocomplete)
+- [x] `lib/rentcast.ts` — server-side AVM client with deterministic mock fallback
+- [x] `lib/hubspot.ts` — search/create/update contact, attach note, gracefully no-op without token
+- [x] `lib/resend.ts` — wrapper that dry-runs (logs to console) without API key
+- [x] `supabase/migrations/003_value_tool.sql` — `valuation_cache` (30-day TTL) + `cma_requests` (apply via Supabase MCP)
+- [x] `app/value/page.tsx` (server, SEO meta + `LocalBusiness` + `Service` schema) + `app/value/ValueClient.tsx` (interactive)
+- [x] Result card with Low / Mid / High range + 3–5 comps (address-masked)
+- [x] CMA request form: name/email/phone/timeline + TCPA + NAR commission disclosure
+- [x] `app/api/value/route.ts` — Supabase cache check → RentCast → cache write
+- [x] `app/api/value/request-cma/route.ts` — Supabase insert → HubSpot upsert → Resend (Stephen alert + lead confirmation)
+- [x] HubSpot fallback safe: Supabase always source of truth; HubSpot failure never blocks lead
+- [x] No email wall before estimate appears
+- [x] Disclaimer: "This is an automated estimate based on public records and recent sales. It is not an appraisal."
+- [x] NAR 2026 commission disclosure on form + page footer
+- [ ] On API keys: smoke test with real Sylvan Park address; verify HubSpot contact + Stephen email + lead email
 
-### Tier 2 (build second)
-- [x] 22 Tier 2 communities shipped: Hendersonville, Gallatin, Goodlettsville, Portland, Hermitage, Antioch, Bellevue, Old Hickory, Murfreesboro, Smyrna, La Vergne, Franklin, Brentwood, Nolensville, Spring Hill, Mt. Juliet, Pleasant View, Cross Plains, Orlinda, Millersville, White Bluff
+### Blocker 4 — Nashville Pipeline Rebrand ✅ SHIPPED
 
-### Tier 3 (build last)
-- [x] 15 Nashville core neighborhoods: East Nashville, Germantown, The Gulch, 12 South, Sylvan Park, Green Hills, Berry Hill, Melrose, Wedgewood-Houston, Edgehill/Music Row, Hillsboro Village, West End/Midtown, Salemtown, The Nations, Lockeland Springs — **All 57 community pages live across 3 tiers.**
+Per ROADMAP §8. All data, scoring, and ZIP logic preserved; only the wrapper changed.
 
-## Phase 6 — New Construction Permit Map (Flagship)
+- [x] Moved: `app/new-builds/` → `app/pipeline/`, `app/api/nashbuilds/` → `app/api/pipeline/`, `components/permits/` → `components/pipeline/`, `lib/nashbuilds-zips.ts` → `lib/pipeline-zips.ts`, `NashBuildsApp.tsx` → `PipelineApp.tsx`
+- [x] Renamed exports: `NASHBUILDS_ZIPS` → `PIPELINE_ZIPS`
+- [x] All copy updated: `NashBuilds` → `Nashville Pipeline` (public) / `House Haven Pipeline` (product refs); `pipeline_alert` source name (newsletter route accepts both for backward compat)
+- [x] Updated header nav (Pipeline replaces NashBuilds entry), footer nav (Pipeline link), sitemap, market-reports/[zip] cross-links
+- [x] 301 redirects added: `/new-builds` + `/new-builds/:path*` → `/pipeline/*`; `/api/nashbuilds/*` → `/api/pipeline/*`; `/new-construction` → `/pipeline` (deleted as orphaned duplicate)
+- [x] OG images regenerated for `/pipeline` and `/pipeline/[zip]`
+- [x] `Dataset` schema added on `/pipeline` (Nashville/Davidson scope per §8.5) and per-ZIP `Dataset` + `Place` on `/pipeline/[zip]`
+- [x] Polish pass:
+  - [x] Loading skeleton on dynamic MapLibre import (spinner + label)
+  - [x] Empty state on ZIP page when 0 permits in 12mo (CTA to active ZIPs + alerts)
+  - [x] Empty state on main map when filters return 0 results (with "Clear all filters" button)
+  - [x] Permit popup copy rewrite per §8.3 template (residential new construction · permit issued date · est. cost · builder · specs)
+  - [x] "How to use this map" modal accessible from header; explains pin colors, filtering, alerts
+- [x] Build verified clean: 15 ZIP pages + builders + main map all rendering at `/pipeline/*`
+- [x] Copy says "Nashville" (not "Middle Tennessee") until Layer 0.5 county expansion
+- [ ] Builder profile pages: live "currently building" count + cross-link to MLS filter (post-launch — small enhancement)
+- [ ] Press-ready PDF export button on `/pipeline` (deferred to Layer 4 Pulse first issue)
+- [ ] Mobile pinch/tap smoothing — verify on actual iPhone/Android post-deploy
 
-- [x] `lib/permits.ts` — Nashville Socrata client with residential filter
-- [x] `/api/permits` route with days/limit params, 6-hour ISR
-- [x] `/new-construction` page — SSR from Socrata, stats bar, permit grid, lead CTA
-- [x] **MapView rebuilt** — direct MapLibre GL JS with CARTO light tiles (free, no key), GeoJSON circle layer (GPU-rendered), data-driven recency colors, hover highlight, click→detail panel
-- [x] `/api/permits/geojson` route — GeoJSON FeatureCollection endpoint for MapLibre
-- [x] `/api/suggest` + `/api/geocode` — ArcGIS Nashville address search (no API key)
-- [x] `MapSearch.tsx` — debounced autocomplete with flyTo on select
-- [x] `MapFilters.tsx` — filter panel (date range, cost min/max, ZIP code)
-- [x] `PermitDetailPanel.tsx` — click detail with permit info + lead-capture CTA
-- [x] Full-page map layout with compact header, toolbar, responsive detail panel
-- [x] `building_permits` table migration for historical caching (Supabase migration 002)
-- [x] Daily Vercel Cron `/api/cron/sync-permits` → upserts 180 days of permits into Supabase building_permits table (6am UTC daily)
-- [x] Permit alert email signup — AlertSignup component on NashBuilds toolbar
-- [ ] Surrounding counties (Sumner/Robertson/etc.) — research + add feeds
+---
 
-### Phase 6B — NashBuilds Flagship Product ✅ SHIPPED
-**Branded as "NashBuilds" — standalone product at /new-builds**
-- [x] Brand: "NashBuilds" — shorter, punchier, domain-friendly
-- [x] Live ArcGIS API: services2.arcgis.com Nashville permits (29,460 records, daily refresh)
-- [x] Property detail parsing: sqft, beds, baths parsed from permit Purpose field via regex
-- [x] Property type classification: single_family, townhome, condo, duplex, multi_family, etc.
-- [x] Saturation Score algorithm: per-ZIP scoring (0-100) based on volume + value + recency
-- [x] Advanced filters: date range, cost, ZIP, beds, property type (6 dimensions)
-- [x] Builder profiles: /new-builds/builders index + /new-builds/builders/[slug] dynamic pages
-- [x] Email alert signup: AlertSignup component → leads table with target_zip + source='nashbuilds_alert'
-- [x] Standalone product UI: /new-builds with own branded header/footer (black bg, NashBuilds branding)
-- [x] Mobile bottom drawer: slide-up animation with backdrop, map stays visible
-- [x] 15 ZIP landing pages: /new-builds/[zip] with saturation hero, builders, stats, embedded map
-- [x] Homepage NashBuilds hero: flagship product showcase section
-- [x] Dynamic OG images: NashBuilds, ZIP pages, About
-- [x] Sitemap: all NashBuilds routes with daily/weekly priorities
-- [x] 15 Market Report ZIP pages: /market-reports/[zip] with 6-month pipeline trend
-- [ ] Photo integration for completed/in-progress builds
-- [ ] Surrounding county data feeds
+## 🎬 LAUNCH PREP (post-blockers, pre-cutover)
 
-## Phase 7 — Blog & Market Reports
+- [ ] `robots.ts` updated to allow GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot, anthropic-ai, PerplexityBot, Google-Extended, Bingbot per §10.2
+- [ ] `sitemap.ts` regenerated with `/pipeline/*`, `/value`, `/homes-for-sale/*`
+- [ ] GA4 measurement ID added; events wired per §11.2 (14 events)
+- [ ] `app/api/cron/sync-permits` confirmed running daily on Vercel Pro cron
+- [ ] Resend sender domain (`alerts@househavenrealty.com`) verified in Resend dashboard
+- [ ] HubSpot custom properties created in portal 242305648: `house_haven_source`, `selling_timeline`
+- [ ] Search Console verified for `househavenrealty.com` (and submit sitemap on cutover)
+- [ ] Lighthouse audit: 10 representative pages, all categories ≥ 90 (Perf), ≥ 95 (A11y/SEO/Best Practices)
+- [ ] axe-core sweep
+- [ ] Cross-browser smoke: Chrome, Safari, Firefox, Edge, iPhone Safari, Android Chrome
+- [ ] Confirm 301 map covers every Blok URL Stephen knows about (`next.config.mjs` already has 20+; review for gaps)
 
-- [x] `data/blog.ts` — structured long-form posts with sections, callouts, related links
-- [x] `/blog` index with featured post layout + grid of remaining
-- [x] `/blog/[slug]` full post template with breadcrumbs, hero, body, author card, related communities, related posts, Article JSON-LD, OpenGraph metadata
-- [x] Real long-form content for all 5 initial posts:
-  - [x] Moving to Nashville in 2026
-  - [x] Nashville market report — April 2026
-  - [x] First-time buyer programs in Tennessee
-  - [x] Rent vs. buy in Nashville 2026
-  - [x] New construction contracts in Nashville
-- [x] Internal linking — posts reference 20 community pages and each other
-- [x] `/market-reports` page with county snapshot table
-- [ ] `next-mdx-remote` upgrade if we want richer inline components
-- [ ] Monthly cadence established (post-launch)
+## 🚪 DOMAIN CUTOVER (Gate D — Stephen explicit go)
 
-## Phase 8 — Buyer & Seller Journeys
+- [ ] Stephen DNS: `househavenrealty.com` → Vercel
+- [ ] SSL provisioning verified (Vercel auto)
+- [ ] Production smoke test: every launch-blocker page loads, every form submits, every redirect resolves
+- [ ] Submit sitemap to Search Console
+- [ ] 24-hour monitoring: Vercel Analytics, Speed Insights, error logs
+- [ ] Stephen cancels Blok subscription
+- [ ] Send launch announcement (Stephen's personal FB/IG + past-client email — see §10.4 Week 1)
 
-- [x] `/buyers` — 8-step process timeline + Buyer Representation Agreement disclosure
-- [x] `/sellers` — 8-step selling process, staging checklist, CMA CTA
-- [x] Mortgage calculator widget on `/buyers#mortgage-calculator` — `components/buyers/MortgageCalculator.tsx` (client, live PITI math, editable price/down/rate/term/tax/insurance)
-- [x] `/property-management` — Door Collectors handoff page
-- [x] Moving checklist accordion on /buyers — `MovingChecklist.tsx` (5-phase accordion with checkbox UI)
+---
 
-## Phase 9 — Reviews & Social Proof
+## 🌱 POST-LAUNCH LAYERS (do not start any of these before launch is live)
 
-- [ ] Google Places API client (or manual Supabase table)
-- [ ] Reviews widget on homepage
-- [ ] AggregateRating schema.org
-- [ ] Reviews section on About
-- [ ] Per-agent reviews on team pages
+Each layer ships with a shareable moment per §9. One layer every 2–3 weeks. Stephen approves scope + PR plan at Gate F before each layer begins.
 
-## Phase 10 — SEO & Structured Data
+- [ ] **Layer 0.5** (Week 2–3) — Pipeline county expansion (Williamson, Sumner, Rutherford, Wilson). Then update copy to "Middle Tennessee."
+- [ ] **Layer 1** (Week 4–6) — House Haven Journey (FTHB pillar + 12 spokes; built for Chris). Axios pitch + Reddit r/nashville post.
+- [ ] **Layer 2** (Week 7–9) — House Haven Match (6-question neighborhood quiz, lifestyle-only).
+- [ ] **Layer 3** (Week 10–12) — House Haven Commute (Distance Matrix). Nashville Post pitch.
+- [ ] **Layer 4** (Week 13–15) — House Haven Pulse (monthly market report). Tennessean pitch + Pulse newsletter launch.
+- [ ] **Layer 5** (Week 16–18) — House Haven Risk (FEMA NFHL + NOAA storms).
+- [ ] **Layer 6** (Week 19–21) — House Haven Tax (TN-specific calculator).
+- [ ] **Layer 7** (Week 22–24) — House Haven Comps (deed-derived, TN non-disclosure workaround).
+- [ ] **Layer 8** (Week 25–27) — House Haven Digest (homeowner retention email).
 
-- [x] Per-page metadata on every built route (title/description/canonical where relevant)
-- [x] JSON-LD: RealEstateAgent + WebSite+SearchAction rendered sitewide via `components/seo/OrganizationJsonLd.tsx`
-- [x] Place schema on every community page
-- [x] `app/sitemap.ts` — auto-includes static routes + all communities + all team members
-- [x] `app/robots.ts`
-- [x] Breadcrumb nav on community pages
-- [x] RealEstateAgent Person schema per team member on `/team/[slug]` pages (linked to parent Organization via `@id` reference)
-- [x] Article schema on blog posts (`/blog/[slug]` — headline, author, publisher, datePublished, dateModified, mainEntityOfPage)
-- [x] OpenGraph article metadata on blog posts
-- [ ] RealEstateListing + BreadcrumbList on listings (blocked on Phase 3 IDX)
-- [x] Full Breadcrumb component (`components/ui/Breadcrumbs.tsx`) with BreadcrumbList JSON-LD — used on community + blog pages
-- [x] FAQPage JSON-LD on Buyers, Sellers, and Home Valuation pages (11 FAQs targeting rich results)
-- [x] LocalBusiness JSON-LD on Contact page with geo coordinates + hours
-- [x] Enriched Organization JSON-LD — foundingDate, openingHours, priceRange, numberOfEmployees
-- [x] Canonical URLs on all 15 static pages
-- [x] Internal linking: community pages → related blog posts
-- [x] Blog sitemap entries with lastModified dates
-- [x] Phone click tracking data attributes (data-event="phone_click")
-- [ ] Image optimization audit (WebP + responsive) — pending local-hosted headshots
+---
 
-## Phase 11 — Lead Capture, CRM, Analytics
+## 📦 PRESERVED FROM PRE-V2 BUILD (already shipped, stays as-is)
 
-- [x] `leads` table migration (unified lead funnel) — Supabase migration 002
-- [x] Contact + Valuation forms → unified leads pipeline with TCPA consent tracking
-- [ ] Resend — confirmation email to lead + notification to Stephen
-- [ ] HubSpot API push (fallback to Supabase if API fails)
-- [ ] GA4 via `next/script`
-- [ ] Custom events: form_submission, property_search, listing_view, valuation_request, community_page_view, permit_map_interaction, phone_click
-- [x] Vercel Web Analytics + Speed Insights (added to root layout)
+These exist on `main` and are not relaunched, just light-polished where needed:
 
-## Phase 12 — QA, Perf, A11y, Launch
-
-- [x] Compliance walkthrough — TREC, NAR, Fair Housing, TCPA, ADA all verified. Removed "family-friendly" language per Fair Housing best practice.
-- [x] Lighthouse audit + fixes: autocomplete on all forms, security headers (X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy), canonical URLs on all 15 pages, OG image + Twitter card in layout metadata
-- [ ] axe-core audit
-- [ ] Keyboard nav test
-- [ ] Screen reader smoke test
-- [ ] Cross-browser: Chrome/Safari/Firefox/Edge + iOS/Android
-- [x] 301 redirect map from old URLs (see ROADMAP Appendix B) — configured in `next.config.mjs`
-- [ ] Vercel domain + DNS cutover
-- [ ] Search Console + sitemap submit
-- [ ] 48-hour post-launch monitoring
+- 152 routes deploying green on Vercel (commit `40265b9`)
+- Compliance shell: SiteFooter, IDXDisclaimer, ComplianceBanner, FairHousingBadge, TCPAConsent
+- Header (logo + nav + click-to-call + mobile menu)
+- 57 community pages (Tier 1 × 20 + Tier 2 × 22 + Tier 3 × 15) — Fair Housing audited, Place schema
+- 11 team profile pages with Person + RealEstateAgent schema
+- 25 blog posts with Article schema (no new posts until Layer 1)
+- About, Contact, Buyers (with mortgage calculator + moving checklist), Sellers, Privacy, Terms, Property Management, Market Reports landing
+- Supabase migrations 001 (initial) + 002 (leads + building_permits)
+- Daily Vercel Cron `/api/cron/sync-permits` (6am UTC)
+- Vercel Analytics + Speed Insights
+- 20+ legacy Blok URL redirects in `next.config.mjs`
+- Brand fonts (Modulus Bold + Medium) in `public/fonts/`
+- Logo package in `public/images/logo/`
 
 ---
 
 ## Change Log
-- **2026-04-15 (session 1)** — Big push. Added Header + mobile nav + skip link, TCPAConsent, NewsletterSignup, ContactForm, ValuationForm, AgentCard, TestimonialCarousel. Wrote real content for Home, About, Team (index + 11 dynamic profiles), Contact (with working POST /api/contact), Home Valuation (with POST /api/valuation), Communities index + 5 Tier 1 guides (Joelton, Ashland City, Greenbrier, Springfield, Thompsons Station) with JSON-LD Place schema, Buyers, Sellers, Blog shell, Homes-for-sale + listing detail shells. Built New Construction page with live Socrata permit fetch + stats bar + `/api/permits` route. Seeded `data/team.ts` (11 agents), `data/communities.ts`, `data/testimonials.ts`. Added `.eslintrc.json`. Fixed strict-mode types in `lib/supabase/server.ts`. `npm run type-check`, `npm run lint`, and `npm run build` all green — 34 routes generated (11 static team pages, 5 static community pages, 3 dynamic API routes).
-- **2026-04-15 (session 2)** — Content & SEO push. Added 15 more Tier 1 community guides (Bordeaux, Whites Creek, Madison, Pegram, Kingston Springs, White House, Coopertown, Dickson, Burns, Charlotte, Fairview, Watertown, Lebanon, Inglewood, Donelson) — **all 20 Tier 1 communities now live**. Shipped `app/sitemap.ts` (auto-generates from team + communities data), `app/robots.ts`, sitewide `OrganizationJsonLd` component (RealEstateAgent + WebSite+SearchAction schema). Built `/terms-of-service`, `/market-reports` (county snapshot table), `/property-management` (Door Collectors handoff). Added 20+ 301 redirects in `next.config.mjs` covering legacy Blok/AgentA URLs (meet-the-team, meet-*, whats-my-home-worth, homes-for-sale-featured, calculate-my-payments, property-organizer-login, etc.). Build clean: **54 routes generated** (20 static community pages, 11 static team pages, sitemap.xml, robots.txt, 3 API routes).
-- **2026-04-15 (session 3)** — Flagship + content push. Shipped `components/permits/PermitMap.tsx` — interactive MapLibre map on `/new-construction` via react-map-gl/maplibre, markers colored by permit recency (green ≤30d / navy ≤90d / gray older), click-to-popup with address/cost/contractor, NavigationControl, legend overlay. Wrote 5 real long-form blog posts in `data/blog.ts` (Moving to Nashville 2026 · April 2026 market report · Tennessee first-time buyer programs · Rent-vs-buy 2026 · New construction contracts) — 8-14 min reads each with callouts and internal links. Rebuilt `/blog` as a featured-post + grid layout and `/blog/[slug]` as a full template with breadcrumbs, hero image, structured body sections, author card, related communities (5 per post), related posts, Article JSON-LD, and OpenGraph article metadata. Added `RealEstateAgent` Person JSON-LD to `/team/[slug]` pages linked via `@id` to the Organization. Built `components/buyers/MortgageCalculator.tsx` — client component with live PITI math (P&I amortization + tax + insurance), editable price/down/rate/term/tax/insurance, mounted at `/buyers#mortgage-calculator`. Build clean: **59 routes generated** (20 static community pages, 11 static team pages, 5 static blog posts, 3 API routes, sitemap, robots). Fixed one type error in PermitMap (attributionControl boolean vs object).
-- **2026-04-16 (session 4)** — Vercel deployment fixed + major feature push. Diagnosed all 20 failed Vercel deploys — root cause was `framework: null` in project settings; fixed with `vercel.json` containing `"framework": "nextjs"`. First successful production deploy at project-bmq0e.vercel.app. Rebuilt new construction map using PermitPilot architecture: direct MapLibre GL JS with CARTO light tiles, GeoJSON circle layer, ArcGIS address search (/api/suggest + /api/geocode), filter panel, click→detail panel with lead CTA. Added logo package: landscape dark/light in header/footer, icon as favicon, brand fonts to public/fonts/. Shipped 22 Tier 2 community pages (Hendersonville, Gallatin, Goodlettsville, Portland, Hermitage, Antioch, Bellevue, Old Hickory, Murfreesboro, Smyrna, La Vergne, Franklin, Brentwood, Nolensville, Spring Hill, Mt. Juliet, Pleasant View, Cross Plains, Orlinda, Millersville, White Bluff). Upgraded homepage images to next/image with hover effects. Build clean: **82 routes generated** (42 community pages, 11 team, 5 blog, 6 API routes, sitemap, robots, icon).
+
+- **2026-04-17 (later) — All 4 launch blockers built, awaiting API keys.** Pipeline rebrand: NashBuilds → Nashville Pipeline / House Haven Pipeline (file moves, find/replace, 301s, Dataset schema, empty states, permit popup rewrite, "how to use" modal). Compliance: NAR 2026 commission-negotiable disclosure component mounted on Sellers, Home Valuation, Value, IDX disclaimer; TCPA aligned to spec §5.4 verbatim. House Haven Value: full /value page + ValueClient + RentCast/HubSpot/Resend libs (graceful mock fallback when keys missing) + Supabase migration 003 + 2 API routes. Realtracs IDX skeleton: MLS Grid client + listings cache migration 004 + ListingCard/Grid/SearchFilters components + full /homes-for-sale and detail page with NAR-compliant attribution + RealEstateListing schema. Homepage: 8 sections per §6.1, brokerage-first, brand-kit-true. Deleted orphaned `/new-construction` route (consolidated into Pipeline via 301). Final: type-check ✅, lint ✅, build ✅ (homepage 3.57 kB, /pipeline 7.68 kB, /value 3.39 kB).
+- **2026-04-17 — v2 pivot.** Rewrote `docs/ROADMAP.md` and `docs/TODO.md` to Master Build Spec v2. Locked the 4-blocker launch model: Realtracs IDX, homepage rebuild, House Haven Value, Nashville Pipeline rebrand. Verified 3 spec inaccuracies via web research and flagged at top of each doc (MLS Grid pricing, RentCast tiering, NAR 2026 disclosure). Catalogued 30+ NashBuilds references awaiting rename. Surfaced Modulus-vs-Fraunces typography conflict and B/W-vs-warm-accent palette conflict to Stephen as decisions needed.
+- **2026-04-16 (session 4)** — Vercel deploys fixed (`framework: null` → `nextjs` via `vercel.json`). Rebuilt new construction map on PermitPilot architecture (MapLibre + ArcGIS). Logo package + Modulus fonts placed. 22 Tier 2 + 15 Tier 3 community pages. NashBuilds shipped end-to-end at `/new-builds` (saturation scoring, builder profiles, alert signup, mobile drawer, 15 ZIP pages). 25 blog posts. Brand kit applied (B/W/Grey, Modulus, squared forms). 152 routes, all green.
+- **2026-04-15 (sessions 1–3)** — Initial scaffold + content push: Header, footer, compliance shell, all forms, homepage, About, Team (11 profiles), Contact (with API), Home Valuation (with API), Buyers (mortgage calc + moving checklist), Sellers, Communities (20 Tier 1 pages), Blog (5 long-form posts + author cards + Article schema), `/new-construction` with live Socrata permit fetch + interactive map. Full SEO foundation: sitemap, robots, OrganizationJsonLd, Place schema, Article schema, Person schema, BreadcrumbList, FAQ schema, LocalBusiness schema. 20+ Blok URL 301s.
