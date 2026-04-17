@@ -3,9 +3,6 @@ import Link from 'next/link'
 import FadeIn from '@/components/ui/FadeIn'
 import TestimonialCarousel from '@/components/sections/TestimonialCarousel'
 import NewsletterSignup from '@/components/forms/NewsletterSignup'
-import IDXDisclaimer from '@/components/compliance/IDXDisclaimer'
-import ListingCard from '@/components/listings/ListingCard'
-import { searchListings } from '@/lib/mlsgrid'
 import { communities } from '@/data/communities'
 
 const FEATURED_COMMUNITY_SLUGS = [
@@ -26,8 +23,6 @@ const FEATURED_COMMUNITY_SLUGS = [
 export const revalidate = 900
 
 export default async function HomePage() {
-  const { listings: featuredListings, source: listingsSource } = await searchListings({ limit: 8 })
-
   const featuredCommunities = FEATURED_COMMUNITY_SLUGS
     .map((slug) => communities.find((c) => c.slug === slug))
     .filter((c): c is NonNullable<typeof c> => Boolean(c))
@@ -50,7 +45,7 @@ export default async function HomePage() {
                 href="/homes-for-sale"
                 className="inline-flex items-center justify-center px-7 py-4 rounded-lg bg-black text-white font-semibold hover:bg-househaven-navy-light transition"
               >
-                Browse homes for sale →
+                Find your next home →
               </Link>
               <Link
                 href="/value"
@@ -67,45 +62,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Section 2 — Featured Listings Strip */}
-      <section className="bg-white py-16 lg:py-20">
-        <div className="max-w-7xl mx-auto px-4 lg:px-6">
-          <div className="flex items-end justify-between flex-wrap gap-4 mb-8">
-            <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-househaven-text-muted">
-                Featured listings
-              </p>
-              <h2 className="font-serif text-3xl lg:text-4xl text-househaven-navy mt-2">
-                Just listed in Middle Tennessee
-              </h2>
-            </div>
-            <Link
-              href="/homes-for-sale"
-              className="text-sm font-semibold text-househaven-navy hover:underline"
-            >
-              See all Nashville homes →
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {featuredListings.slice(0, 8).map((l, i) => (
-              <ListingCard key={l.mlsId} listing={l} priority={i < 3} />
-            ))}
-          </div>
-
-          <div className="mt-8">
-            <IDXDisclaimer />
-          </div>
-
-          {listingsSource === 'mock' && (
-            <p className="mt-3 text-xs text-amber-700 bg-amber-50 rounded px-3 py-2">
-              Showing sample listings. Live Realtracs data activates the moment our MLS Grid feed is connected.
-            </p>
-          )}
-        </div>
-      </section>
-
-      {/* Section 3 — The House Haven Difference */}
+      {/* Section 2 — The House Haven Difference */}
       <section className="bg-househaven-surface py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-4 lg:px-6">
           <FadeIn>

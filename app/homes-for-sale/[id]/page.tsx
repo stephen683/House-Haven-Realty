@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: ListingDetailProps): Promise<
 }
 
 export default async function ListingDetailPage({ params }: ListingDetailProps) {
-  const { listing, source } = await getListing(params.id)
+  const { listing } = await getListing(params.id)
 
   if (!listing) notFound()
 
@@ -85,12 +85,6 @@ export default async function ListingDetailPage({ params }: ListingDetailProps) 
             ← All homes for sale
           </Link>
         </nav>
-
-        {source === 'mock' && (
-          <p className="mb-6 text-xs text-amber-700 bg-amber-50 rounded px-3 py-2">
-            This is a sample listing. Live Realtracs data activates the moment MLS Grid credentials are added.
-          </p>
-        )}
 
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
