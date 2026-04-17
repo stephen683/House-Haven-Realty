@@ -1,129 +1,74 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import IDXDisclaimer from '@/components/compliance/IDXDisclaimer'
+import SearchFilters from '@/components/listings/SearchFilters'
+import ListingGrid from '@/components/listings/ListingGrid'
+import { searchListings, type ListingSearch } from '@/lib/mlsgrid'
 import { communities } from '@/data/communities'
 
 export const metadata: Metadata = {
-  title: 'Homes for Sale in Nashville & Middle Tennessee',
+  title: 'Homes for Sale in Nashville & Middle Tennessee | House Haven Realty',
   description:
-    'Search active listings across Nashville and Middle Tennessee. Filter by price, beds, baths, community, and more. Presented by House Haven Realty.',
+    'Search live Realtracs MLS listings across Nashville and Middle Tennessee. Filter by price, beds, ZIP, and property type. Presented by House Haven Realty.',
   alternates: { canonical: '/homes-for-sale' },
 }
 
-const propertyTypes = ['Single Family', 'Condo', 'Townhouse', 'Multi-Family', 'Land']
+export const revalidate = 900
 
-export default function HomesForSalePage() {
+interface HomesForSalePageProps {
+  searchParams: {
+    city?: string
+    zip?: string
+    minPrice?: string
+    maxPrice?: string
+    beds?: string
+    propertyType?: string
+  }
+}
+
+export default async function HomesForSalePage({ searchParams }: HomesForSalePageProps) {
+  const search: ListingSearch = {
+    city: searchParams.city,
+    zip: searchParams.zip,
+    minPrice: searchParams.minPrice ? Number(searchParams.minPrice) : undefined,
+    maxPrice: searchParams.maxPrice ? Number(searchParams.maxPrice) : undefined,
+    beds: searchParams.beds ? Number(searchParams.beds) : undefined,
+    propertyType: searchParams.propertyType,
+    limit: 24,
+  }
+
+  const { listings, source } = await searchListings(search)
   const featuredCommunities = communities.filter((c) => c.tier === 1).slice(0, 8)
 
   return (
     <main className="bg-white">
-      <section className="relative bg-househaven-navy text-white overflow-hidden">
-        <Image
-          src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1440&q=70"
-          alt=""
-          fill
-          priority
-          className="object-cover opacity-25"
-          sizes="(max-width: 1280px) 100vw, 1280px"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-househaven-navy/50 via-househaven-navy/75 to-househaven-navy" />
-        <div className="relative max-w-5xl mx-auto px-4 lg:px-6 py-24 lg:py-32">
-          <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
-            Property search
+      <section className="bg-black text-white py-16 lg:py-20">
+        <div className="max-w-7xl mx-auto px-4 lg:px-6">
+          <p className="text-xs uppercase tracking-[0.2em] text-white/50">
+            Realtracs MLS
           </p>
           <h1 className="font-serif text-5xl lg:text-6xl text-white mt-3">
             Homes for sale.
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-white/70">
-            Live MLS listings across Nashville, Middle Tennessee, and every community in
-            our 40-mile radius.
+            Live MLS listings across Nashville and Middle Tennessee. Filter, save searches,
+            and connect with our team for showings.
           </p>
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 lg:px-6 py-12 lg:py-16">
-        <form className="grid md:grid-cols-5 gap-4 p-6 rounded-xl border border-black/5 bg-white shadow-sm">
-          <div className="md:col-span-2">
-            <label className="block text-xs font-medium text-househaven-text-muted mb-1">
-              Location
-            </label>
-            <input
-              type="text"
-              placeholder="City, ZIP, neighborhood"
-              className="w-full rounded-lg border border-black/10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-househaven-navy"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-househaven-text-muted mb-1">
-              Min price
-            </label>
-            <input
-              type="number"
-              placeholder="$"
-              className="w-full rounded-lg border border-black/10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-househaven-navy"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-househaven-text-muted mb-1">
-              Max price
-            </label>
-            <input
-              type="number"
-              placeholder="$"
-              className="w-full rounded-lg border border-black/10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-househaven-navy"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-househaven-text-muted mb-1">
-              Beds
-            </label>
-            <select className="w-full rounded-lg border border-black/10 px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-househaven-navy">
-              <option>Any</option>
-              <option>1+</option>
-              <option>2+</option>
-              <option>3+</option>
-              <option>4+</option>
-              <option>5+</option>
-            </select>
-          </div>
-          <div className="md:col-span-5 flex flex-wrap gap-2">
-            {propertyTypes.map((t) => (
-              <button
-                key={t}
-                type="button"
-                className="px-3 py-1.5 rounded-lg border border-black/10 text-xs font-medium text-househaven-text-muted hover:bg-househaven-surface transition"
-              >
-                {t}
-              </button>
-            ))}
-          </div>
-          <div className="md:col-span-5">
-            <button
-              type="button"
-              disabled
-              className="inline-flex items-center px-6 py-3 rounded-lg bg-househaven-navy text-white font-semibold disabled:opacity-60"
-            >
-              Search — launching with IDX
-            </button>
-          </div>
-        </form>
+      <section className="max-w-7xl mx-auto px-4 lg:px-6 py-10 lg:py-12">
+        <SearchFilters />
 
-        <div className="mt-12 rounded-xl border border-dashed border-black/10 bg-househaven-surface p-10 text-center">
-          <h2 className="font-serif text-3xl text-househaven-navy">
-            Live MLS search launches with Phase 3.
-          </h2>
-          <p className="text-househaven-text-muted mt-3 max-w-xl mx-auto">
-            While we finalize our IDX feed from Realtracs MLS, reach out and one of our
-            agents will build you a custom search and deliver listings to your inbox the
-            same day.
+        {source === 'mock' && (
+          <p className="mt-6 text-xs text-amber-700 bg-amber-50 rounded px-3 py-2">
+            Showing sample listings. Live Realtracs data activates the moment our MLS Grid
+            credentials are added.
           </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center mt-6 px-6 py-3 rounded-lg bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
-          >
-            Request a custom search
-          </Link>
+        )}
+
+        <div className="mt-8">
+          <ListingGrid listings={listings} />
         </div>
 
         <div className="mt-10">
@@ -131,7 +76,6 @@ export default function HomesForSalePage() {
         </div>
       </section>
 
-      {/* Browse by community */}
       <section className="bg-househaven-surface py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 lg:px-6">
           <div className="text-center mb-10">
@@ -150,9 +94,7 @@ export default function HomesForSalePage() {
                 className="block rounded-xl bg-white border border-black/5 p-4 hover:shadow-lg hover:border-househaven-navy/10 transition text-center"
               >
                 <p className="font-serif text-lg text-househaven-navy">{c.name}</p>
-                <p className="text-xs text-househaven-text-muted mt-1">
-                  {c.county} County
-                </p>
+                <p className="text-xs text-househaven-text-muted mt-1">{c.county} County</p>
               </Link>
             ))}
           </div>

@@ -3,366 +3,328 @@ import Link from 'next/link'
 import FadeIn from '@/components/ui/FadeIn'
 import TestimonialCarousel from '@/components/sections/TestimonialCarousel'
 import NewsletterSignup from '@/components/forms/NewsletterSignup'
-import AgentCard from '@/components/team/AgentCard'
 import IDXDisclaimer from '@/components/compliance/IDXDisclaimer'
-import { visibleTeam } from '@/data/team'
+import ListingCard from '@/components/listings/ListingCard'
+import { searchListings } from '@/lib/mlsgrid'
 import { communities } from '@/data/communities'
 
-const heroStats = [
-  { value: '500+', label: 'Homes closed' },
-  { value: '$250M+', label: 'Volume sold' },
-  { value: 'Since 2016', label: 'Licensed in TN' },
-  { value: '40 mi', label: 'Radius we cover' },
+const FEATURED_COMMUNITY_SLUGS = [
+  'east-nashville',
+  'the-nations',
+  '12-south',
+  'germantown',
+  'franklin',
+  'brentwood',
+  'mt-juliet',
+  'hendersonville',
+  'sylvan-park',
+  'spring-hill',
+  'nolensville',
+  'thompsons-station',
 ]
 
-const featuredPlaceholderListings = [
-  {
-    id: 'ph-1',
-    image:
-      'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=70',
-    address: 'Coming soon · East Nashville',
-    price: '$749,000',
-    beds: 4,
-    baths: 3,
-    sqft: 2450,
-  },
-  {
-    id: 'ph-2',
-    image:
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=70',
-    address: 'Coming soon · Franklin',
-    price: '$1,150,000',
-    beds: 5,
-    baths: 4,
-    sqft: 3600,
-  },
-  {
-    id: 'ph-3',
-    image:
-      'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1200&q=70',
-    address: 'Coming soon · Germantown',
-    price: '$879,000',
-    beds: 3,
-    baths: 2,
-    sqft: 1980,
-  },
-  {
-    id: 'ph-4',
-    image:
-      'https://images.unsplash.com/photo-1605276373954-0c4a0dac5b12?auto=format&fit=crop&w=1200&q=70',
-    address: 'Coming soon · Thompsons Station',
-    price: '$625,000',
-    beds: 4,
-    baths: 3,
-    sqft: 2780,
-  },
-  {
-    id: 'ph-5',
-    image:
-      'https://images.unsplash.com/photo-1598228723793-52759bba239c?auto=format&fit=crop&w=1200&q=70',
-    address: 'Coming soon · Joelton',
-    price: '$515,000',
-    beds: 3,
-    baths: 2,
-    sqft: 1840,
-  },
-  {
-    id: 'ph-6',
-    image:
-      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=70',
-    address: 'Coming soon · Brentwood',
-    price: '$1,495,000',
-    beds: 5,
-    baths: 4,
-    sqft: 4100,
-  },
-]
+export const revalidate = 900
 
-export default function HomePage() {
-  const homepageTeam = visibleTeam.slice(0, 4)
-  const homepageCommunities = communities.slice(0, 5)
+export default async function HomePage() {
+  const { listings: featuredListings, source: listingsSource } = await searchListings({ limit: 8 })
+
+  const featuredCommunities = FEATURED_COMMUNITY_SLUGS
+    .map((slug) => communities.find((c) => c.slug === slug))
+    .filter((c): c is NonNullable<typeof c> => Boolean(c))
 
   return (
     <main>
-      {/* Hero */}
-      <section className="relative bg-househaven-navy text-white overflow-hidden">
-        <Image
-          src="https://images.unsplash.com/photo-1568454537842-d933259bb258?auto=format&fit=crop&w=1440&q=70"
-          alt=""
-          fill
-          priority
-          className="object-cover opacity-40"
-          sizes="(max-width: 1280px) 100vw, 1280px"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-househaven-navy/60 via-househaven-navy/80 to-househaven-navy" />
-        <div className="relative max-w-7xl mx-auto px-4 lg:px-6 py-24 lg:py-36">
-          <p className="text-xs uppercase tracking-[0.24em] text-househaven-accent mb-4">
-            House Haven Realty · Nashville, TN
-          </p>
-          <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl text-white leading-[1.05] max-w-3xl">
-            Your Nashville neighbor in real estate.
-          </h1>
-          <p className="mt-6 max-w-xl text-lg text-white/80">
-            Helping families buy, sell, and invest across Nashville and Middle Tennessee
-            since 2016. A boutique brokerage with a 40-mile neighborhood map and the
-            receipts to match.
-          </p>
-          <div className="mt-10 flex flex-col sm:flex-row gap-4">
-            <Link
-              href="/homes-for-sale"
-              className="inline-flex items-center justify-center px-7 py-4 rounded-lg bg-househaven-accent text-househaven-navy font-semibold hover:bg-white transition"
-            >
-              Find Your Home
-            </Link>
-            <Link
-              href="/home-valuation"
-              className="inline-flex items-center justify-center px-7 py-4 rounded-lg border border-white/40 text-white font-semibold hover:bg-white/10 transition"
-            >
-              What&rsquo;s My Home Worth?
-            </Link>
-          </div>
+      {/* Section 1 — Hero */}
+      <section className="bg-white border-b border-black/5">
+        <div className="max-w-7xl mx-auto px-4 lg:px-6 py-20 lg:py-28">
+          <div className="max-w-4xl">
+            <p className="text-xs uppercase tracking-[0.2em] text-househaven-text-muted">
+              House Haven Realty · Nashville, Tennessee
+            </p>
+            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl text-househaven-navy mt-4 leading-[1.05]">
+              Nashville real estate, for people who want to see the whole picture.
+            </h1>
 
-          <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl">
-            {heroStats.map((s) => (
-              <div key={s.label}>
-                <p className="font-serif text-3xl lg:text-4xl text-white">{s.value}</p>
-                <p className="text-xs uppercase tracking-[0.16em] text-white/80 mt-1">
-                  {s.label}
-                </p>
-              </div>
-            ))}
+            <div className="mt-10 flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/homes-for-sale"
+                className="inline-flex items-center justify-center px-7 py-4 rounded-lg bg-black text-white font-semibold hover:bg-househaven-navy-light transition"
+              >
+                Browse homes for sale →
+              </Link>
+              <Link
+                href="/value"
+                className="inline-flex items-center justify-center px-7 py-4 rounded-lg border border-black/15 text-househaven-navy font-semibold hover:bg-househaven-surface transition"
+              >
+                What is my home worth? →
+              </Link>
+            </div>
+
+            <p className="mt-10 text-xs uppercase tracking-[0.16em] text-househaven-text-muted">
+              Licensed Tennessee brokerage · 500+ homes closed · $250M+ sold · Nashville-based since 2016
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Featured listings */}
-      <section className="bg-white py-20 lg:py-28">
+      {/* Section 2 — Featured Listings Strip */}
+      <section className="bg-white py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 lg:px-6">
-          <FadeIn>
-          <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
+          <div className="flex items-end justify-between flex-wrap gap-4 mb-8">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
-                Featured
+              <p className="text-xs uppercase tracking-[0.2em] text-househaven-text-muted">
+                Featured listings
               </p>
-              <h2 className="font-serif text-4xl lg:text-5xl text-househaven-navy mt-2">
-                Homes on our radar
+              <h2 className="font-serif text-3xl lg:text-4xl text-househaven-navy mt-2">
+                Just listed in Middle Tennessee
               </h2>
-              <p className="text-househaven-text-muted mt-2 max-w-xl">
-                A curated look at what&rsquo;s active across the metro. Live MLS integration
-                lands with our Phase 3 IDX launch — these cards are placeholders from our
-                current pipeline.
-              </p>
             </div>
             <Link
               href="/homes-for-sale"
-              className="text-sm font-semibold text-househaven-navy hover:text-househaven-accent"
+              className="text-sm font-semibold text-househaven-navy hover:underline"
             >
-              Search all homes →
+              See all Nashville homes →
             </Link>
           </div>
-          </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredPlaceholderListings.map((l) => (
-              <article
-                key={l.id}
-                className="group rounded-lg overflow-hidden border border-black/5 hover:shadow-xl transition"
-              >
-                <div className="relative aspect-[4/3] bg-househaven-surface overflow-hidden">
-                  <Image
-                    src={l.image}
-                    alt={l.address}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
-                </div>
-                <div className="p-5">
-                  <p className="font-serif text-2xl text-househaven-navy">{l.price}</p>
-                  <p className="text-sm text-househaven-text mt-1">{l.address}</p>
-                  <p className="text-xs text-househaven-text-muted mt-3">
-                    {l.beds} bd · {l.baths} ba · {l.sqft.toLocaleString()} sq ft
-                  </p>
-                  <p className="text-[11px] text-househaven-text-muted mt-3">
-                    Listed by House Haven Realty
-                  </p>
-                </div>
-              </article>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {featuredListings.slice(0, 8).map((l, i) => (
+              <ListingCard key={l.mlsId} listing={l} priority={i < 3} />
             ))}
           </div>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 lg:px-6 mt-10">
-          <IDXDisclaimer />
+
+          <div className="mt-8">
+            <IDXDisclaimer />
+          </div>
+
+          {listingsSource === 'mock' && (
+            <p className="mt-3 text-xs text-amber-700 bg-amber-50 rounded px-3 py-2">
+              Showing sample listings. Live Realtracs data activates the moment our MLS Grid feed is connected.
+            </p>
+          )}
         </div>
       </section>
 
-      {/* Communities */}
+      {/* Section 3 — The House Haven Difference */}
       <section className="bg-househaven-surface py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-4 lg:px-6">
           <FadeIn>
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
-              40-mile radius
-            </p>
-            <h2 className="font-serif text-4xl lg:text-5xl text-househaven-navy mt-2">
-              Explore our communities
-            </h2>
-            <p className="text-househaven-text-muted mt-3">
-              From urban Nashville neighborhoods to peaceful Middle Tennessee towns —
-              we&rsquo;re your local experts everywhere within 40 miles of downtown.
-            </p>
-          </div>
+            <div className="max-w-3xl">
+              <p className="text-xs uppercase tracking-[0.2em] text-househaven-text-muted">
+                The House Haven Difference
+              </p>
+              <h2 className="font-serif text-4xl lg:text-5xl text-househaven-navy mt-2 leading-tight">
+                We built tools most Nashville brokerages don&rsquo;t have, because buying or selling should feel informed, not overwhelming.
+              </h2>
+            </div>
           </FadeIn>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {homepageCommunities.map((c) => (
+          <div className="mt-12 grid lg:grid-cols-3 gap-6">
+            {/* Pipeline — visually weighted */}
+            <Link
+              href="/pipeline"
+              className="lg:col-span-2 group flex flex-col rounded-xl bg-black text-white overflow-hidden hover:shadow-2xl transition"
+            >
+              <div className="relative aspect-[16/9] bg-black/80">
+                <Image
+                  src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1440&q=70"
+                  alt="Nashville new construction permit map"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 800px"
+                  className="object-cover opacity-40 group-hover:opacity-50 transition"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6 lg:p-8">
+                  <p className="text-xs uppercase tracking-[0.2em] text-white/60">Nashville Pipeline</p>
+                  <p className="font-serif text-3xl lg:text-4xl text-white mt-2 leading-tight">
+                    See every home being built in Nashville, before it hits the market.
+                  </p>
+                </div>
+              </div>
+              <div className="p-6 lg:p-8 flex items-center justify-between gap-4">
+                <p className="text-sm text-white/70">
+                  Live permit data, builder profiles, saturation scoring by ZIP.
+                </p>
+                <span className="font-semibold text-white group-hover:translate-x-1 transition">See the map →</span>
+              </div>
+            </Link>
+
+            {/* Value */}
+            <Link
+              href="/value"
+              className="group flex flex-col rounded-xl bg-white border border-black/10 hover:border-black/20 hover:shadow-xl transition p-6 lg:p-8"
+            >
+              <p className="text-xs uppercase tracking-[0.2em] text-househaven-text-muted">
+                House Haven Value
+              </p>
+              <p className="font-serif text-2xl text-househaven-navy mt-2 leading-tight">
+                An honest home valuation in 60 seconds. No signup. No pressure.
+              </p>
+              <p className="mt-4 text-sm text-househaven-text-muted">
+                Real comp data, not a Zestimate guess.
+              </p>
+              <span className="mt-auto pt-6 font-semibold text-househaven-navy group-hover:translate-x-1 transition">
+                Get my estimate →
+              </span>
+            </Link>
+
+            {/* Journey — Coming Soon */}
+            <div className="lg:col-span-3 rounded-xl bg-white border border-dashed border-black/15 p-6 lg:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+              <div>
+                <div className="flex items-center gap-3">
+                  <p className="text-xs uppercase tracking-[0.2em] text-househaven-text-muted">
+                    House Haven Journey
+                  </p>
+                  <span className="px-2 py-0.5 rounded bg-househaven-surface text-[10px] uppercase tracking-widest text-househaven-text-muted">
+                    Coming soon
+                  </span>
+                </div>
+                <p className="font-serif text-2xl text-househaven-navy mt-2 leading-tight">
+                  The real Nashville first-time buyer guide. THDA programs, true closing costs, no fluff.
+                </p>
+              </div>
+              <NewsletterSignup compact label="Get notified" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 4 — Nashville Pipeline Preview */}
+      <section className="bg-black text-white py-20 lg:py-28">
+        <div className="max-w-7xl mx-auto px-4 lg:px-6 grid lg:grid-cols-2 gap-12 items-center">
+          <FadeIn>
+            <div>
+              <p className="text-xs uppercase tracking-[0.2em] text-white/50">
+                Nashville Pipeline
+              </p>
+              <h2 className="font-serif text-4xl lg:text-5xl text-white mt-2 leading-tight">
+                Thousands of new homes being built in Nashville right now.
+              </h2>
+              <p className="mt-4 text-white/70 max-w-md">
+                Updated daily from Metro Nashville Codes. Filter by ZIP, builder, beds, and price.
+                Set alerts for new permits in your target neighborhood.
+              </p>
+              <div className="mt-8">
+                <Link
+                  href="/pipeline"
+                  className="inline-flex items-center px-7 py-4 rounded-lg bg-white text-black font-semibold hover:bg-househaven-accent transition"
+                >
+                  Explore the Pipeline →
+                </Link>
+              </div>
+            </div>
+          </FadeIn>
+          <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-white/5">
+            <Image
+              src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1440&q=70"
+              alt="Nashville new construction"
+              fill
+              sizes="(max-width: 1024px) 100vw, 600px"
+              className="object-cover opacity-90"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Section 5 — Communities */}
+      <section className="bg-white py-20 lg:py-28">
+        <div className="max-w-7xl mx-auto px-4 lg:px-6">
+          <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
+            <div>
+              <p className="text-xs uppercase tracking-[0.2em] text-househaven-text-muted">
+                Communities
+              </p>
+              <h2 className="font-serif text-4xl lg:text-5xl text-househaven-navy mt-2">
+                Where we work.
+              </h2>
+            </div>
+            <Link
+              href="/communities"
+              className="text-sm font-semibold text-househaven-navy hover:underline"
+            >
+              Explore all {communities.length} communities →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+            {featuredCommunities.map((c) => (
               <Link
                 key={c.slug}
                 href={`/communities/${c.slug}`}
-                className="group relative block rounded-lg overflow-hidden bg-white border border-black/5 hover:shadow-xl transition p-6"
+                className="group block rounded-xl bg-househaven-surface border border-black/5 p-5 hover:bg-white hover:shadow-lg hover:border-black/10 transition"
               >
-                <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
+                <p className="text-[10px] uppercase tracking-[0.16em] text-househaven-text-muted">
                   {c.county} County
                 </p>
-                <p className="font-serif text-2xl text-househaven-navy mt-2">{c.name}</p>
-                <p className="text-sm text-househaven-text-muted mt-2">{c.tagline}</p>
-                <p className="text-xs text-househaven-text-muted mt-4">
-                  {c.distanceFromNashville}
-                </p>
-                <span className="inline-flex mt-5 text-sm font-semibold text-househaven-navy group-hover:text-househaven-accent">
-                  Explore {c.name} →
-                </span>
+                <p className="font-serif text-xl text-househaven-navy mt-2">{c.name}</p>
+                <p className="text-xs text-househaven-text-muted mt-1 line-clamp-2">{c.tagline}</p>
               </Link>
             ))}
           </div>
-
-          <div className="text-center mt-10">
-            <Link
-              href="/communities"
-              className="inline-flex items-center px-6 py-3 rounded-lg border border-househaven-navy/20 text-househaven-navy font-semibold hover:bg-househaven-navy hover:text-white transition"
-            >
-              View all communities
-            </Link>
-          </div>
         </div>
       </section>
 
-      {/* NashBuilds — flagship product feature */}
-      <section className="bg-black text-white py-20 lg:py-28">
-        <FadeIn>
-        <div className="max-w-7xl mx-auto px-4 lg:px-6 grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <span className="font-serif text-2xl font-bold tracking-tight">NashBuilds</span>
-              <span className="px-2 py-0.5 rounded bg-white/10 text-[10px] uppercase tracking-widest text-white/60">
-                Exclusive
-              </span>
-            </div>
-            <h2 className="font-serif text-4xl lg:text-5xl text-white mt-2 leading-tight">
-              See what&rsquo;s being built
-              <br />
-              before it hits the market.
-            </h2>
-            <p className="mt-4 text-white/70 max-w-md">
-              Live building permits. Saturation scoring by ZIP. Builder profiles with
-              reputation signals. Filter by beds, baths, sqft, and property type.
-              No other Nashville brokerage has this.
-            </p>
-            <div className="flex flex-wrap gap-3 mt-6 text-xs">
-              <span className="px-3 py-1.5 rounded-lg bg-white/10 text-white/80">Live permit data</span>
-              <span className="px-3 py-1.5 rounded-lg bg-white/10 text-white/80">Saturation scoring</span>
-              <span className="px-3 py-1.5 rounded-lg bg-white/10 text-white/80">Builder profiles</span>
-              <span className="px-3 py-1.5 rounded-lg bg-white/10 text-white/80">ZIP alerts</span>
-            </div>
-            <div className="flex gap-4 mt-8">
-              <Link
-                href="/new-builds"
-                className="inline-flex items-center px-7 py-4 rounded-lg bg-white text-black font-semibold hover:bg-househaven-accent transition"
-              >
-                Launch NashBuilds
-              </Link>
-              <Link
-                href="/new-builds/builders"
-                className="inline-flex items-center px-7 py-4 rounded-lg border border-white/20 text-white font-semibold hover:bg-white/10 transition"
-              >
-                View builders
-              </Link>
-            </div>
-          </div>
-          <div className="aspect-[4/3] rounded-xl bg-gradient-to-br from-white/10 to-white/5 p-1">
-            <div className="relative h-full w-full rounded-lg overflow-hidden">
+      {/* Section 6 — The Stephen Moment */}
+      <section className="bg-househaven-surface py-20 lg:py-28">
+        <div className="max-w-5xl mx-auto px-4 lg:px-6 grid md:grid-cols-5 gap-10 items-center">
+          <div className="md:col-span-2">
+            <div className="relative aspect-square rounded-xl overflow-hidden bg-white">
               <Image
-                src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1440&q=70"
-                alt="New construction homes in Nashville"
+                src="https://media.agentaprd.com/sites/213/BQXPwDi7x8QXhtLq9sNIHxFrNatzeVTpTA.webp"
+                alt="Stephen Delahoussaye, broker/owner of House Haven Realty"
                 fill
+                sizes="(max-width: 768px) 100vw, 400px"
                 className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
           </div>
+          <div className="md:col-span-3">
+            <p className="text-xs uppercase tracking-[0.2em] text-househaven-text-muted">
+              From the broker
+            </p>
+            <p className="font-serif text-2xl lg:text-3xl text-househaven-navy mt-3 leading-snug">
+              I&rsquo;m Stephen. I started House Haven in Nashville because I wanted to build a brokerage where buying or selling a home actually feels like someone has your back. We&rsquo;re a team of ten. We&rsquo;ve closed 500+ homes — over $250M in volume — since 2016. We volunteer in our communities once a month. If you want to talk — about buying, selling, or just figuring out what you&rsquo;d even do — call me directly.
+            </p>
+            <a
+              data-event="phone_click"
+              href="tel:+16156244766"
+              className="inline-flex mt-6 font-serif text-3xl text-househaven-navy hover:underline"
+            >
+              (615) 624-4766
+            </a>
+          </div>
         </div>
-        </FadeIn>
       </section>
 
-      {/* Testimonials */}
-      <section className="bg-househaven-surface py-20 lg:py-28">
-        <div className="max-w-7xl mx-auto px-4 lg:px-6">
-          <FadeIn>
-          <div className="text-center mb-12">
-            <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
-              What clients say
+      {/* Section 7 — Testimonials */}
+      <section className="bg-white py-20 lg:py-28">
+        <div className="max-w-6xl mx-auto px-4 lg:px-6">
+          <div className="mb-10">
+            <p className="text-xs uppercase tracking-[0.2em] text-househaven-text-muted">
+              Clients, in their words
             </p>
-            <h2 className="font-serif text-4xl lg:text-5xl text-househaven-navy mt-2">
-              Clients become friends.
+            <h2 className="font-serif text-4xl text-househaven-navy mt-2">
+              Why people stay with House Haven.
             </h2>
           </div>
-          </FadeIn>
           <TestimonialCarousel />
         </div>
       </section>
 
-      {/* Meet the team */}
-      <section className="bg-white py-20 lg:py-28">
-        <div className="max-w-7xl mx-auto px-4 lg:px-6">
-          <div className="flex items-end justify-between flex-wrap gap-4 mb-12">
-            <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
-                Meet House Haven
-              </p>
-              <h2 className="font-serif text-4xl lg:text-5xl text-househaven-navy mt-2">
-                A boutique team, by design.
-              </h2>
-            </div>
-            <Link
-              href="/team"
-              className="text-sm font-semibold text-househaven-navy hover:text-househaven-accent"
-            >
-              Meet the full team →
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-            {homepageTeam.map((agent) => (
-              <AgentCard key={agent.slug} agent={agent} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Newsletter */}
-      <section className="bg-househaven-navy text-white py-20 lg:py-28">
-        <div className="max-w-3xl mx-auto text-center px-4 lg:px-6">
-          <p className="text-xs uppercase tracking-[0.2em] text-househaven-accent">
-            Stay in the know
+      {/* Section 8 — Newsletter (footer compliance is in site footer) */}
+      <section className="bg-black text-white py-16 lg:py-20">
+        <div className="max-w-3xl mx-auto px-4 lg:px-6 text-center">
+          <p className="text-xs uppercase tracking-[0.2em] text-white/50">
+            Nashville market updates
           </p>
-          <h2 className="font-serif text-4xl lg:text-5xl text-white mt-2">
-            Nashville, delivered monthly.
+          <h2 className="font-serif text-3xl lg:text-4xl text-white mt-2">
+            Get monthly updates on the Nashville market.
           </h2>
-          <p className="text-white/70 mt-3">
-            Market updates, new listings, and insider tips — the good stuff only.
+          <p className="text-white/70 mt-2 text-sm">
+            No spam. Easy to unsubscribe.
           </p>
-          <div className="mt-8">
-            <NewsletterSignup />
+          <div className="mt-8 max-w-xl mx-auto">
+            <NewsletterSignup variant="dark" />
           </div>
         </div>
       </section>
