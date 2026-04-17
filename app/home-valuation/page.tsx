@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import ValuationForm from '@/components/forms/ValuationForm'
+import CommissionDisclosure from '@/components/compliance/CommissionDisclosure'
 
 export const metadata: Metadata = {
   title: "What's My Home Worth? Free Nashville Home Valuation",
@@ -100,6 +101,10 @@ export default function HomeValuationPage() {
             free, no-obligation Comparative Market Analysis based on real, recent sales in
             your specific neighborhood.
           </p>
+        </div>
+
+        <div className="mt-6">
+          <CommissionDisclosure variant="card" />
         </div>
       </section>
     </main>

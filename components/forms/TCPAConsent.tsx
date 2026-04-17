@@ -21,11 +21,9 @@ export default function TCPAConsent({
         className="mt-0.5 h-4 w-4 rounded border-gray-300 text-househaven-navy focus:ring-househaven-navy"
       />
       <span>
-        I agree to be contacted by House Haven Realty via call, email, and text at the
-        number and email provided, including via automated means. Consent is not a
-        condition of purchase. To opt out, reply &ldquo;STOP&rdquo; at any time or click the
-        unsubscribe link in any email. Message frequency may vary. Message and data
-        rates may apply. See our{' '}
+        I agree to be contacted by House Haven Realty via call, email, and text. To opt
+        out, reply STOP at any time or click the unsubscribe link in any email. Message
+        frequency may vary. Message and data rates may apply.{' '}
         <Link href="/privacy" className="underline hover:text-househaven-navy">
           Privacy Policy
         </Link>

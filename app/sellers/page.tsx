@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import CommissionDisclosure from '@/components/compliance/CommissionDisclosure'
 
 export const metadata: Metadata = {
   title: 'Selling Your Home in Nashville — House Haven Realty',
@@ -162,6 +163,10 @@ export default function SellersPage() {
             >
               Get my free CMA
             </Link>
+          </div>
+
+          <div className="mt-10 max-w-2xl mx-auto">
+            <CommissionDisclosure variant="card" />
           </div>
         </div>
       </section>
