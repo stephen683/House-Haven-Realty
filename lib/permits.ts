@@ -174,16 +174,21 @@ function isResidentialNew(attrs: ArcGISPermitAttributes): boolean {
 
 // ─── Fetch from ArcGIS ──────────────────────────────────
 
+// ArcGIS rejects raw epoch-millis in WHERE clauses on this service; use a SQL
+// TIMESTAMP literal instead.
+function toArcGISTimestamp(date: Date): string {
+  return `TIMESTAMP '${date.toISOString().slice(0, 19).replace('T', ' ')}'`
+}
+
 export async function fetchRecentPermits(options: {
   days?: number
   limit?: number
 } = {}): Promise<NormalizedPermit[]> {
   const { days = 180, limit = 500 } = options
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000)
-  const sinceEpoch = since.getTime()
 
   const params = new URLSearchParams({
-    where: `Date_Issued > ${sinceEpoch} AND Permit_Type_Description LIKE '%Residential%New%'`,
+    where: `Date_Issued > ${toArcGISTimestamp(since)} AND Permit_Type_Description LIKE '%Residential%New%'`,
     outFields: '*',
     resultRecordCount: String(limit),
     orderByFields: 'Date_Issued DESC',
@@ -225,10 +230,9 @@ export async function fetchAllPermits(options: {
 } = {}): Promise<NormalizedPermit[]> {
   const { days = 365, limit = 2000 } = options
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000)
-  const sinceEpoch = since.getTime()
 
   const params = new URLSearchParams({
-    where: `Date_Issued > ${sinceEpoch}`,
+    where: `Date_Issued > ${toArcGISTimestamp(since)}`,
     outFields: '*',
     resultRecordCount: String(limit),
     orderByFields: 'Date_Issued DESC',
