@@ -167,6 +167,28 @@ These exist on `main` and are not relaunched, just light-polished where needed:
 
 ---
 
+## 🔧 Post-v2 shipped (2026-04-20)
+
+Pipeline product redesign beyond the original launch scope — triggered by Stephen's mobile smoke-test. Six commits on `main`, all deployed to prod.
+
+- [x] **ArcGIS date-literal fix** (`36c07ca`) — permit map was returning zero features; ArcGIS rejected raw epoch-millis in WHERE, now uses `TIMESTAMP 'YYYY-MM-DD HH:MM:SS'` literal. 493 live permits restored.
+- [x] **Compass-style detail panel** (`f80b163`) — full redesign: MapLibre mini-map hero + "Tracked by House Haven" chip, neighborhood-street-block (no house number), fiduciary-conflict block, email-only notify form with TCPA, builder card with prior Nashville builds, collapsible FTHB checklist, NAR 2026 commission disclosure. Removed: construction cost (read like a price), permit number, council district, parcel ID, census tract, raw Purpose text.
+- [x] **Real construction-stage timeline** — ePermits REST API (`epermits.nashville.gov/api/permit/1.0/`) returns live inspection records. 7-stage ladder: Permitted → Site prep → Foundation → Framing → Dried-in → Finishing → Near listing. Per-stage click-to-expand shows underlying inspections with results + scheduled dates.
+- [x] **Canary monitoring** (`69431c2` + `611b562`) — `/api/cron/canary` at `*/15 * * * *` hits 6 critical endpoints with shape assertions, writes to Supabase `canary_runs` + `canary_state`, emails on DOWN/RECOVERED transitions with 1hr cooldown. Verified end-to-end — canary caught its own config bug (VERCEL_URL was auth-gated), fired DOWN alerts, recovered on next cycle after fix.
+- [x] **Condos + multifamily included** (`5016b0e`) — broadened ArcGIS filter to include condo permits (filed as Commercial-Rehab with subtype `Multifamily, Condominium`), duplexes, multifamily-new. Dedupe by building: 186 McGavock unit permits collapse to one pin with `unitCount: 186` chip on panel. Accessory subtypes (pools/sheds/carports) filtered out at source.
+- [x] **Stage illustrations** — 7 branded SVG illustrations in `/public/images/pipeline/stages/` (permitted, site_prep, foundation, framing, dried_in, finishing, near_listing). Shipped as hero banner at top of stage timeline (always visible, no tap required). Swap to JPG photos by dropping files and flipping extension in `lib/stage-images.ts`.
+- [x] **Lot size via parcels join** — new `fetchParcelByAPN()` hits `Parcels_view` ArcGIS layer, surfaces acres + zoning + land use. Panel shows 4th spec cell when acres > 0; zoning always in the footer caption.
+- [x] **Unified map color** (`f8eff0c`) — pins now colored by ZIP saturation score (red/orange/yellow/blue/gray) via MapLibre `match` expression. Retired permit-age coloring + its bottom-left legend. Hot ZIPs side panel now collapsed by default; tiny "Show Hot ZIPs" pill in top-right, click to expand top-10 list.
+
+**Supabase migrations added:** `005_permit_stages`, `006_property_notify`, `007_canary` — all applied.
+
+**Env vars still pending on Vercel:**
+- [ ] `RESEND_API_KEY` — currently alerts dry-run to logs; set this to activate email
+- [ ] `HUBSPOT_PRIVATE_APP_TOKEN` + custom properties (`house_haven_source`, `selling_timeline`, `pipeline_notify` source)
+- [ ] `CANARY_BASE_URL=https://househavenrealty.com` at DNS cutover
+
+---
+
 ## Change Log
 
 - **2026-04-17 (later) — All 4 launch blockers built, awaiting API keys.** Pipeline rebrand: NashBuilds → Nashville Pipeline / House Haven Pipeline (file moves, find/replace, 301s, Dataset schema, empty states, permit popup rewrite, "how to use" modal). Compliance: NAR 2026 commission-negotiable disclosure component mounted on Sellers, Home Valuation, Value, IDX disclaimer; TCPA aligned to spec §5.4 verbatim. House Haven Value: full /value page + ValueClient + RentCast/HubSpot/Resend libs (graceful mock fallback when keys missing) + Supabase migration 003 + 2 API routes. Realtracs IDX skeleton: MLS Grid client + listings cache migration 004 + ListingCard/Grid/SearchFilters components + full /homes-for-sale and detail page with NAR-compliant attribution + RealEstateListing schema. Homepage: 8 sections per §6.1, brokerage-first, brand-kit-true. Deleted orphaned `/new-construction` route (consolidated into Pipeline via 301). Final: type-check ✅, lint ✅, build ✅ (homepage 3.57 kB, /pipeline 7.68 kB, /value 3.39 kB).
