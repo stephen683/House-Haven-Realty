@@ -13,13 +13,17 @@ import {
 export const runtime = 'nodejs'
 export const maxDuration = 60
 
+// Default to the stable pre-launch public alias. After DNS cutover, set
+// CANARY_BASE_URL=https://househavenrealty.com in Vercel. Never default to
+// VERCEL_URL — per-deployment URLs are auth-gated on this project and will
+// always return 401 from an unauthenticated canary fetch.
+const CANARY_DEFAULT_BASE = 'https://project-bmq0e.vercel.app'
+
 function canaryBaseUrl(): string {
-  // Prefer explicit prod URL (custom domain after cutover, stable alias before);
-  // fall back to the per-deployment VERCEL_URL so preview-branch canaries still run.
   return (
     process.env.CANARY_BASE_URL ??
     process.env.NEXT_PUBLIC_SITE_URL ??
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
+    CANARY_DEFAULT_BASE
   )
 }
 
