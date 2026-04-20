@@ -274,6 +274,7 @@ export default function PipelineApp({
             <div className="hidden md:block w-[380px] lg:w-[420px] shrink-0 border-l border-black/5 bg-white overflow-hidden">
               <PermitDetailPanel
                 permit={selectedPermit.properties}
+                lngLat={selectedPermit.lngLat}
                 onClose={() => setSelectedPermit(null)}
               />
             </div>
@@ -291,6 +292,7 @@ export default function PipelineApp({
                 </div>
                 <PermitDetailPanel
                   permit={selectedPermit.properties}
+                  lngLat={selectedPermit.lngLat}
                   onClose={() => setSelectedPermit(null)}
                 />
               </div>

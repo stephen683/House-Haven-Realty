@@ -252,3 +252,50 @@ export async function fetchAllPermits(options: {
     return []
   }
 }
+
+// ─── Metro ePermits REST API (inspection tasks) ─────────
+
+import type { EPermitsCase, EPermitsCaseTask } from './permit-stages'
+
+const EPERMITS_BASE = 'https://epermits.nashville.gov/api/permit/1.0'
+const EPERMITS_UA = 'HouseHaven-Realty/1.0 (+stephen@househavenrealty.com)'
+const EPERMITS_TIMEOUT_MS = 5000
+
+async function epermitsFetch<T>(path: string): Promise<T | null> {
+  const ctrl = new AbortController()
+  const timer = setTimeout(() => ctrl.abort(), EPERMITS_TIMEOUT_MS)
+  try {
+    const res = await fetch(`${EPERMITS_BASE}/${path}`, {
+      headers: { Accept: 'application/json', 'User-Agent': EPERMITS_UA },
+      signal: ctrl.signal,
+      cache: 'no-store',
+    })
+    if (!res.ok) {
+      console.error('[epermits] non-ok', res.status, path)
+      return null
+    }
+    return (await res.json()) as T
+  } catch (err) {
+    console.error('[epermits] fetch failed', path, err)
+    return null
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
+export async function fetchCaseByPermitNumber(
+  permitNumber: string,
+): Promise<EPermitsCase | null> {
+  const filter = encodeURIComponent(`caseNumber eq '${permitNumber.replace(/'/g, "''")}'`)
+  const data = await epermitsFetch<{ value: EPermitsCase[] }>(
+    `Case?$filter=${filter}&$top=1`,
+  )
+  return data?.value?.[0] ?? null
+}
+
+export async function fetchCaseTasks(caseId: number): Promise<EPermitsCaseTask[]> {
+  const data = await epermitsFetch<{ value: EPermitsCaseTask[] }>(
+    `CaseTask?$filter=caseID eq ${caseId}&$orderby=scheduledDate asc`,
+  )
+  return data?.value ?? []
+}

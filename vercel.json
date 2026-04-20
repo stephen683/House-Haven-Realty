@@ -6,6 +6,10 @@
     {
       "path": "/api/cron/sync-permits",
       "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/sync-permit-stages",
+      "schedule": "0 7 * * *"
     }
   ]
 }

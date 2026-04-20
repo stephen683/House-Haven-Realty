@@ -1,185 +1,375 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import type { PermitFeatureProperties } from './MapView'
+import type { StageKey, StageView } from '@/lib/permit-stages'
+import { STAGE_LADDER, expectedListingWindow } from '@/lib/permit-stages'
+import StageTimeline from './StageTimeline'
+import PropertyHeroMap from './PropertyHeroMap'
+import BuilderCard from './BuilderCard'
+import NotifySignup from './NotifySignup'
+import CommissionDisclosure from '@/components/compliance/CommissionDisclosure'
 
 interface PermitDetailPanelProps {
   permit: PermitFeatureProperties
+  lngLat: [number, number]
   onClose: () => void
 }
 
-function formatCost(cost: number | null) {
-  if (!cost) return null
-  return `$${Math.round(cost).toLocaleString()}`
+interface StageApiResponse {
+  permitNumber: string
+  caseId: number | null
+  currentStage: StageKey
+  effectiveStage: StageKey
+  stages: StageView[]
+  override: {
+    stage: StageKey
+    note: string
+    confidence: string | null
+    at: string
+    expiresAt: string | null
+  } | null
+  fetchedAt: string
+  cacheAge: 'fresh' | 'stale_ok' | 'stale' | 'miss'
+  degraded: boolean
 }
 
-function formatDate(iso: string | null) {
-  if (!iso) return 'Date unknown'
-  return new Date(iso).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
+const PLACEHOLDER_STAGES: StageView[] = STAGE_LADDER.map((def) => ({
+  key: def.key,
+  label: def.label,
+  order: def.order,
+  description: def.description,
+  status: 'pending',
+  completedAt: null,
+  scheduledAt: null,
+  tasks: [],
+}))
+
+// Neighborhood labels for the common Nashville ZIPs we cover. Used instead of
+// bare numbers so the hero reads like a Compass listing, not a municipal record.
+const ZIP_TO_NEIGHBORHOOD: Record<string, string> = {
+  '37203': 'Midtown',
+  '37204': '12 South · Melrose',
+  '37205': 'Belle Meade · West Nashville',
+  '37206': 'East Nashville',
+  '37207': 'North Nashville',
+  '37208': 'Germantown · North Nashville',
+  '37209': 'The Nations · Sylvan Park',
+  '37210': 'Nashville South',
+  '37211': 'South Nashville',
+  '37212': 'Hillsboro Village',
+  '37215': 'Green Hills',
+  '37216': 'Inglewood',
+  '37218': 'Bordeaux',
+  '37219': 'Downtown',
+  '37220': 'Oak Hill',
+  '37221': 'Bellevue',
+  '37027': 'Brentwood',
+  '37064': 'Franklin',
+  '37067': 'Cool Springs',
+  '37069': 'Franklin',
+  '37122': 'Mt. Juliet',
+  '37135': 'Nolensville',
+  '37174': 'Spring Hill',
+  '37076': 'Hermitage',
+  '37086': 'La Vergne',
+  '37087': 'Lebanon',
 }
 
-function recencyLabel(days: number) {
-  if (days <= 7) return 'This week'
-  if (days <= 30) return 'This month'
-  if (days <= 90) return 'Last 90 days'
-  return 'Older'
+function streetBlock(address: string): string {
+  const parts = address.trim().split(/\s+/)
+  if (parts.length === 0) return 'Address withheld'
+  const rest = parts.slice(1).join(' ')
+  return rest || address
 }
 
-function recencyColor(days: number) {
-  if (days <= 7) return 'bg-emerald-500'
-  if (days <= 30) return 'bg-blue-500'
-  if (days <= 90) return 'bg-househaven-navy'
-  return 'bg-gray-400'
+function neighborhoodLabel(zip: string): string {
+  return ZIP_TO_NEIGHBORHOOD[zip] ?? `Nashville ${zip}`
 }
 
-export default function PermitDetailPanel({ permit, onClose }: PermitDetailPanelProps) {
+function stageLabelShort(key: StageKey) {
+  return STAGE_LADDER.find((s) => s.key === key)?.label ?? key
+}
+
+export default function PermitDetailPanel({
+  permit,
+  lngLat,
+  onClose,
+}: PermitDetailPanelProps) {
+  const [stageData, setStageData] = useState<StageApiResponse | null>(null)
+  const [stageLoading, setStageLoading] = useState(true)
+  const [stageError, setStageError] = useState(false)
+  const [showChecklist, setShowChecklist] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    setStageLoading(true)
+    setStageError(false)
+    setStageData(null)
+    fetch(`/api/pipeline/permit/${encodeURIComponent(permit.id)}/stage`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then((data: StageApiResponse) => {
+        if (!cancelled) {
+          setStageData(data)
+          setStageLoading(false)
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setStageError(true)
+          setStageLoading(false)
+        }
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [permit.id])
+
+  const effectiveStage = stageData?.effectiveStage ?? 'permitted'
+  const heroStageLabel = stageData ? stageLabelShort(effectiveStage) : null
+
   return (
-    <div className="bg-white border-l border-black/5 w-full h-full overflow-y-auto">
-      {/* Header */}
-      <div className="flex items-start justify-between p-4 border-b border-black/5">
-        <div className="flex items-center gap-2">
-          <span
-            className={`inline-block h-2.5 w-2.5 rounded-lg ${recencyColor(permit.daysAgo)}`}
-          />
-          <span className="text-[11px] text-househaven-text-muted">
-            {recencyLabel(permit.daysAgo)}
-          </span>
-        </div>
+    <div className="bg-white w-full h-full overflow-y-auto">
+      <div className="flex items-center justify-between px-4 pt-3">
+        <span className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
+          House Haven Pipeline
+        </span>
         <button
           type="button"
           onClick={onClose}
           className="p-1 rounded-lg hover:bg-househaven-surface transition"
           aria-label="Close detail panel"
         >
-          <svg className="h-5 w-5 text-househaven-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+          <svg
+            className="h-5 w-5 text-househaven-text-muted"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+            aria-hidden="true"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
 
-      {/* Content */}
-      <div className="p-4 space-y-4">
+      <div className="p-4 space-y-5">
+        <PropertyHeroMap
+          lng={lngLat[0]}
+          lat={lngLat[1]}
+          stageLabel={heroStageLabel}
+        />
+
         <div>
-          <h3 className="font-serif text-xl text-househaven-navy leading-tight">
-            {permit.address || 'Address withheld'}
+          <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
+            {neighborhoodLabel(permit.zip)} &middot; {permit.zip}
+          </p>
+          <h3 className="mt-1 font-serif text-xl text-househaven-navy leading-tight">
+            {streetBlock(permit.address)}
           </h3>
-          <p className="text-xs text-househaven-text-muted mt-0.5">
-            {permit.city} &middot; {permit.zip}
+          <p className="mt-0.5 text-[11px] text-househaven-text-muted">
+            House number withheld until the home is publicly listed.
           </p>
         </div>
 
-        {/* Property specs — beds/baths/sqft */}
         {(permit.bedrooms || permit.bathrooms || permit.sqft) && (
-          <div className="flex gap-4 text-center">
+          <div className="flex gap-3 text-center">
             {permit.bedrooms && (
               <div className="flex-1 rounded-lg bg-househaven-surface p-3">
-                <p className="font-serif text-xl text-househaven-navy">{permit.bedrooms}</p>
-                <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">Beds</p>
+                <p className="font-serif text-xl text-househaven-navy">
+                  {permit.bedrooms}
+                </p>
+                <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
+                  Beds
+                </p>
               </div>
             )}
             {permit.bathrooms && (
               <div className="flex-1 rounded-lg bg-househaven-surface p-3">
-                <p className="font-serif text-xl text-househaven-navy">{permit.bathrooms}</p>
-                <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">Baths</p>
+                <p className="font-serif text-xl text-househaven-navy">
+                  {permit.bathrooms}
+                </p>
+                <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
+                  Baths
+                </p>
               </div>
             )}
             {permit.sqft && (
               <div className="flex-1 rounded-lg bg-househaven-surface p-3">
-                <p className="font-serif text-xl text-househaven-navy">{permit.sqft.toLocaleString()}</p>
-                <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">Sq Ft</p>
+                <p className="font-serif text-xl text-househaven-navy">
+                  {permit.sqft.toLocaleString()}
+                </p>
+                <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
+                  Sq Ft
+                </p>
               </div>
             )}
           </div>
         )}
 
-        {/* Key details */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-lg bg-househaven-surface p-3">
-            <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
-              Issued
-            </p>
-            <p className="text-sm font-semibold text-househaven-navy mt-0.5">
-              {formatDate(permit.dateIssued)}
-            </p>
-          </div>
-          <div className="rounded-lg bg-househaven-surface p-3">
-            <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
-              Est. cost
-            </p>
-            <p className="text-sm font-semibold text-househaven-navy mt-0.5">
-              {formatCost(permit.constructionCost) || '—'}
-            </p>
-          </div>
-        </div>
-
-        {/* Property type badge */}
         {permit.propertyType && permit.propertyType !== 'unknown' && (
           <div>
             <span className="inline-block px-3 py-1 rounded-lg bg-househaven-navy/10 text-xs font-medium text-househaven-navy capitalize">
               {permit.propertyType.replace(/_/g, ' ')}
             </span>
-            {permit.subtype && (
-              <span className="inline-block ml-2 px-3 py-1 rounded-lg bg-househaven-surface text-xs text-househaven-text-muted">
-                {permit.subtype}
-              </span>
-            )}
+            <p className="mt-1 text-[10px] text-househaven-text-muted">
+              Specs from Metro Nashville permit.
+            </p>
           </div>
         )}
 
-        {/* Permit info */}
-        <div className="space-y-2">
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
-              Builder
-            </p>
-            <p className="text-sm text-househaven-text mt-0.5 font-medium">
-              {permit.contractor || '—'}
+        {stageLoading && (
+          <div className="rounded-lg bg-househaven-surface p-4 text-center">
+            <div className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-black/10 border-t-black/40" />
+            <p className="mt-2 text-[11px] text-househaven-text-muted">
+              Checking construction progress&hellip;
             </p>
           </div>
-          {permit.description && (
-            <div>
-              <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
-                Description
-              </p>
-              <p className="text-sm text-househaven-text mt-0.5 line-clamp-3">
-                {permit.description}
-              </p>
-            </div>
-          )}
-          {permit.subdivision && (
-            <div>
-              <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
-                Subdivision
-              </p>
-              <p className="text-sm text-househaven-text mt-0.5">
-                {permit.subdivision}
-              </p>
-            </div>
-          )}
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
-              Permit #
+        )}
+        {stageError && (
+          <div className="rounded-lg bg-househaven-surface p-4">
+            <p className="text-xs text-househaven-text">
+              Construction stage temporarily unavailable.
             </p>
-            <p className="text-sm text-househaven-text mt-0.5 font-mono">
-              {permit.id}
+            <p className="mt-1 text-[11px] text-househaven-text-muted">
+              Metro Nashville&rsquo;s inspection feed is slow right now &mdash; try again in a
+              minute.
             </p>
           </div>
-        </div>
+        )}
+        {stageData && (
+          <>
+            <StageTimeline
+              stages={
+                stageData.stages && stageData.stages.length > 0
+                  ? stageData.stages
+                  : PLACEHOLDER_STAGES
+              }
+              currentStage={stageData.currentStage}
+              effectiveStage={stageData.effectiveStage}
+              override={stageData.override}
+            />
+            <div className="rounded-lg bg-househaven-surface p-3">
+              <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
+                Expected listing
+              </p>
+              <p className="mt-1 text-sm font-semibold text-househaven-navy">
+                {expectedListingWindow(effectiveStage)}
+              </p>
+              <p className="mt-1 text-[11px] text-househaven-text-muted">
+                Heuristic based on current stage. Not a guarantee &mdash; builders&rsquo; schedules
+                shift.
+              </p>
+            </div>
+          </>
+        )}
 
-        {/* CTA */}
-        <div className="pt-2 border-t border-black/5 space-y-2">
+        {permit.contractor && (
+          <BuilderCard
+            contractor={permit.contractor}
+            excludePermitNumber={permit.id}
+          />
+        )}
+
+        <section className="space-y-3">
+          <div className="rounded-lg bg-white border border-black/10 p-4">
+            <p className="font-serif text-base text-househaven-navy leading-snug">
+              The builder&rsquo;s sales rep works for the builder. House Haven works for you.
+            </p>
+            <p className="mt-2 text-[12px] text-househaven-text leading-relaxed">
+              When you walk into a new-construction sales office, the person you meet has a
+              fiduciary duty to the builder. We have that duty to you &mdash; reviewing the
+              contract, the upgrades list, warranty terms, and inspection rights before you
+              sign.
+            </p>
+          </div>
+          <NotifySignup
+            permitNumber={permit.id}
+            address={permit.address}
+            zip={permit.zip}
+          />
           <Link
-            href={`/contact?subject=New+Construction+at+${encodeURIComponent(permit.address)}`}
-            className="block w-full text-center px-4 py-2.5 rounded-xl bg-househaven-navy text-white text-sm font-semibold hover:bg-househaven-navy-light transition"
+            href="tel:+16156244766"
+            className="block w-full text-center px-4 py-2.5 rounded-lg border border-black/15 text-sm font-medium text-househaven-navy hover:border-black/30 transition"
           >
-            Ask about this property
+            Call Stephen directly &middot; (615) 624-4766
           </Link>
-          <p className="text-[10px] text-center text-househaven-text-muted">
-            We&rsquo;ll connect you with the builder or schedule a drive-by tour.
+        </section>
+
+        <section className="rounded-lg border border-black/10">
+          <button
+            type="button"
+            onClick={() => setShowChecklist((v) => !v)}
+            className="w-full flex items-center justify-between px-4 py-3 text-left"
+            aria-expanded={showChecklist}
+          >
+            <span className="text-sm font-semibold text-househaven-navy">
+              New-build first-timer&rsquo;s checklist
+            </span>
+            <svg
+              className={`h-4 w-4 text-househaven-text-muted transition-transform ${showChecklist ? 'rotate-180' : ''}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+              aria-hidden="true"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          {showChecklist && (
+            <div className="px-4 pb-4 space-y-4 text-[12px] text-househaven-text leading-relaxed">
+              <div>
+                <p className="font-semibold text-househaven-navy mb-1">
+                  Warranty: 1 / 2 / 10
+                </p>
+                <p>
+                  Builders in Tennessee typically warrant workmanship for one year, mechanical
+                  systems for two, and major structural components for ten. Get the specific
+                  schedule in writing before you sign.
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-househaven-navy mb-1">
+                  Base price vs. walked model
+                </p>
+                <p>
+                  The model home you toured is usually the loaded version. Ask the builder to
+                  itemize what&rsquo;s base and what&rsquo;s upgrade &mdash; then budget 8&ndash;15%
+                  of base for the finishes you actually want.
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-househaven-navy mb-1">
+                  Independent inspection
+                </p>
+                <p>
+                  You have the right to bring your own inspector before closing, even on new
+                  construction. Some builders push back; we hold the line.
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-househaven-navy mb-1">
+                  Rate-lock windows
+                </p>
+                <p>
+                  Standard 30&ndash;60-day locks don&rsquo;t cover 4&ndash;6 month build
+                  timelines. Ask your lender about an extended lock or a builder forward
+                  commitment before you sign.
+                </p>
+              </div>
+            </div>
+          )}
+        </section>
+
+        <div className="space-y-2">
+          <CommissionDisclosure variant="card" />
+          <p className="text-[10px] text-househaven-text-muted leading-relaxed">
+            Source: Metro Nashville Codes and ePermits &mdash; public records. This is not
+            a listing and no list price is displayed. Construction stage reflects permit and
+            inspection activity; it is not a promise of delivery. House Haven Realty
+            represents buyers; we are not the listing agent for this property.
           </p>
         </div>
       </div>
