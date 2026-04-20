@@ -17,6 +17,14 @@ interface PermitDetailPanelProps {
   onClose: () => void
 }
 
+interface ParcelInfoView {
+  apn: string
+  acres: number | null
+  zoning: string | null
+  landUse: string | null
+  address: string | null
+}
+
 interface StageApiResponse {
   permitNumber: string
   caseId: number | null
@@ -30,6 +38,7 @@ interface StageApiResponse {
     at: string
     expiresAt: string | null
   } | null
+  parcel: ParcelInfoView | null
   fetchedAt: string
   cacheAge: 'fresh' | 'stale_ok' | 'stale' | 'miss'
   degraded: boolean
@@ -173,10 +182,25 @@ export default function PermitDetailPanel({
           </p>
         </div>
 
-        {(permit.bedrooms || permit.bathrooms || permit.sqft) && (
-          <div className="flex gap-3 text-center">
+        {(permit.propertyType && permit.propertyType !== 'unknown') || permit.unitCount > 1 ? (
+          <div className="flex flex-wrap items-center gap-2">
+            {permit.propertyType && permit.propertyType !== 'unknown' && (
+              <span className="inline-block px-3 py-1 rounded-lg bg-househaven-navy/10 text-xs font-medium text-househaven-navy capitalize">
+                {permit.propertyType.replace(/_/g, ' ')}
+              </span>
+            )}
+            {permit.unitCount > 1 && (
+              <span className="inline-block px-3 py-1 rounded-lg bg-black text-white text-xs font-medium">
+                {permit.unitCount} units
+              </span>
+            )}
+          </div>
+        ) : null}
+
+        {(permit.bedrooms || permit.bathrooms || permit.sqft || stageData?.parcel?.acres) && (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
             {permit.bedrooms && (
-              <div className="flex-1 rounded-lg bg-househaven-surface p-3">
+              <div className="rounded-lg bg-househaven-surface p-3">
                 <p className="font-serif text-xl text-househaven-navy">
                   {permit.bedrooms}
                 </p>
@@ -186,7 +210,7 @@ export default function PermitDetailPanel({
               </div>
             )}
             {permit.bathrooms && (
-              <div className="flex-1 rounded-lg bg-househaven-surface p-3">
+              <div className="rounded-lg bg-househaven-surface p-3">
                 <p className="font-serif text-xl text-househaven-navy">
                   {permit.bathrooms}
                 </p>
@@ -196,7 +220,7 @@ export default function PermitDetailPanel({
               </div>
             )}
             {permit.sqft && (
-              <div className="flex-1 rounded-lg bg-househaven-surface p-3">
+              <div className="rounded-lg bg-househaven-surface p-3">
                 <p className="font-serif text-xl text-househaven-navy">
                   {permit.sqft.toLocaleString()}
                 </p>
@@ -205,19 +229,23 @@ export default function PermitDetailPanel({
                 </p>
               </div>
             )}
+            {stageData?.parcel?.acres && (
+              <div className="rounded-lg bg-househaven-surface p-3">
+                <p className="font-serif text-xl text-househaven-navy">
+                  {stageData.parcel.acres.toFixed(2)}
+                </p>
+                <p className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
+                  Acre{stageData.parcel.acres === 1 ? '' : 's'}
+                </p>
+              </div>
+            )}
           </div>
         )}
 
-        {permit.propertyType && permit.propertyType !== 'unknown' && (
-          <div>
-            <span className="inline-block px-3 py-1 rounded-lg bg-househaven-navy/10 text-xs font-medium text-househaven-navy capitalize">
-              {permit.propertyType.replace(/_/g, ' ')}
-            </span>
-            <p className="mt-1 text-[10px] text-househaven-text-muted">
-              Specs from Metro Nashville permit.
-            </p>
-          </div>
-        )}
+        <p className="text-[10px] text-househaven-text-muted">
+          Specs from Metro Nashville permit.
+          {stageData?.parcel?.zoning ? ` Zoning: ${stageData.parcel.zoning}.` : ''}
+        </p>
 
         {stageLoading && (
           <div className="rounded-lg bg-househaven-surface p-4 text-center">

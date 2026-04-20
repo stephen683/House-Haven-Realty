@@ -35,6 +35,7 @@ function toGeoJSON(permits: NormalizedPermit[]): GeoJSON.FeatureCollection {
           propertyType: p.propertyType,
           parcel: p.parcel,
           subdivision: p.subdivision,
+          unitCount: p.unitCount,
         },
       })),
   }

@@ -52,7 +52,7 @@ const datasetSchema = {
 
 export default async function PipelinePage() {
   const [permits, allPermits] = await Promise.all([
-    fetchRecentPermits({ days: 180, limit: 500 }),
+    fetchRecentPermits({ days: 180, limit: 1000 }),
     fetchAllPermits({ days: 365, limit: 2000 }),
   ])
 

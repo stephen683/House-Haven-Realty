@@ -23,6 +23,7 @@ export interface PermitFeatureProperties {
   propertyType: string
   parcel: string
   subdivision: string
+  unitCount: number
 }
 
 interface MapViewProps {
@@ -82,6 +83,7 @@ export default function MapView({ onPermitSelect, filterExpression }: MapViewPro
           parcel: String(props.parcel || ''),
           subdivision: String(props.subdivision || ''),
           subtype: String(props.subtype || ''),
+          unitCount: Number(props.unitCount || 1),
         },
         geom.coordinates as [number, number],
       )

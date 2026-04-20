@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" role="img" aria-label="Dried in — roof and windows">
+  <rect width="800" height="400" fill="#F5F5F5"/>
+  <g fill="none" stroke="#000" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter">
+    <!-- Ground line -->
+    <line x1="40" y1="340" x2="760" y2="340"/>
+    <!-- House silhouette -->
+    <polygon points="180,340 180,230 400,130 620,230 620,340"/>
+    <!-- Roof shingle lines -->
+    <line x1="400" y1="130" x2="260" y2="340"/>
+    <line x1="400" y1="130" x2="540" y2="340"/>
+    <line x1="230" y1="190" x2="570" y2="190"/>
+    <line x1="210" y1="220" x2="590" y2="220"/>
+    <!-- Windows (installed, glass shown with diagonal hash) -->
+    <g stroke-width="3">
+      <rect x="225" y="250" width="90" height="60"/>
+      <line x1="270" y1="250" x2="270" y2="310"/>
+      <line x1="225" y1="280" x2="315" y2="280"/>
+      <line x1="240" y1="260" x2="255" y2="275" stroke-width="1.5"/>
+      <line x1="285" y1="260" x2="300" y2="275" stroke-width="1.5"/>
+
+      <rect x="485" y="250" width="90" height="60"/>
+      <line x1="530" y1="250" x2="530" y2="310"/>
+      <line x1="485" y1="280" x2="575" y2="280"/>
+      <line x1="500" y1="260" x2="515" y2="275" stroke-width="1.5"/>
+      <line x1="545" y1="260" x2="560" y2="275" stroke-width="1.5"/>
+    </g>
+    <!-- Front door -->
+    <rect x="370" y="250" width="60" height="90"/>
+    <circle cx="418" cy="295" r="3" fill="#000"/>
+    <!-- House wrap/Tyvek suggestion — dashed lines -->
+    <line x1="180" y1="240" x2="370" y2="240" stroke-dasharray="8,6" stroke-width="1.5"/>
+    <line x1="430" y1="240" x2="620" y2="240" stroke-dasharray="8,6" stroke-width="1.5"/>
+  </g>
+</svg>

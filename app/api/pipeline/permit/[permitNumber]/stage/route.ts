@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { fetchCaseByPermitNumber, fetchCaseTasks } from '@/lib/permits'
+import {
+  fetchCaseByPermitNumber,
+  fetchCaseTasks,
+  fetchParcelByAPN,
+  fetchPermitByNumber,
+  type ParcelInfo,
+} from '@/lib/permits'
 import { computeStages, type StageView, type StageKey } from '@/lib/permit-stages'
 import { createClient } from '@/lib/supabase/server'
 
@@ -26,6 +32,7 @@ interface StageResponse {
   effectiveStage: StageKey
   stages: StageView[]
   override: OverrideView | null
+  parcel: ParcelInfo | null
   fetchedAt: string
   cacheAge: CacheAge
   degraded: boolean
@@ -71,11 +78,18 @@ export async function GET(
   const { permitNumber } = await params
   const supabase = await createClient()
 
-  const { data: cached } = await supabase
-    .from('permit_stages')
-    .select('*')
-    .eq('permit_number', permitNumber)
-    .maybeSingle()
+  const [cachedRes, knownRes] = await Promise.all([
+    supabase.from('permit_stages').select('*').eq('permit_number', permitNumber).maybeSingle(),
+    supabase.from('building_permits').select('permit_number,parcel').eq('permit_number', permitNumber).maybeSingle(),
+  ])
+  const cached = cachedRes.data
+  const knownPermit = knownRes.data
+  let apn: string | null = knownPermit?.parcel ?? null
+  if (!apn) {
+    const live = await fetchPermitByNumber(permitNumber)
+    apn = live?.parcel || null
+  }
+  const parcel = apn ? await fetchParcelByAPN(apn) : null
 
   if (cached) {
     const age = cacheAgeOf(cached.fetched_at)
@@ -88,6 +102,7 @@ export async function GET(
       effectiveStage: override?.stage ?? currentStage,
       stages: cached.stages_json as StageView[],
       override,
+      parcel,
       fetchedAt: cached.fetched_at,
       cacheAge: age,
       degraded: false,
@@ -115,13 +130,8 @@ export async function GET(
     return NextResponse.json(body)
   }
 
-  // Cache miss — gate live fetch behind the ArcGIS allowlist
-  const { data: known } = await supabase
-    .from('building_permits')
-    .select('permit_number')
-    .eq('permit_number', permitNumber)
-    .maybeSingle()
-  if (!known) {
+  // Cache miss — gate live fetch behind the ArcGIS allowlist (building_permits).
+  if (!knownPermit) {
     // Still allow the fetch if the permit exists in ePermits even when our
     // building_permits cache hasn't caught up — but cap at one lookup.
     const live = await liveFetch(permitNumber)
@@ -142,6 +152,7 @@ export async function GET(
       effectiveStage: live.computed.currentStage,
       stages: live.computed.stages,
       override: null,
+      parcel,
       fetchedAt: new Date().toISOString(),
       cacheAge: 'miss',
       degraded: false,
@@ -174,6 +185,7 @@ export async function GET(
     effectiveStage: live.computed.currentStage,
     stages: live.computed.stages,
     override: null,
+    parcel,
     fetchedAt: new Date().toISOString(),
     cacheAge: 'miss',
     degraded: false,

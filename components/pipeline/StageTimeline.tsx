@@ -1,7 +1,9 @@
 'use client'
 
+import Image from 'next/image'
 import { useState } from 'react'
 import type { StageKey, StageStatus, StageView } from '@/lib/permit-stages'
+import { STAGE_IMAGE } from '@/lib/stage-images'
 
 interface StageTimelineProps {
   stages: StageView[]
@@ -123,7 +125,17 @@ export default function StageTimeline({
                 </svg>
               </button>
               {isOpen && (
-                <div className="ml-9 mb-2 rounded-lg bg-househaven-surface p-3 space-y-1.5">
+                <div className="ml-9 mb-2 rounded-lg bg-househaven-surface overflow-hidden">
+                  <div className="relative w-full aspect-[2/1] bg-white border-b border-black/5">
+                    <Image
+                      src={STAGE_IMAGE[s.key]}
+                      alt={`${s.label} illustration`}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 400px"
+                      className="object-contain"
+                    />
+                  </div>
+                  <div className="p-3 space-y-1.5">
                   <p className="text-[11px] text-househaven-text-muted leading-relaxed">
                     {s.description}
                   </p>
@@ -150,6 +162,7 @@ export default function StageTimeline({
                       ))}
                     </ul>
                   )}
+                  </div>
                 </div>
               )}
             </li>

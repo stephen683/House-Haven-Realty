@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" role="img" aria-label="Permit issued">
+  <rect width="800" height="400" fill="#F5F5F5"/>
+  <g fill="none" stroke="#000" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter">
+    <!-- Rolled blueprint document -->
+    <rect x="220" y="100" width="280" height="220"/>
+    <line x1="220" y1="140" x2="500" y2="140"/>
+    <line x1="240" y1="170" x2="480" y2="170"/>
+    <line x1="240" y1="200" x2="460" y2="200"/>
+    <!-- House plan sketch -->
+    <polyline points="260,260 360,220 460,260 460,300 260,300 260,260"/>
+    <line x1="340" y1="300" x2="340" y2="270"/>
+    <line x1="380" y1="300" x2="380" y2="270"/>
+    <!-- Official stamp -->
+    <circle cx="570" cy="250" r="55"/>
+    <circle cx="570" cy="250" r="40"/>
+    <text x="570" y="245" font-family="monospace" font-size="11" font-weight="700" text-anchor="middle" fill="#000" stroke="none">ISSUED</text>
+    <text x="570" y="263" font-family="monospace" font-size="8" text-anchor="middle" fill="#000" stroke="none">METRO NASHVILLE</text>
+  </g>
+</svg>

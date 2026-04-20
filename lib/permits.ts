@@ -55,6 +55,10 @@ export interface NormalizedPermit {
   propertyType: 'single_family' | 'townhome' | 'condo' | 'duplex' | 'multi_family' | 'accessory' | 'commercial' | 'unknown'
   // Computed
   daysAgo: number
+  // For multi-unit buildings, how many permit rows collapse to this marker.
+  // 1 for a standalone SFR/townhome; 190 for a condo conversion where each
+  // unit has its own permit row but shares the building.
+  unitCount: number
 }
 
 // ─── Purpose field parser ───────────────────────────────
@@ -104,13 +108,23 @@ function parsePropertyType(
   subtypeDesc: string,
   purpose: string,
 ): NormalizedPermit['propertyType'] {
-  const combined = `${typeDesc} ${subtypeDesc} ${purpose}`.toLowerCase()
-  if (/single.?family|sfr|single family residence/.test(combined)) return 'single_family'
-  if (/townho(?:me|use)|row house|attached/.test(combined)) return 'townhome'
+  // Trust the subtype first — it's a coded value from Metro, more reliable than
+  // regex on the free-text Purpose field.
+  const sub = (subtypeDesc || '').toLowerCase()
+  if (sub.includes('condominium')) return 'condo'
+  if (sub.includes('townhome') || sub.includes('townhouse')) return 'townhome'
+  if (sub.includes('duplex')) return 'duplex'
+  if (sub.startsWith('multifamily')) return 'multi_family'
+  if (sub.includes('single family')) return 'single_family'
+  if (sub.startsWith('accessory') || sub.includes('adu') || sub.includes('pool')) return 'accessory'
+
+  const combined = `${typeDesc} ${purpose}`.toLowerCase()
+  if (/townho(?:me|use)|row house/.test(combined)) return 'townhome'
   if (/condo|condominium|hpr|horizontal property/.test(combined)) return 'condo'
   if (/duplex|two.?family|two.?unit/.test(combined)) return 'duplex'
   if (/multi.?family|apartment|tri-?plex|four-?plex|\d+.?unit/.test(combined)) return 'multi_family'
   if (/accessory|adu|pool|garage|deck|fence|addition/.test(combined)) return 'accessory'
+  if (/single.?family|sfr|single family residence/.test(combined)) return 'single_family'
   if (/commercial|restaurant|retail|office|warehouse/.test(combined)) return 'commercial'
   if (/residential/.test(combined)) return 'single_family'
   return 'unknown'
@@ -157,19 +171,82 @@ function normalize(attrs: ArcGISPermitAttributes): NormalizedPermit {
     daysAgo: dateIssued
       ? Math.floor((Date.now() - new Date(dateIssued).getTime()) / (1000 * 60 * 60 * 24))
       : 999,
+    unitCount: 1,
   }
+}
+
+// Strip trailing unit markers so "1600 MCGAVOCK ST 606" and "1600 MCGAVOCK ST 612"
+// collapse to the same building key.
+function buildingKey(p: NormalizedPermit): string {
+  const stripped = p.address
+    .trim()
+    .toUpperCase()
+    .replace(/\s+(UNIT|APT|SUITE|STE|#)\s*\S+$/i, '')
+    .replace(/\s+[A-Z]?-?\d{1,4}([A-Z]?)?$/i, '')
+    .trim()
+  return `${stripped}||${p.contractor}`
+}
+
+function dedupeByBuilding(permits: NormalizedPermit[]): NormalizedPermit[] {
+  const groups = new Map<string, NormalizedPermit[]>()
+  for (const p of permits) {
+    const key = buildingKey(p)
+    const arr = groups.get(key) ?? []
+    arr.push(p)
+    groups.set(key, arr)
+  }
+  const result: NormalizedPermit[] = []
+  Array.from(groups.values()).forEach((arr: NormalizedPermit[]) => {
+    if (arr.length === 1) {
+      result.push(arr[0])
+      return
+    }
+    arr.sort((a: NormalizedPermit, b: NormalizedPermit) =>
+      (b.dateIssued ?? '').localeCompare(a.dateIssued ?? ''),
+    )
+    const rep = arr[0]
+    const totalCost = arr.reduce(
+      (sum: number, p: NormalizedPermit) => sum + (p.constructionCost ?? 0),
+      0,
+    )
+    result.push({
+      ...rep,
+      constructionCost: totalCost || rep.constructionCost,
+      unitCount: arr.length,
+    })
+  })
+  return result
 }
 
 // ─── Residential filter ─────────────────────────────────
 
-const RESIDENTIAL_TYPES = [
-  'Building Residential - New',
-  'Building Residential - Addition',
+// Accessory structures aren't homes a buyer can move into; filter them off the
+// map. Pools, sheds, carports, garages, detached decks — hide at the subtype
+// level so the pipeline shows only dwelling permits.
+const ACCESSORY_SUBTYPE_PATTERNS = [
+  /^accessory structure/i,
+  /pools? -/i,
 ]
 
-function isResidentialNew(attrs: ArcGISPermitAttributes): boolean {
+function isHomeBuildingPermit(attrs: ArcGISPermitAttributes): boolean {
   const type = attrs.Permit_Type_Description || ''
-  return RESIDENTIAL_TYPES.some((t) => type.includes(t))
+  const subtype = attrs.Permit_Subtype_Description || ''
+
+  if (ACCESSORY_SUBTYPE_PATTERNS.some((p) => p.test(subtype))) return false
+
+  // Ground-up residential — the default case (SFR, townhome, duplex,
+  // multifamily-condo in the new-construction feed).
+  if (type === 'Building Residential - New') return true
+  if (type === 'Building Residential - Addition') return true
+
+  // Commercial-rehab with a condo/multifamily subtype — these are the big
+  // condo-conversion projects (1600 McGavock, 730 Main, 3509 Charlotte).
+  // A buyer who wants new-construction condo inventory needs to see them.
+  if (type === 'Building Commercial - Rehab' || type === 'Building Commercial - New') {
+    if (/condominium|multifamily/i.test(subtype)) return true
+  }
+
+  return false
 }
 
 // ─── Fetch from ArcGIS ──────────────────────────────────
@@ -180,15 +257,32 @@ function toArcGISTimestamp(date: Date): string {
   return `TIMESTAMP '${date.toISOString().slice(0, 19).replace('T', ' ')}'`
 }
 
+function buildHomeWhereClause(since: Date): string {
+  // Includes ground-up residential (SFR, townhome, duplex, multifamily-new)
+  // AND condo conversions filed as Commercial-Rehab/New. Excludes accessory
+  // structures (pools, sheds, garages, carports, decks) at the subtype level
+  // so the map shows dwellings only.
+  return [
+    `Date_Issued > ${toArcGISTimestamp(since)}`,
+    `AND (`,
+    `  (Permit_Type_Description IN ('Building Residential - New','Building Residential - Addition'))`,
+    `  OR (Permit_Type_Description IN ('Building Commercial - Rehab','Building Commercial - New')`,
+    `      AND (Permit_Subtype_Description LIKE '%Condominium%' OR Permit_Subtype_Description LIKE 'Multifamily%'))`,
+    `)`,
+    `AND Permit_Subtype_Description NOT LIKE 'Accessory Structure%'`,
+    `AND Permit_Subtype_Description NOT LIKE 'Pools %'`,
+  ].join(' ')
+}
+
 export async function fetchRecentPermits(options: {
   days?: number
   limit?: number
 } = {}): Promise<NormalizedPermit[]> {
-  const { days = 180, limit = 500 } = options
+  const { days = 180, limit = 1000 } = options
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000)
 
   const params = new URLSearchParams({
-    where: `Date_Issued > ${toArcGISTimestamp(since)} AND Permit_Type_Description LIKE '%Residential%New%'`,
+    where: buildHomeWhereClause(since),
     outFields: '*',
     resultRecordCount: String(limit),
     orderByFields: 'Date_Issued DESC',
@@ -212,10 +306,11 @@ export async function fetchRecentPermits(options: {
       return []
     }
 
-    return data.features
+    const normalized = data.features
       .map((f: { attributes: ArcGISPermitAttributes }) => f.attributes)
-      .filter(isResidentialNew)
+      .filter(isHomeBuildingPermit)
       .map(normalize)
+    return dedupeByBuilding(normalized)
   } catch (err) {
     console.error('[permits] ArcGIS fetch failed', err)
     return []
@@ -291,6 +386,81 @@ export async function fetchCaseByPermitNumber(
     `Case?$filter=${filter}&$top=1`,
   )
   return data?.value?.[0] ?? null
+}
+
+// Single-permit ArcGIS lookup by permit number. Used when building_permits cache
+// lacks a row (daily sync hasn't run yet) and we still need the APN for parcel lookup.
+export async function fetchPermitByNumber(permitNumber: string): Promise<NormalizedPermit | null> {
+  const escaped = permitNumber.replace(/'/g, "''")
+  const params = new URLSearchParams({
+    where: `Permit__ = '${escaped}'`,
+    outFields: '*',
+    f: 'json',
+  })
+  try {
+    const res = await fetch(`${ARCGIS_PERMITS_URL}?${params}`, {
+      next: { revalidate: 60 * 60 * 24 }, // parcel-per-permit rarely changes
+    })
+    if (!res.ok) return null
+    const data = await res.json()
+    const attrs = (data as { features?: { attributes: ArcGISPermitAttributes }[] }).features?.[0]
+      ?.attributes
+    if (!attrs) return null
+    return normalize(attrs)
+  } catch {
+    return null
+  }
+}
+
+// ─── Metro Nashville parcels (lot size, zoning) ────────
+
+const ARCGIS_PARCELS_URL =
+  'https://services2.arcgis.com/HdTo6HJqh92wn4D8/arcgis/rest/services/Parcels_view/FeatureServer/0/query'
+
+export interface ParcelInfo {
+  apn: string
+  acres: number | null
+  zoning: string | null
+  landUse: string | null
+  address: string | null
+}
+
+interface ParcelAttrs {
+  STANPAR: string
+  Acres: number | null
+  Zoning: string | null
+  LUDesc: string | null
+  PropAddr: string | null
+}
+
+export async function fetchParcelByAPN(apn: string): Promise<ParcelInfo | null> {
+  if (!apn) return null
+  const escaped = apn.replace(/'/g, "''")
+  const params = new URLSearchParams({
+    where: `STANPAR = '${escaped}'`,
+    outFields: 'STANPAR,Acres,Zoning,LUDesc,PropAddr',
+    returnGeometry: 'false',
+    f: 'json',
+  })
+  try {
+    const res = await fetch(`${ARCGIS_PARCELS_URL}?${params}`, {
+      next: { revalidate: 60 * 60 * 24 * 7 }, // parcels rarely change — 7-day cache
+    })
+    if (!res.ok) return null
+    const data = (await res.json()) as { features?: { attributes: ParcelAttrs }[] }
+    const row = data.features?.[0]?.attributes
+    if (!row) return null
+    return {
+      apn: row.STANPAR,
+      acres: typeof row.Acres === 'number' && row.Acres > 0 ? row.Acres : null,
+      zoning: row.Zoning || null,
+      landUse: row.LUDesc || null,
+      address: row.PropAddr || null,
+    }
+  } catch (err) {
+    console.error('[parcels] fetch failed', apn, err)
+    return null
+  }
 }
 
 export async function fetchCaseTasks(caseId: number): Promise<EPermitsCaseTask[]> {
