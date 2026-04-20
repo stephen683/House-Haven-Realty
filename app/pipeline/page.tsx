@@ -95,7 +95,8 @@ export default async function PipelinePage() {
         avgSqft={avgSqft}
         availableZips={availableZips}
         topBuilders={topBuilders}
-        topScores={scores.slice(0, 5)}
+        topScores={scores.slice(0, 10)}
+        allScores={scores}
       />
     </>
   )

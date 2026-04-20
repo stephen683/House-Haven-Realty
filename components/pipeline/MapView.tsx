@@ -29,22 +29,26 @@ export interface PermitFeatureProperties {
 interface MapViewProps {
   onPermitSelect: (properties: PermitFeatureProperties, lngLat: [number, number]) => void
   filterExpression: maplibregl.FilterSpecification | null
+  // ZIP → hex color, derived from saturation scores. Pins in hot ZIPs render
+  // red, warm ZIPs yellow, cool ZIPs gray — unified with the Hot ZIPs panel.
+  zipColorMap?: Record<string, string>
 }
 
 const NASHVILLE: [number, number] = [-86.7816, 36.1627]
 
-// Recency color stops
-const RECENCY_COLORS: [number, string][] = [
-  [0, '#10B981'],   // green — last 7 days
-  [7, '#10B981'],
-  [8, '#3B82F6'],   // blue — 8-30 days
-  [30, '#3B82F6'],
-  [31, '#1a1a2e'],  // navy — 31-90 days
-  [90, '#1a1a2e'],
-  [91, '#9CA3AF'],  // gray — older
-]
+const DEFAULT_PIN_COLOR = '#000000'
 
-export default function MapView({ onPermitSelect, filterExpression }: MapViewProps) {
+function buildZipColorExpr(zipColorMap: Record<string, string> | undefined) {
+  if (!zipColorMap || Object.keys(zipColorMap).length === 0) return DEFAULT_PIN_COLOR
+  const pairs: (string | string[])[] = []
+  for (const [zip, color] of Object.entries(zipColorMap)) {
+    pairs.push(zip)
+    pairs.push(color)
+  }
+  return ['match', ['get', 'zip'], ...pairs, DEFAULT_PIN_COLOR] as unknown as maplibregl.ExpressionSpecification
+}
+
+export default function MapView({ onPermitSelect, filterExpression, zipColorMap }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<maplibregl.Map | null>(null)
   const [loaded, setLoaded] = useState(false)
@@ -154,12 +158,7 @@ export default function MapView({ onPermitSelect, filterExpression }: MapViewPro
             15, 9,
             17, 14,
           ],
-          'circle-color': [
-            'interpolate',
-            ['linear'],
-            ['get', 'daysAgo'],
-            ...RECENCY_COLORS.flat(),
-          ],
+          'circle-color': buildZipColorExpr(zipColorMap),
           'circle-stroke-color': '#ffffff',
           'circle-stroke-width': [
             'interpolate',
@@ -261,6 +260,13 @@ export default function MapView({ onPermitSelect, filterExpression }: MapViewPro
       map.setFilter('permits-circle', null)
     }
   }, [filterExpression, loaded])
+
+  // Repaint pins when saturation scores arrive or change
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !loaded) return
+    map.setPaintProperty('permits-circle', 'circle-color', buildZipColorExpr(zipColorMap))
+  }, [zipColorMap, loaded])
 
   return (
     <div ref={containerRef} className="w-full h-full" />

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -34,6 +34,7 @@ interface PipelineAppProps {
   availableZips: string[]
   topBuilders: [string, number][]
   topScores: ZipSaturationScore[]
+  allScores: ZipSaturationScore[]
 }
 
 function scoreColor(score: number) {
@@ -44,6 +45,14 @@ function scoreColor(score: number) {
   return 'bg-gray-400'
 }
 
+function scoreHex(score: number): string {
+  if (score >= 80) return '#EF4444' // red-500
+  if (score >= 60) return '#F97316' // orange-500
+  if (score >= 40) return '#EAB308' // yellow-500
+  if (score >= 20) return '#60A5FA' // blue-400
+  return '#9CA3AF' // gray-400
+}
+
 export default function PipelineApp({
   permitCount,
   avgCost,
@@ -51,6 +60,7 @@ export default function PipelineApp({
   availableZips,
   topBuilders: _topBuilders,
   topScores,
+  allScores,
 }: PipelineAppProps) {
   const [selectedPermit, setSelectedPermit] = useState<{
     properties: PermitFeatureProperties
@@ -59,6 +69,13 @@ export default function PipelineApp({
   const [filterExpression, setFilterExpression] =
     useState<FilterSpecification | null>(null)
   const [showHelp, setShowHelp] = useState(false)
+  const [showHotZips, setShowHotZips] = useState(false)
+
+  const zipColorMap = useMemo(() => {
+    const m: Record<string, string> = {}
+    for (const s of allScores) m[s.zip] = scoreHex(s.score)
+    return m
+  }, [allScores])
 
   const handlePermitSelect = useCallback(
     (properties: PermitFeatureProperties, lngLat: [number, number]) => {
@@ -182,6 +199,7 @@ export default function PipelineApp({
           <MapView
             onPermitSelect={handlePermitSelect}
             filterExpression={filterExpression}
+            zipColorMap={zipColorMap}
           />
 
           {permitCount === 0 && (
@@ -204,68 +222,80 @@ export default function PipelineApp({
             </div>
           )}
 
-          <div className="absolute left-4 bottom-4 bg-white/95 backdrop-blur rounded-lg px-4 py-3 shadow text-xs text-househaven-text space-y-1.5 pointer-events-none">
-            <p className="font-bold text-househaven-navy mb-1">Permit age</p>
-            <div className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-sm bg-emerald-500" />
-              Last 7 days
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-sm bg-blue-500" />
-              8 &ndash; 30 days
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-sm bg-black" />
-              31 &ndash; 90 days
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-sm bg-gray-400" />
-              Older
-            </div>
-          </div>
-
-          <div className="absolute right-4 top-4 bg-white/95 backdrop-blur rounded-lg shadow w-56 pointer-events-auto">
-            <div className="px-3 py-2 border-b border-black/5">
-              <p className="text-[10px] uppercase tracking-wider font-bold text-househaven-navy">
-                Build Saturation Score
-              </p>
-            </div>
-            <div className="px-3 py-2 space-y-1 max-h-60 overflow-y-auto">
-              {topScores.slice(0, 10).map((s) => (
-                <button
-                  key={s.zip}
-                  type="button"
-                  onClick={() => {
-                    setFilterExpression(['==', ['get', 'zip'], s.zip] as FilterSpecification)
-                  }}
-                  className="w-full flex items-center justify-between text-xs px-1.5 py-1 rounded hover:bg-househaven-surface transition text-left"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className={`h-2.5 w-2.5 rounded-sm ${scoreColor(s.score)}`} />
-                    <span className="font-medium">{s.zip}</span>
-                    <span className="text-[10px] text-househaven-text-muted">{s.label}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-househaven-text-muted">{s.permitCount}</span>
-                    <span className="font-bold text-househaven-navy w-7 text-right">{s.score}</span>
-                  </div>
-                </button>
-              ))}
-            </div>
-            <div className="px-3 py-2 border-t border-black/5 flex items-center justify-between">
-              <p className="text-[9px] text-househaven-text-muted">
-                Score: volume + value + recency
-              </p>
+          <div className="absolute right-4 top-4 pointer-events-auto flex flex-col items-end gap-2">
+            <button
+              type="button"
+              onClick={() => setShowHotZips((v) => !v)}
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white/95 backdrop-blur shadow text-xs font-semibold text-househaven-navy hover:bg-white transition"
+              aria-expanded={showHotZips}
+              aria-controls="hot-zips-panel"
+            >
+              <span className="inline-flex gap-1" aria-hidden="true">
+                <span className="h-2 w-2 rounded-sm bg-red-500" />
+                <span className="h-2 w-2 rounded-sm bg-orange-500" />
+                <span className="h-2 w-2 rounded-sm bg-yellow-500" />
+                <span className="h-2 w-2 rounded-sm bg-blue-400" />
+                <span className="h-2 w-2 rounded-sm bg-gray-400" />
+              </span>
+              {showHotZips ? 'Hide' : 'Show'} Hot ZIPs
               {filterExpression && (
-                <button
-                  type="button"
-                  onClick={() => setFilterExpression(null)}
-                  className="text-[9px] font-medium text-househaven-navy hover:underline"
-                >
-                  Clear filter
-                </button>
+                <span className="ml-1 inline-flex h-4 px-1.5 rounded bg-black text-white text-[9px] items-center">
+                  filtered
+                </span>
               )}
-            </div>
+            </button>
+
+            {showHotZips && (
+              <div
+                id="hot-zips-panel"
+                className="bg-white/95 backdrop-blur rounded-lg shadow w-64"
+              >
+                <div className="px-3 py-2 border-b border-black/5 flex items-center justify-between">
+                  <p className="text-[10px] uppercase tracking-wider font-bold text-househaven-navy">
+                    Build Saturation Score
+                  </p>
+                  <p className="text-[9px] text-househaven-text-muted">
+                    {allScores.length} ZIPs
+                  </p>
+                </div>
+                <div className="px-3 py-2 space-y-1 max-h-72 overflow-y-auto">
+                  {topScores.map((s) => (
+                    <button
+                      key={s.zip}
+                      type="button"
+                      onClick={() => {
+                        setFilterExpression(['==', ['get', 'zip'], s.zip] as FilterSpecification)
+                      }}
+                      className="w-full flex items-center justify-between text-xs px-1.5 py-1 rounded hover:bg-househaven-surface transition text-left"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className={`h-2.5 w-2.5 rounded-sm ${scoreColor(s.score)}`} />
+                        <span className="font-medium">{s.zip}</span>
+                        <span className="text-[10px] text-househaven-text-muted">{s.label}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-househaven-text-muted">{s.permitCount}</span>
+                        <span className="font-bold text-househaven-navy w-7 text-right">{s.score}</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                <div className="px-3 py-2 border-t border-black/5 flex items-center justify-between">
+                  <p className="text-[9px] text-househaven-text-muted">
+                    Pin color = ZIP score
+                  </p>
+                  {filterExpression && (
+                    <button
+                      type="button"
+                      onClick={() => setFilterExpression(null)}
+                      className="text-[9px] font-medium text-househaven-navy hover:underline"
+                    >
+                      Clear filter
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

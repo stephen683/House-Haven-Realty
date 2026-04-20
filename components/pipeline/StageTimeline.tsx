@@ -55,6 +55,8 @@ export default function StageTimeline({
 }: StageTimelineProps) {
   const [expanded, setExpanded] = useState<StageKey | null>(null)
 
+  const heroStage = stages.find((s) => s.key === effectiveStage) ?? stages.find((s) => s.key === currentStage)
+
   return (
     <section>
       {override && (
@@ -68,6 +70,33 @@ export default function StageTimeline({
           <p className="mt-0.5 text-[11px] text-househaven-text-muted">
             {friendlyConfidence(override.confidence)} &middot; {formatDate(override.at)}
           </p>
+        </div>
+      )}
+
+      {heroStage && (
+        <div className="mb-3 rounded-lg overflow-hidden bg-househaven-surface">
+          <div className="relative w-full aspect-[2/1] bg-white">
+            <Image
+              src={STAGE_IMAGE[heroStage.key]}
+              alt={`${heroStage.label} stage illustration`}
+              fill
+              sizes="(max-width: 768px) 100vw, 420px"
+              className="object-contain"
+              priority
+            />
+            <div className="absolute top-2 left-2 inline-flex items-center gap-1.5 px-2 py-1 rounded bg-black text-white text-[10px] uppercase tracking-wider font-semibold">
+              <span className="h-1.5 w-1.5 rounded-full bg-white" aria-hidden="true" />
+              Current stage
+            </div>
+          </div>
+          <div className="px-3 py-2">
+            <p className="font-serif text-base text-househaven-navy leading-tight">
+              {heroStage.label}
+            </p>
+            <p className="mt-0.5 text-[11px] text-househaven-text-muted leading-relaxed">
+              {heroStage.description}
+            </p>
+          </div>
         </div>
       )}
 
