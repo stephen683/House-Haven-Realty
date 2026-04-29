@@ -25,6 +25,7 @@ const footerNav = {
     { label: 'About', href: '/about' },
     { label: 'Meet the Team', href: '/team' },
     { label: 'Contact', href: '/contact' },
+    { label: 'Agent Login', href: '/agents' },
     { label: 'Privacy Policy', href: '/privacy' },
     { label: 'Terms of Service', href: '/terms-of-service' },
   ],
@@ -143,10 +144,7 @@ export default function SiteFooter() {
               </p>
             </div>
             <p className="lg:text-right text-white/80">
-              &copy; {currentYear} House Haven Realty. All rights reserved. ·{' '}
-              <Link href="/agents" className="text-white/60 hover:text-white">
-                Agent login
-              </Link>
+              &copy; {currentYear} House Haven Realty. All rights reserved.
             </p>
           </div>
         </div>
