@@ -143,7 +143,10 @@ export default function SiteFooter() {
               </p>
             </div>
             <p className="lg:text-right text-white/80">
-              &copy; {currentYear} House Haven Realty. All rights reserved.
+              &copy; {currentYear} House Haven Realty. All rights reserved. ·{' '}
+              <Link href="/agents" className="text-white/60 hover:text-white">
+                Agent login
+              </Link>
             </p>
           </div>
         </div>
