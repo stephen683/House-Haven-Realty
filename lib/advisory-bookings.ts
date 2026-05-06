@@ -4,6 +4,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import type { AdvisoryTrackSlug } from '@/lib/advisory-config'
+import type { ESignVendor } from '@/lib/esign'
 
 export type PaymentStatus = 'pending' | 'succeeded' | 'failed' | 'refunded'
 export type EngagementStatus = 'not_sent' | 'sent' | 'signed' | 'not_required'
@@ -37,6 +38,10 @@ export interface AdvisoryBookingRow {
   canceled_at: string | null
   cancellation_reason: string | null
   admin_notes: string | null
+  // Phase 6 — e-sign columns (added by migration 013)
+  esign_provider: ESignVendor | null
+  esign_signature_request_id: string | null
+  esign_send_failed_reason: string | null
 }
 
 export interface CreateBookingInput {
@@ -117,6 +122,9 @@ export interface UpdateBookingInput {
   canceledAt?: Date
   cancellationReason?: string
   adminNotes?: string
+  esignProvider?: ESignVendor | null
+  esignSignatureRequestId?: string | null
+  esignSendFailedReason?: string | null
 }
 
 function toDb(input: UpdateBookingInput): Record<string, unknown> {
@@ -145,6 +153,11 @@ function toDb(input: UpdateBookingInput): Record<string, unknown> {
   if (input.cancellationReason !== undefined)
     out.cancellation_reason = input.cancellationReason
   if (input.adminNotes !== undefined) out.admin_notes = input.adminNotes
+  if (input.esignProvider !== undefined) out.esign_provider = input.esignProvider
+  if (input.esignSignatureRequestId !== undefined)
+    out.esign_signature_request_id = input.esignSignatureRequestId
+  if (input.esignSendFailedReason !== undefined)
+    out.esign_send_failed_reason = input.esignSendFailedReason
   return out
 }
 

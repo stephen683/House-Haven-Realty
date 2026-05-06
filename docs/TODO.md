@@ -133,14 +133,35 @@ Report: `/reports/2026-05-06-phase-5-shipped.md`
 - [ ] Top-10 Tier-1 communities list — pending Stephen. Single-edit lights up full editorial for those 10 by setting `tier: 1` in `data/communities.ts`
 - [ ] Lifestyle content trim on Tier 1 — content-level edit, not structural; deferred to Stephen's editorial pass
 
-### Phase 6 — E-sign integration + admin polish
+### Phase 6 — E-sign integration + admin polish ✅ SHIPPED 2026-05-06
 
-- [ ] Vendor pick: HelloSign or DocuSign (Stephen)
-- [ ] Engagement letter swap from PDF placeholder to real e-sign send
-- [ ] Webhook → `advisory_bookings.engagement_letter_status`
-- [ ] Stephen admin view at `/agents/advisory` (HMAC-gated, reuses existing pattern)
+Report: `/reports/2026-05-06-phase-6-shipped.md`
+
+- [x] Vendor-agnostic `lib/esign.ts` with HelloSign + DocuSign fetch implementations + parser helpers. Fallback to placeholder PDF email when no vendor configured
+- [x] `/api/advisory/esign-webhook` accepts both vendors, flips `engagement_letter_status` to `signed`. Idempotent
+- [x] `lib/advisory-flow.ts` wires e-sign send into post-payment side effects (additive — placeholder PDF email stays alive)
+- [x] Migration 013 applied — `esign_provider`, `esign_signature_request_id`, `esign_send_failed_reason` columns + partial index
+- [x] Stephen admin at `/agents/advisory` (HMAC-gated) — list with stats, per-booking detail with intake + RentCast prepull, Deliver-Brief + Cancel-booking forms
+- [x] `/api/agents/advisory/[id]/cancel` — sets canceled_at, deletes Calendar event, emails client. Stripe refund stays manual per brief
+- [x] AgentNav component + /agents chooser page linking contract + advisory tools
+- [ ] Vendor pick (HelloSign or DocuSign) — Stephen sets `ESIGN_VENDOR` + vendor keys when ready
 
 ---
+
+## ✅ Advisory build complete (Phases 0–6 shipped 2026-05-06)
+
+The autonomous Advisory rebuild is structurally done. Remaining items are all data-file or env-var swaps — no code changes:
+
+- [ ] Stephen-Nashville hero photo → slot via `lib/homepage-config.ts`
+- [ ] Top-10 Tier-1 community list → set `tier: 1` in `data/communities.ts`
+- [ ] 8–12 Greatest Hits picks → edit `GREATEST_HITS` in `lib/learn-taxonomy.ts`
+- [ ] FSBO `/learn` topic list → entries in `data/learn.ts` + `LEARN_TAXONOMY`
+- [ ] 3 Sample Decision Briefs → flip `status: 'published'` + add `bottomLine` in `data/sample-briefs.ts`
+- [ ] Stripe live keys + $200 product + webhook secret in Vercel env
+- [ ] Google OAuth + HHR Advisory calendar ID in Vercel env
+- [ ] Resend sender domains (`alerts@`, `advisory@`) verified
+- [ ] E-sign vendor pick (`ESIGN_VENDOR=hellosign|docusign` + keys)
+- [ ] Apply migration 011 (spatial_ref_sys RLS) via Supabase Dashboard SQL Editor
 
 ---
 

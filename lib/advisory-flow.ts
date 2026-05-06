@@ -14,6 +14,7 @@ import {
   sendEngagementLetter,
   notifyStephenOfNewBooking,
 } from '@/lib/advisory-emails'
+import { sendEngagementLetterForSignature } from '@/lib/esign'
 
 const SLOT_DURATION_MINUTES = 60
 const STEPHEN_EMAIL = 'stephen@househavenrealty.com'
@@ -64,6 +65,34 @@ export async function runPostPaymentSideEffects(
       engagementLetterStatus: 'sent',
       engagementLetterSentAt: new Date(),
     })
+
+    // Try e-sign send. Falls back silently when no vendor configured —
+    // sendEngagementLetter (placeholder PDF email) above remains the
+    // canonical engagement-letter delivery in fallback mode.
+    const trackName =
+      ADVISORY_TRACKS.find((t) => t.slug === updated.track)?.name ?? 'Decision Brief'
+    const templateRef =
+      process.env.ADVISORY_ENGAGEMENT_LETTER_TEMPLATE_URL ?? ''
+    if (templateRef) {
+      const esign = await sendEngagementLetterForSignature({
+        bookingId,
+        clientName: updated.client_name,
+        clientEmail: updated.client_email,
+        trackName,
+        templateRef,
+      })
+      if (esign.signatureRequestId && esign.provider) {
+        await updateBooking(bookingId, {
+          esignProvider: esign.provider,
+          esignSignatureRequestId: esign.signatureRequestId,
+          esignSendFailedReason: null,
+        })
+      } else if (esign.errorReason) {
+        await updateBooking(bookingId, {
+          esignSendFailedReason: esign.errorReason,
+        })
+      }
+    }
   }
 
   return { ok: true }
