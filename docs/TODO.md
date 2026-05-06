@@ -56,17 +56,29 @@ Report: `/reports/2026-05-06-phase-1.5-cleanup.md`
 
 ### Phase 2 — Booking flow (Stripe + Google Calendar + Resend)
 
-- [ ] `/advisory/book` real flow (track → intake → slot → Stripe → confirmation)
-- [ ] `lib/google-calendar.ts` (googleapis SDK, refresh token grant, scoped to HHR_ADVISORY_CALENDAR_ID)
-- [ ] `lib/stripe.ts` (server SDK, $200 PaymentIntent, webhook verification)
-- [ ] `lib/advisory-bookings.ts` (Supabase CRUD)
-- [ ] Stripe webhook → calendar event + confirmation/.ics + engagement letter (placeholder PDF) + scheduled reminders
-- [ ] `app/api/advisory/{create-intent,stripe-webhook,calendar-slots,deliver-brief}/route.ts`
-- [ ] Server-enforced slot windows: Tue 9/10:30, Thu 1/2:30 Central; 48hr min; 4/wk; 8/mo; no Friday PM
-- [ ] FSBO + Sell-or-Rent intake pre-pulls RentCast; stored alongside booking record
-- [ ] Stephen-only HMAC-gated `/api/advisory/deliver-brief/[id]` for manual Brief delivery
-- [ ] Hourly Vercel cron for 48hr/2hr reminder emails
-- [ ] Supabase migration `010_advisory_bookings.sql`
+**Phase 2 scaffolding ✅ SHIPPED 2026-05-06** (libs + DB ready; UI/API routes in next pass)
+
+Report: `/reports/2026-05-06-phase-2-scaffolding.md`
+
+- [x] Supabase migration `012_advisory_bookings` applied (full lifecycle: payment_status, engagement_letter_status, brief_status, reminder timestamps, cancellation, admin_notes; auto-update updated_at trigger)
+- [x] `lib/stripe.ts` — fetch-based wrapper with deterministic mock when `STRIPE_SECRET_KEY` unset (matches existing `rentcast/hubspot/resend` pattern, no SDK install). `createPaymentIntent`, `retrievePaymentIntent`, `verifyWebhookSignature` (manual HMAC-SHA256 with timestamp tolerance), `getPublishableKey`, `isStripeLive`
+- [x] `lib/google-calendar.ts` — fetch-based wrapper with mock when OAuth env vars unset. OAuth refresh-token → access-token caching, `listBusy`, `createEvent` (with conferenceData / Google Meet link), `deleteEvent`, `isCalendarLive`
+- [x] `lib/advisory-bookings.ts` — Supabase CRUD with full type model (`AdvisoryBookingRow`, `CreateBookingInput`, `UpdateBookingInput`). `createBooking`, `getBookingById`, `getBookingByPaymentIntent`, `updateBooking`, `listBookingsForReminderWindow(48|2)`
+- [x] `lib/advisory-emails.ts` — six templates via `lib/resend.ts`: confirmation, engagement letter, 48h reminder, 2h reminder, brief delivery, Stephen new-booking notification
+
+**Phase 2 second pass — UI + API + cron (next session, after Stephen smoke-tests Phase 1):**
+
+- [ ] `app/advisory/book/page.tsx` — replace placeholder with real flow (Phase 1 waitlist remains live until this swap)
+- [ ] `app/advisory/book/BookingClient.tsx` — multi-step (TrackPicker / IntakeForm / SlotPicker / StripeCheckout)
+- [ ] Track-specific intake field components per brief (FSBO: address + listing status; Buyer Roadmap: timeframe + pre-approval; Sell-or-Rent: address + mortgage + reason)
+- [ ] FSBO + Sell-or-Rent intake pre-pulls RentCast; stored on booking record
+- [ ] `app/advisory/book/confirmation/page.tsx` — post-payment confirmation with .ics download, calendar add links
+- [ ] `app/api/advisory/create-intent/route.ts` — POST: validates intake, RentCast pre-pull for relevant tracks, creates booking row, creates Stripe PaymentIntent, returns clientSecret
+- [ ] `app/api/advisory/stripe-webhook/route.ts` — verifies signature, on `payment_intent.succeeded` creates Calendar event, fires confirmation + engagement letter emails
+- [ ] `app/api/advisory/calendar-slots/route.ts` — GET: returns available slots in `?from=...&to=...` window with server-enforced rules (Tue 9/10:30, Thu 1/2:30 Central; 48hr min; 4/wk; 8/mo; no Fri PM)
+- [ ] `app/api/advisory/deliver-brief/[id]/route.ts` — Stephen-only HMAC-gated, marks booking delivered + fires email
+- [ ] `app/api/cron/advisory-reminders/route.ts` + Vercel cron entry — hourly tick, fires 48h + 2h reminders
+- [ ] npm install: `@stripe/stripe-js` + `@stripe/react-stripe-js` (client-side Stripe Elements)
 - [ ] Sample Brief #2 (Buyer Roadmap) — Stephen target end of Phase 2
 
 ### Phase 3 — Homepage rebrand to three peer paths
