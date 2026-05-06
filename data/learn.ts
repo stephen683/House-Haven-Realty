@@ -1,14 +1,14 @@
 // Long-form blog content for the House Haven Realty site.
 // Stored as structured TS rather than MDX until we wire up next-mdx-remote.
-// Sections render as rich text on /blog/[slug]; internal links are authored inline.
+// Sections render as rich text on /learn/[slug]; internal links are authored inline.
 
-export interface BlogSection {
+export interface LearnSection {
   heading?: string
   paragraphs: string[]
   callout?: { title: string; body: string }
 }
 
-export interface BlogPost {
+export interface LearnPost {
   slug: string
   title: string
   excerpt: string
@@ -20,12 +20,12 @@ export interface BlogPost {
   heroCaption: string
   category: string
   tags: string[]
-  sections: BlogSection[]
+  sections: LearnSection[]
   relatedCommunitySlugs?: string[]
   relatedPostSlugs?: string[]
 }
 
-export const blogPosts: BlogPost[] = [
+export const learnPosts: LearnPost[] = [
   {
     slug: 'moving-to-nashville-2026',
     title: 'Moving to Nashville in 2026: the honest, neighborhood-by-neighborhood guide',
@@ -1821,12 +1821,12 @@ export const blogPosts: BlogPost[] = [
   },
 ]
 
-export const blogPostBySlug = Object.fromEntries(
-  blogPosts.map((p) => [p.slug, p]),
+export const learnPostBySlug = Object.fromEntries(
+  learnPosts.map((p) => [p.slug, p]),
 )
 
-export function getSortedPosts(): BlogPost[] {
-  return [...blogPosts].sort(
+export function getSortedLearnPosts(): LearnPost[] {
+  return [...learnPosts].sort(
     (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
   )
 }

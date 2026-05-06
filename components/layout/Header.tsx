@@ -17,7 +17,7 @@ const primaryNav = [
 
 const secondaryNav = [
   { label: 'About', href: '/about' },
-  { label: 'Blog', href: '/blog' },
+  { label: 'Learn', href: '/learn' },
   { label: 'Contact', href: '/contact' },
 ]
 

@@ -22,7 +22,7 @@ const footerNav = {
     { label: 'Book a Decision Brief', href: '/advisory/book' },
   ],
   Resources: [
-    { label: 'Blog', href: '/blog' },
+    { label: 'Learn', href: '/learn' },
     { label: 'Buyers', href: '/buyers' },
     { label: 'Sellers', href: '/sellers' },
     { label: 'Mortgage Calculator', href: '/buyers#mortgage-calculator' },

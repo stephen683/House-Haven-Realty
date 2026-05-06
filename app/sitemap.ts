@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { communities } from '@/data/communities'
 import { visibleTeam } from '@/data/team'
-import { blogPosts } from '@/data/blog'
+import { learnPosts } from '@/data/learn'
 import { PIPELINE_ZIPS } from '@/lib/pipeline-zips'
 import { ADVISORY_TRACKS } from '@/lib/advisory-config'
 
@@ -20,7 +20,8 @@ const staticRoutes: { path: string; changeFrequency: MetadataRoute.Sitemap[numbe
   { path: '/team', changeFrequency: 'monthly', priority: 0.6 },
   { path: '/buyers', changeFrequency: 'monthly', priority: 0.6 },
   { path: '/sellers', changeFrequency: 'monthly', priority: 0.6 },
-  { path: '/blog', changeFrequency: 'weekly', priority: 0.6 },
+  { path: '/learn', changeFrequency: 'weekly', priority: 0.7 },
+  { path: '/learn/greatest-hits', changeFrequency: 'monthly', priority: 0.7 },
   { path: '/market-reports', changeFrequency: 'weekly', priority: 0.6 },
   { path: '/property-management', changeFrequency: 'monthly', priority: 0.4 },
   { path: '/contact', changeFrequency: 'yearly', priority: 0.4 },
@@ -57,10 +58,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   }
 
-  // Blog posts
-  for (const p of blogPosts) {
+  // Learn library posts
+  for (const p of learnPosts) {
     entries.push({
-      url: `${BASE_URL}/blog/${p.slug}`,
+      url: `${BASE_URL}/learn/${p.slug}`,
       lastModified: new Date(p.updatedAt || p.publishedAt),
       changeFrequency: 'monthly',
       priority: 0.7,

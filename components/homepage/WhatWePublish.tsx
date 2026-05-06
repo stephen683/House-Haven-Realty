@@ -1,15 +1,11 @@
 import Link from 'next/link'
-import { blogPosts } from '@/data/blog'
+import { learnPosts } from '@/data/learn'
 
-// "Learn" preview on the homepage. Pulls 3 most recent published posts from
-// data/blog.ts. Phase 4 will move this content under /learn with category
-// taxonomy + the Greatest Hits curation page; Phase 3 ships against /blog
-// to avoid breaking existing URLs before Phase 4 redirect lands.
-//
+// "Learn" preview on the homepage. Pulls 3 most recent posts from data/learn.ts.
 // Frame is "what we publish" — never "blog" — per voice rules.
 
 export default function WhatWePublish() {
-  const recent = [...blogPosts]
+  const recent = [...learnPosts]
     .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
     .slice(0, 3)
 
@@ -28,7 +24,7 @@ export default function WhatWePublish() {
             </h2>
           </div>
           <Link
-            href="/blog"
+            href="/learn"
             className="text-sm font-semibold text-househaven-navy hover:underline"
           >
             Browse the library →
@@ -39,7 +35,7 @@ export default function WhatWePublish() {
           {recent.map((post) => (
             <Link
               key={post.slug}
-              href={`/blog/${post.slug}`}
+              href={`/learn/${post.slug}`}
               className="group flex flex-col rounded-xl border border-black/10 hover:border-black/30 hover:shadow-lg transition p-6"
             >
               <p className="text-xs uppercase tracking-[0.16em] text-househaven-text-muted">

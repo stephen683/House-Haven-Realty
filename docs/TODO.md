@@ -103,15 +103,19 @@ Reports: `/reports/2026-05-06-phase-3-shipped.md`, `/reports/2026-05-06-homepage
 - [x] `lib/homepage-config.ts` + `data/sample-briefs.ts` (swappable without code changes)
 - [ ] Sample Brief #3 (Sell-or-Rent) — Stephen target end of Phase 3
 
-### Phase 4 — `/learn` library (restructure from `/blog`)
+### Phase 4 — `/learn` library (restructure from `/blog`) ✅ SHIPPED 2026-05-06
 
-- [ ] `data/blog.ts` → `data/learn.ts` with `category` + `stage` taxonomy
-- [ ] `app/learn/page.tsx`, `app/learn/[slug]/page.tsx`, `app/learn/greatest-hits/page.tsx`, `app/learn/feed.xml/route.ts`
-- [ ] 301 `/blog/*` → `/learn/*` in next.config.mjs
-- [ ] `<AdvisoryCTA>` block at end of each article (keyed off article tags)
-- [ ] FSBO / Sell-or-Rent topic scaffolding with `status: 'publishing-soon'` markers
-- [ ] Greatest Hits curation ask in `/reports/[date]-greatest-hits-curation-ask.md` (8–12 pieces with reader job-to-be-done from Stephen)
-- [ ] RSS feed working
+Reports: `/reports/2026-05-06-phase-4-shipped.md`, `/reports/2026-05-06-greatest-hits-curation-ask.md`
+
+- [x] `data/blog.ts` → `data/learn.ts` via `git mv`; exports renamed via sed (BlogPost → LearnPost, blogPosts → learnPosts, etc.). 1,832 lines of article content untouched
+- [x] `lib/learn-taxonomy.ts` with category (fsbo/buying/sell-or-rent/nashville-market) × stage (research/decision/action) decoration map for 22 of 25 articles
+- [x] `/learn` (filterable index via ?category= ?stage= URL params), `/learn/[slug]` (Article schema + contextual AdvisoryCTA + author byline + related posts/neighborhoods), `/learn/greatest-hits`, `/learn/feed.xml` (RSS 2.0)
+- [x] 301 `/blog/*` → `/learn/*` in next.config.mjs
+- [x] `<AdvisoryCTA>` rendered at end of articles where `advisoryTrack` is mapped (12 of 25 articles cross-promote a track)
+- [x] FSBO empty state: `/learn?category=fsbo` shows "first piece coming soon" + CTA to `/advisory/fsbo`. No fabricated content
+- [x] Greatest Hits curation ask delivered → Stephen picks 8–12 entries with reader job-to-be-done framing
+- [x] RSS feed live at `/learn/feed.xml` with 1-hour CDN cache
+- [x] `/blog` routes deleted; consumers updated (sitemap, communities/[slug], WhatWePublish, Header, SiteFooter)
 
 ### Phase 5 — RentCast on community pages + Pipeline data cross-links
 

@@ -63,9 +63,11 @@ const nextConfig = {
       { source: '/selling-your-home', destination: '/sellers', permanent: true },
       { source: '/staging-checklist', destination: '/sellers', permanent: true },
 
-      // Market reports / blog
+      // Market reports / learn library — /blog renamed to /learn in Phase 4
       { source: '/market-reports-index', destination: '/market-reports', permanent: true },
-      { source: '/blog-posts', destination: '/blog', permanent: true },
+      { source: '/blog-posts', destination: '/learn', permanent: true },
+      { source: '/blog', destination: '/learn', permanent: true },
+      { source: '/blog/:path*', destination: '/learn/:path*', permanent: true },
 
       // Account / auth on the legacy site
       { source: '/property-organizer-login', destination: '/contact', permanent: true },

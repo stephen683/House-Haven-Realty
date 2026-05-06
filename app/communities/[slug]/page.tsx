@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { communities, communityBySlug } from '@/data/communities'
-import { blogPosts } from '@/data/blog'
+import { learnPosts } from '@/data/learn'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
 import ContactForm from '@/components/forms/ContactForm'
 import IDXDisclaimer from '@/components/compliance/IDXDisclaimer'
@@ -193,7 +193,7 @@ export default function CommunityPage({ params }: CommunityPageProps) {
 
       {/* Related blog posts */}
       {(() => {
-        const relatedPosts = blogPosts
+        const relatedPosts = learnPosts
           .filter((p) => p.relatedCommunitySlugs?.includes(c.slug))
           .slice(0, 3)
         if (relatedPosts.length === 0) return null
@@ -206,7 +206,7 @@ export default function CommunityPage({ params }: CommunityPageProps) {
               {relatedPosts.map((p) => (
                 <Link
                   key={p.slug}
-                  href={`/blog/${p.slug}`}
+                  href={`/learn/${p.slug}`}
                   className="block rounded-lg border border-black/5 bg-white p-5 hover:shadow-lg transition"
                 >
                   <p className="text-xs uppercase tracking-wider text-househaven-accent">
