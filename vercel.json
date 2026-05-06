@@ -14,6 +14,10 @@
     {
       "path": "/api/cron/canary",
       "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/advisory-reminders",
+      "schedule": "0 * * * *"
     }
   ]
 }

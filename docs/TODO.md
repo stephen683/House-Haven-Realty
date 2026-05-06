@@ -66,19 +66,27 @@ Report: `/reports/2026-05-06-phase-2-scaffolding.md`
 - [x] `lib/advisory-bookings.ts` — Supabase CRUD with full type model (`AdvisoryBookingRow`, `CreateBookingInput`, `UpdateBookingInput`). `createBooking`, `getBookingById`, `getBookingByPaymentIntent`, `updateBooking`, `listBookingsForReminderWindow(48|2)`
 - [x] `lib/advisory-emails.ts` — six templates via `lib/resend.ts`: confirmation, engagement letter, 48h reminder, 2h reminder, brief delivery, Stephen new-booking notification
 
-**Phase 2 second pass — UI + API + cron (next session, after Stephen smoke-tests Phase 1):**
+**Phase 2 second pass — UI + API + cron ✅ SHIPPED 2026-05-06**
 
-- [ ] `app/advisory/book/page.tsx` — replace placeholder with real flow (Phase 1 waitlist remains live until this swap)
-- [ ] `app/advisory/book/BookingClient.tsx` — multi-step (TrackPicker / IntakeForm / SlotPicker / StripeCheckout)
-- [ ] Track-specific intake field components per brief (FSBO: address + listing status; Buyer Roadmap: timeframe + pre-approval; Sell-or-Rent: address + mortgage + reason)
-- [ ] FSBO + Sell-or-Rent intake pre-pulls RentCast; stored on booking record
-- [ ] `app/advisory/book/confirmation/page.tsx` — post-payment confirmation with .ics download, calendar add links
-- [ ] `app/api/advisory/create-intent/route.ts` — POST: validates intake, RentCast pre-pull for relevant tracks, creates booking row, creates Stripe PaymentIntent, returns clientSecret
-- [ ] `app/api/advisory/stripe-webhook/route.ts` — verifies signature, on `payment_intent.succeeded` creates Calendar event, fires confirmation + engagement letter emails
-- [ ] `app/api/advisory/calendar-slots/route.ts` — GET: returns available slots in `?from=...&to=...` window with server-enforced rules (Tue 9/10:30, Thu 1/2:30 Central; 48hr min; 4/wk; 8/mo; no Fri PM)
-- [ ] `app/api/advisory/deliver-brief/[id]/route.ts` — Stephen-only HMAC-gated, marks booking delivered + fires email
-- [ ] `app/api/cron/advisory-reminders/route.ts` + Vercel cron entry — hourly tick, fires 48h + 2h reminders
-- [ ] npm install: `@stripe/stripe-js` + `@stripe/react-stripe-js` (client-side Stripe Elements)
+Report: `/reports/2026-05-06-phase-2-second-pass.md`
+
+- [x] `app/advisory/book/page.tsx` — replaced waitlist placeholder with real BookingClient flow
+- [x] `components/advisory/booking/BookingClient.tsx` — multi-step orchestrator (Stepper + TrackPicker + IntakeForm + SlotPicker + dynamic-imported StripeCheckout)
+- [x] Track-specific intake fields per brief (FSBO/Buyer Roadmap/Sell-or-Rent)
+- [x] FSBO + Sell-or-Rent intake pre-pulls RentCast → stored as `rentcast_prepull` on booking row
+- [x] `app/advisory/book/confirmation/page.tsx` — post-payment confirmation with .ics + Google + Outlook calendar links
+- [x] `app/api/advisory/create-intent/route.ts` — validates intake + slot, RentCast pre-pull, creates booking, creates Stripe PaymentIntent. Mock mode runs `runPostPaymentSideEffects` inline; live mode returns clientSecret for Stripe Elements
+- [x] `app/api/advisory/stripe-webhook/route.ts` — verifies signature, handles `payment_intent.succeeded` (calls flow), `payment_intent.payment_failed`, `charge.refunded`
+- [x] `app/api/advisory/calendar-slots/route.ts` — server-enforced slot windows + 48h lead + 4/week + 8/month caps + Google Calendar busy filtering. Range capped at 60 days
+- [x] `app/api/advisory/deliver-brief/[id]/route.ts` — Stephen-only HMAC-gated (reuses `/agents` auth), marks `brief_status=delivered` + fires email
+- [x] `app/api/advisory/booking/[id]/ics/route.ts` — RFC 5545 .ics file download for the calendar invite
+- [x] `app/api/cron/advisory-reminders/route.ts` + `vercel.json` cron entry (hourly: `0 * * * *`)
+- [x] `lib/advisory-slots.ts` — DST-aware Central → UTC conversion, candidate slot generation, weekly/monthly cap counting, race-guard `validateSlotIsAvailable()`
+- [x] `lib/advisory-prepull.ts` — RentCast prepull helper used by create-intent
+- [x] `lib/advisory-flow.ts` — `runPostPaymentSideEffects()` shared between mock-mode create-intent and live-mode webhook (idempotent guards on each side effect)
+- [x] npm install: `@stripe/stripe-js` (^9.4.0) + `@stripe/react-stripe-js` (^6.3.0)
+- [x] Stripe Elements truly lazy-mounted via `next/dynamic` (StripeCheckout chunk only loads when payment step renders — `/advisory/book` bundle dropped 11 kB → 6.53 kB)
+- [x] Phase 1 waitlist code deleted (`components/advisory/BookWaitlistForm.tsx` + `app/api/advisory/waitlist/`). Supabase table `advisory_book_waitlist` retained for Phase 2 launch announcement export
 - [ ] Sample Brief #2 (Buyer Roadmap) — Stephen target end of Phase 2
 
 ### Phase 3 — Homepage rebrand to three peer paths
