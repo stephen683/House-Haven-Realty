@@ -48,6 +48,12 @@ Report: `/reports/2026-05-06-phase-1.5-cleanup.md`
 - [x] New migration file `010_drop_legacy_valuation_requests.sql` recording the drop in version control
 - [x] Verified post-migration schema state via `list_tables`
 
+### Phase 1.5b — `spatial_ref_sys` RLS (cosmetic) ⚠️ MANUAL APPLY REQUIRED
+
+- [x] Migration `011_spatial_ref_sys_rls.sql` written and committed
+- [!] Apply via Supabase Dashboard SQL Editor (MCP `apply_migration` returns `42501: must be owner of table spatial_ref_sys` — the table is owned by `supabase_admin` per PostGIS install; the Dashboard runs as a higher-privileged role)
+- Header in `supabase/migrations/011_spatial_ref_sys_rls.sql` has the SQL ready to paste
+
 ### Phase 2 — Booking flow (Stripe + Google Calendar + Resend)
 
 - [ ] `/advisory/book` real flow (track → intake → slot → Stripe → confirmation)
