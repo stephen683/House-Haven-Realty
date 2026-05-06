@@ -89,15 +89,18 @@ Report: `/reports/2026-05-06-phase-2-second-pass.md`
 - [x] Phase 1 waitlist code deleted (`components/advisory/BookWaitlistForm.tsx` + `app/api/advisory/waitlist/`). Supabase table `advisory_book_waitlist` retained for Phase 2 launch announcement export
 - [ ] Sample Brief #2 (Buyer Roadmap) — Stephen target end of Phase 2
 
-### Phase 3 — Homepage rebrand to three peer paths
+### Phase 3 — Homepage rebrand to three peer paths ✅ SHIPPED 2026-05-06
 
-- [ ] Three homepage headline candidates → `/reports/[date]-homepage-headlines.md` (Stephen picks before merge)
-- [ ] Hero rewrite: typography-only until Stephen-at-Nashville-location photo lands (data-file slot-in)
-- [ ] Three peer cards (DIY tools / Hire by hour / Hire as agent) replacing existing Difference grid
-- [ ] Below-fold: "What you walk away with" (sample Brief snippets via `data/sample-briefs.ts`), "Three tracks", "What we publish" (preview of /learn), "From Stephen" (text + non-Stephen photo), Testimonials (kept), Newsletter (kept)
-- [ ] Header restructure: 5 top-level peers (Find Homes / Communities / Pipeline / Advisory / Home Value), drop dropdowns, secondary nav for About/Learn/Contact/phone
-- [ ] SiteFooter footer-nav regroup (full diff in Phase 3 report)
-- [ ] Old hero archived; commit hash noted in `/reports/[date]-phase-3-shipped.md`
+Reports: `/reports/2026-05-06-phase-3-shipped.md`, `/reports/2026-05-06-homepage-headlines.md`
+
+- [x] Three homepage headline candidates delivered → Stephen picks before merge (default: Option A)
+- [x] Hero rewrite: typography-only via `components/homepage/ThreePathsHero.tsx`. Stephen photo slots in via `lib/homepage-config.ts` data change when shoot lands
+- [x] Three peer cards: DIY tools / Hire by hour / Hire as agent. Advisory featured via existing bg-black weighted-card pattern
+- [x] Below-fold: WhatYouWalkAwayWith (Brief explainer + 3 sample snippets in placeholder mode), ThreeTracks (reused), WhatWePublish (recent /blog posts), FromStephen (text-only), Testimonials + Newsletter kept verbatim
+- [x] Header: 5 top-level peers (Find Homes / Communities / Pipeline / Advisory / Home Value); dropdowns dropped; About / Blog / Contact in secondary nav; Buyers / Sellers / Mortgage Calc / Property Mgmt / Market Reports demoted to footer
+- [x] SiteFooter: 4 nav columns (Explore / Advisory / Resources / Company); `lg:grid-cols-6` with firm-info col-span-2; compliance bar unchanged
+- [x] Old hero commit hash captured in Phase 3 report: `57e6a9b`
+- [x] `lib/homepage-config.ts` + `data/sample-briefs.ts` (swappable without code changes)
 - [ ] Sample Brief #3 (Sell-or-Rent) — Stephen target end of Phase 3
 
 ### Phase 4 — `/learn` library (restructure from `/blog`)
