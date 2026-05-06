@@ -4,8 +4,10 @@ import { notFound } from 'next/navigation'
 import { fetchAllPermits } from '@/lib/permits'
 import { computeSaturationScores } from '@/lib/saturation-score'
 import { PIPELINE_ZIPS, ZIP_META_MAP } from '@/lib/pipeline-zips'
+import { communities } from '@/data/communities'
 import type { NormalizedPermit } from '@/lib/permits'
 import ZipMapEmbed from './ZipMapEmbed'
+import AdvisoryCTA from '@/components/advisory/AdvisoryCTA'
 
 export const revalidate = 21600
 
@@ -372,6 +374,49 @@ export default async function ZipPage({ params }: ZipPageProps) {
           </div>
         </aside>
       </div>
+
+      {/* Cross-links: communities matching this ZIP + Advisory buyer-roadmap CTA */}
+      {(() => {
+        const zipCommunities = communities
+          .filter((co) => co.zips.includes(params.zip))
+          .slice(0, 4)
+        if (zipCommunities.length === 0) return null
+        return (
+          <section className="bg-white py-12 lg:py-16 border-t border-black/5">
+            <div className="max-w-5xl mx-auto px-4 lg:px-6">
+              <p className="text-xs uppercase tracking-[0.2em] text-househaven-text-muted">
+                Communities in {params.zip}
+              </p>
+              <h2 className="font-serif text-2xl lg:text-3xl text-househaven-navy mt-2">
+                Read the neighborhood guides.
+              </h2>
+              <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {zipCommunities.map((co) => (
+                  <Link
+                    key={co.slug}
+                    href={`/communities/${co.slug}`}
+                    className="rounded-lg border border-black/10 bg-white p-4 hover:bg-househaven-surface transition"
+                  >
+                    <p className="font-serif text-lg text-househaven-navy">{co.name}</p>
+                    <p className="text-xs text-househaven-text-muted mt-1 line-clamp-2">
+                      {co.tagline}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )
+      })()}
+
+      <section className="bg-white pb-16 lg:pb-20">
+        <div className="max-w-3xl mx-auto px-4 lg:px-6">
+          <AdvisoryCTA
+            track="buyer-roadmap"
+            context={`buyers exploring new construction in ${params.zip}`}
+          />
+        </div>
+      </section>
 
       {/* Footer */}
       <div className="bg-black text-white py-6">

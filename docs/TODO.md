@@ -117,14 +117,21 @@ Reports: `/reports/2026-05-06-phase-4-shipped.md`, `/reports/2026-05-06-greatest
 - [x] RSS feed live at `/learn/feed.xml` with 1-hour CDN cache
 - [x] `/blog` routes deleted; consumers updated (sitemap, communities/[slug], WhatWePublish, Header, SiteFooter)
 
-### Phase 5 — RentCast on community pages + Pipeline data cross-links
+### Phase 5 — RentCast on community pages + Pipeline data cross-links ✅ SHIPPED 2026-05-06
 
-- [ ] Stephen delivers Top-10 Tier-1 communities list with transaction-history rationale
-- [ ] `<NeighborhoodPipeline zip={...}/>` reusable component
-- [ ] `<NeighborhoodRental zip={...}/>` reusable component
-- [ ] 57 community pages rewritten to brief's 10-section structure (lifestyle content removed); Tier 1 / Tier 2 / Tier 3 differentiation
-- [ ] Cross-link components on `/homes-for-sale/[id]` listing detail
-- [ ] Pipeline page footer: contextual Advisory CTA
+Report: `/reports/2026-05-06-phase-5-shipped.md`
+
+- [x] `<NeighborhoodPipeline zips={...}/>` reusable — building_permits scoped per ZIP, empty state for non-coverage
+- [x] `<NeighborhoodRental zips={...}/>` reusable — RentCast `/listings/rental/long-term` + median rent + 4 listings
+- [x] `<NeighborhoodMetrics zips={...}/>` reusable — listings_cache (sale data) with MLS-Grid-pending placeholder
+- [x] `<NeighborhoodAdvisoryCTAs communityName={...}/>` reusable — FSBO + Sell-or-Rent cards
+- [x] `lib/rentcast.ts` extended with `getNeighborhoodRentals(zip)`
+- [x] 56 community pages rewritten to brief's 10-section structure with tier-gated editorial (Tier 1 = full content, Tier 2 = first 3 sections, Tier 3 = first 1). Existing `tier` field on each community drives the gate
+- [x] Cross-link on `/homes-for-sale/[id]`: NeighborhoodPipeline + buyer-roadmap AdvisoryCTA
+- [x] Cross-link on `/pipeline/[zip]`: communities-in-this-ZIP grid + buyer-roadmap AdvisoryCTA. Main `/pipeline` map intentionally unchanged
+- [x] Community pages: `revalidate = 604_800` (7 days) to stay inside RentCast Foundation quota
+- [ ] Top-10 Tier-1 communities list — pending Stephen. Single-edit lights up full editorial for those 10 by setting `tier: 1` in `data/communities.ts`
+- [ ] Lifestyle content trim on Tier 1 — content-level edit, not structural; deferred to Stephen's editorial pass
 
 ### Phase 6 — E-sign integration + admin polish
 

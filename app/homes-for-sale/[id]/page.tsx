@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import IDXDisclaimer from '@/components/compliance/IDXDisclaimer'
 import { getListing } from '@/lib/mlsgrid'
+import NeighborhoodPipeline from '@/components/communities/NeighborhoodPipeline'
+import AdvisoryCTA from '@/components/advisory/AdvisoryCTA'
 
 interface ListingDetailProps {
   params: { id: string }
@@ -203,6 +205,25 @@ export default async function ListingDetailPage({ params }: ListingDetailProps) 
 
         <div className="mt-10">
           <IDXDisclaimer />
+        </div>
+      </section>
+
+      {/* Pipeline cross-link scoped to listing's ZIP */}
+      {listing.address.zip && (
+        <NeighborhoodPipeline
+          communityName={listing.address.city}
+          zips={[listing.address.zip]}
+        />
+      )}
+
+      {/* Contextual Advisory CTA — buyer-roadmap, since the visitor is on a
+          listing detail page evaluating a specific property. */}
+      <section className="bg-white py-16 lg:py-20">
+        <div className="max-w-3xl mx-auto px-4 lg:px-6">
+          <AdvisoryCTA
+            track="buyer-roadmap"
+            context={`buyers evaluating ${listing.address.city} homes`}
+          />
         </div>
       </section>
     </main>
