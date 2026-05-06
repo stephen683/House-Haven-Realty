@@ -8,25 +8,18 @@ import Link from 'next/link'
 
 const footerNav = {
   Explore: [
-    { label: 'Find Homes', href: '/homes-for-sale' },
+    { label: 'Homes for Sale', href: '/homes-for-sale' },
+    { label: 'Nashville Pipeline — New Construction', href: '/pipeline' },
     { label: 'Communities', href: '/communities' },
-    { label: 'Nashville Pipeline', href: '/pipeline' },
-    { label: 'Home Value', href: '/value' },
     { label: 'Market Reports', href: '/market-reports' },
+    { label: 'Blog', href: '/blog' },
   ],
-  Advisory: [
-    { label: 'How HHR Advisory works', href: '/advisory' },
-    { label: 'FSBO Sanity-Check', href: '/advisory/fsbo' },
-    { label: 'Buyer Roadmap', href: '/advisory/buyer-roadmap' },
-    { label: 'Sell-or-Rent', href: '/advisory/sell-or-rent' },
-    { label: 'Book a Decision Brief', href: '/advisory/book' },
-  ],
-  Resources: [
-    { label: 'Learn', href: '/learn' },
+  Services: [
     { label: 'Buyers', href: '/buyers' },
     { label: 'Sellers', href: '/sellers' },
-    { label: 'Mortgage Calculator', href: '/buyers#mortgage-calculator' },
+    { label: "What's My Home Worth?", href: '/home-valuation' },
     { label: 'Property Management', href: '/property-management' },
+    { label: 'Mortgage Calculator', href: '/buyers#mortgage-calculator' },
   ],
   Company: [
     { label: 'About', href: '/about' },
@@ -42,9 +35,12 @@ export default function SiteFooter() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-househaven-navy text-white/90" role="contentinfo">
+    <footer
+      className="bg-househaven-navy text-white/90"
+      role="contentinfo"
+    >
       <div className="max-w-7xl mx-auto px-4 lg:px-6 py-14">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
           <div className="lg:col-span-2">
             {/* Firm name — TREC 1260-02-.12(5)(a) — must be conspicuous on every page */}
             <Image
@@ -62,11 +58,7 @@ export default function SiteFooter() {
               <p>5016 Centennial Blvd Suite 200</p>
               <p>Nashville, TN 37209</p>
               <p>
-                <a
-                  data-event="phone_click"
-                  href="tel:+16156244766"
-                  className="hover:text-white underline-offset-2 hover:underline"
-                >
+                <a data-event="phone_click" href="tel:+16156244766" className="hover:text-white underline-offset-2 hover:underline">
                   (615) 624-4766
                 </a>
               </p>
@@ -115,7 +107,10 @@ export default function SiteFooter() {
               <ul className="space-y-2 text-sm">
                 {links.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-white/85 hover:text-white">
+                    <Link
+                      href={link.href}
+                      className="text-white/85 hover:text-white"
+                    >
                       {link.label}
                     </Link>
                   </li>
@@ -141,11 +136,7 @@ export default function SiteFooter() {
               </span>
               <p className="leading-relaxed">
                 <span className="font-semibold text-white">House Haven Realty</span> ·{' '}
-                <a
-                  data-event="phone_click"
-                  href="tel:+16156244766"
-                  className="hover:text-white"
-                >
+                <a data-event="phone_click" href="tel:+16156244766" className="hover:text-white">
                   (615) 624-4766
                 </a>{' '}
                 · 5016 Centennial Blvd Suite 200, Nashville, TN 37209 · Licensed &amp;

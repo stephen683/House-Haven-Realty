@@ -103,7 +103,7 @@ export default function SellersPage() {
             family, not a factory.
           </p>
           <Link
-            href="/value"
+            href="/home-valuation"
             className="inline-flex items-center mt-8 px-7 py-4 rounded-lg bg-white text-househaven-navy font-semibold hover:bg-househaven-accent transition"
           >
             Get my free home value
@@ -158,7 +158,7 @@ export default function SellersPage() {
 
           <div className="mt-12 text-center">
             <Link
-              href="/value"
+              href="/home-valuation"
               className="inline-flex items-center px-7 py-4 rounded-lg bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
             >
               Get my free CMA

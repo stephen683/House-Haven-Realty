@@ -34,9 +34,8 @@ const nextConfig = {
       { source: '/homes-for-sale-featured/:slug*', destination: '/homes-for-sale', permanent: true },
       { source: '/featured-listings', destination: '/homes-for-sale', permanent: true },
 
-      // Seller tools — /home-valuation consolidated into /value (RentCast-live, no email wall)
-      { source: '/whats-my-home-worth', destination: '/value', permanent: true },
-      { source: '/home-valuation', destination: '/value', permanent: true },
+      // Seller tools
+      { source: '/whats-my-home-worth', destination: '/home-valuation', permanent: true },
       { source: '/calculate-my-payments', destination: '/buyers', permanent: true },
 
       // Team
@@ -63,11 +62,9 @@ const nextConfig = {
       { source: '/selling-your-home', destination: '/sellers', permanent: true },
       { source: '/staging-checklist', destination: '/sellers', permanent: true },
 
-      // Market reports / learn library — /blog renamed to /learn in Phase 4
+      // Market reports / blog
       { source: '/market-reports-index', destination: '/market-reports', permanent: true },
-      { source: '/blog-posts', destination: '/learn', permanent: true },
-      { source: '/blog', destination: '/learn', permanent: true },
-      { source: '/blog/:path*', destination: '/learn/:path*', permanent: true },
+      { source: '/blog-posts', destination: '/blog', permanent: true },
 
       // Account / auth on the legacy site
       { source: '/property-organizer-login', destination: '/contact', permanent: true },

@@ -1,174 +1,15 @@
 # House Haven Realty — Launch Tracker
 
-**Source of truth:** `docs/ROADMAP.md` (Master Build Spec v2, with v2.1 Advisory amendment 2026-05-06)
-**Goal:** Ship HHR Advisory in 6 phases on top of the existing v2 launch surface (which is already shipped pending IDX key). Every Advisory phase has a `/reports/[date]-*.md` log.
+**Source of truth:** `docs/ROADMAP.md` (Master Build Spec v2)
+**Goal:** Ship the 4 launch blockers, then domain cutover. Every other feature waits.
 **Status legend:** `[ ]` pending · `[~]` in progress · `[x]` done · `[!]` blocked (needs Stephen / credentials / external approval)
-
----
-
-## 🚀 ADVISORY BUILD (2026-05-06+)
-
-Six phases sequenced so the Advisory revenue surface ships as early as possible. Pipeline / Value / IDX preserved untouched (Pipeline core is the strategic moat per v2.1 amendment).
-
-### Phase 0 — Foundations & decisions ✅ COMPLETE 2026-05-06
-
-- [x] `/value` ↔ `/home-valuation` consolidation: removed duplicate v1 page + form + API; 301 in place; Header/Footer/Sellers/Communities all repointed; sitemap cleaned. Type-check + lint clean.
-- [x] `/reports/` directory created; Phase 0 completion report at `/reports/2026-05-06-phase-0-completion.md`.
-- [x] v2.1 amendment banner added to ROADMAP.md noting § 6.1 (homepage) and § 13 (the /learn kill-list item only) are superseded by Advisory pivot.
-- [!] Stephen-OS Cloud Console OAuth: confirm "Published" status (or stephen@househavenrealty.com pinned permanent Test user) — **gates Phase 2**, not Phase 1
-- [!] Create `HHR Advisory` Google Calendar inside stephen@househavenrealty.com; capture `HHR_ADVISORY_CALENDAR_ID` — **gates Phase 2**
-- [!] Create Stripe $200 product in live mode; capture `STRIPE_SECRET_KEY` / `STRIPE_PUBLISHABLE_KEY` / `STRIPE_WEBHOOK_SECRET` — **gates Phase 2**
-- [ ] Confirm `ADVISORY_DISCLOSURE_TEXT` default is acceptable (or Stephen provides custom) — **soft gate for Phase 1**
-
-### Phase 1 — `/advisory` argument surface (no booking, no payment) ✅ SHIPPED 2026-05-06
-
-Report: `/reports/2026-05-06-phase-1-shipped.md`
-
-- [x] `/advisory` main argument page (hero, how-it-works, three tracks, what's-in-a-Brief, why-this-exists, FAQ, disclosure)
-- [x] `/advisory/fsbo` track page (with NAR commission disclosure)
-- [x] `/advisory/buyer-roadmap` track page
-- [x] `/advisory/sell-or-rent` track page (with NAR commission disclosure)
-- [x] `/advisory/samples/[track]` placeholder routes (banner: "Sample Brief in production — check back soon")
-- [x] `/advisory/book` placeholder with email-capture waitlist (Stephen tightening item 7)
-- [x] `POST /api/advisory/waitlist` with dedupe by lower(email)
-- [x] Supabase migration `009_advisory_book_waitlist` applied to project `eefqcgetyxdrvchkwhrq`
-- [x] Header gets `Advisory` nav entry between Communities and Buyers (full restructure → Phase 3)
-- [x] Reusable `<AdvisoryCTA context={...}/>` component staged for Phases 4–5
-- [x] `Service` + `FAQPage` JSON-LD on `/advisory`; per-page `metadata` on every advisory route
-- [x] Sitemap: 8 new advisory entries
-- [ ] FSBO sample Brief — awaits Stephen's draft (placeholder live in the meantime)
-
-### Phase 1.5 — Supabase cleanup ✅ SHIPPED 2026-05-06
-
-Report: `/reports/2026-05-06-phase-1.5-cleanup.md`
-
-- [x] Applied migration `003_value_tool` to Supabase (creates `valuation_cache`, `cma_requests`)
-- [x] Applied migration `004_listings_cache` to Supabase
-- [x] Dropped legacy `valuation_requests` table (orphaned by Phase 0 /value consolidation, superseded by `cma_requests`)
-- [x] New migration file `010_drop_legacy_valuation_requests.sql` recording the drop in version control
-- [x] Verified post-migration schema state via `list_tables`
-
-### Phase 1.5b — `spatial_ref_sys` RLS (cosmetic) ⚠️ MANUAL APPLY REQUIRED
-
-- [x] Migration `011_spatial_ref_sys_rls.sql` written and committed
-- [!] Apply via Supabase Dashboard SQL Editor (MCP `apply_migration` returns `42501: must be owner of table spatial_ref_sys` — the table is owned by `supabase_admin` per PostGIS install; the Dashboard runs as a higher-privileged role)
-- Header in `supabase/migrations/011_spatial_ref_sys_rls.sql` has the SQL ready to paste
-
-### Phase 2 — Booking flow (Stripe + Google Calendar + Resend)
-
-**Phase 2 scaffolding ✅ SHIPPED 2026-05-06** (libs + DB ready; UI/API routes in next pass)
-
-Report: `/reports/2026-05-06-phase-2-scaffolding.md`
-
-- [x] Supabase migration `012_advisory_bookings` applied (full lifecycle: payment_status, engagement_letter_status, brief_status, reminder timestamps, cancellation, admin_notes; auto-update updated_at trigger)
-- [x] `lib/stripe.ts` — fetch-based wrapper with deterministic mock when `STRIPE_SECRET_KEY` unset (matches existing `rentcast/hubspot/resend` pattern, no SDK install). `createPaymentIntent`, `retrievePaymentIntent`, `verifyWebhookSignature` (manual HMAC-SHA256 with timestamp tolerance), `getPublishableKey`, `isStripeLive`
-- [x] `lib/google-calendar.ts` — fetch-based wrapper with mock when OAuth env vars unset. OAuth refresh-token → access-token caching, `listBusy`, `createEvent` (with conferenceData / Google Meet link), `deleteEvent`, `isCalendarLive`
-- [x] `lib/advisory-bookings.ts` — Supabase CRUD with full type model (`AdvisoryBookingRow`, `CreateBookingInput`, `UpdateBookingInput`). `createBooking`, `getBookingById`, `getBookingByPaymentIntent`, `updateBooking`, `listBookingsForReminderWindow(48|2)`
-- [x] `lib/advisory-emails.ts` — six templates via `lib/resend.ts`: confirmation, engagement letter, 48h reminder, 2h reminder, brief delivery, Stephen new-booking notification
-
-**Phase 2 second pass — UI + API + cron ✅ SHIPPED 2026-05-06**
-
-Report: `/reports/2026-05-06-phase-2-second-pass.md`
-
-- [x] `app/advisory/book/page.tsx` — replaced waitlist placeholder with real BookingClient flow
-- [x] `components/advisory/booking/BookingClient.tsx` — multi-step orchestrator (Stepper + TrackPicker + IntakeForm + SlotPicker + dynamic-imported StripeCheckout)
-- [x] Track-specific intake fields per brief (FSBO/Buyer Roadmap/Sell-or-Rent)
-- [x] FSBO + Sell-or-Rent intake pre-pulls RentCast → stored as `rentcast_prepull` on booking row
-- [x] `app/advisory/book/confirmation/page.tsx` — post-payment confirmation with .ics + Google + Outlook calendar links
-- [x] `app/api/advisory/create-intent/route.ts` — validates intake + slot, RentCast pre-pull, creates booking, creates Stripe PaymentIntent. Mock mode runs `runPostPaymentSideEffects` inline; live mode returns clientSecret for Stripe Elements
-- [x] `app/api/advisory/stripe-webhook/route.ts` — verifies signature, handles `payment_intent.succeeded` (calls flow), `payment_intent.payment_failed`, `charge.refunded`
-- [x] `app/api/advisory/calendar-slots/route.ts` — server-enforced slot windows + 48h lead + 4/week + 8/month caps + Google Calendar busy filtering. Range capped at 60 days
-- [x] `app/api/advisory/deliver-brief/[id]/route.ts` — Stephen-only HMAC-gated (reuses `/agents` auth), marks `brief_status=delivered` + fires email
-- [x] `app/api/advisory/booking/[id]/ics/route.ts` — RFC 5545 .ics file download for the calendar invite
-- [x] `app/api/cron/advisory-reminders/route.ts` + `vercel.json` cron entry (hourly: `0 * * * *`)
-- [x] `lib/advisory-slots.ts` — DST-aware Central → UTC conversion, candidate slot generation, weekly/monthly cap counting, race-guard `validateSlotIsAvailable()`
-- [x] `lib/advisory-prepull.ts` — RentCast prepull helper used by create-intent
-- [x] `lib/advisory-flow.ts` — `runPostPaymentSideEffects()` shared between mock-mode create-intent and live-mode webhook (idempotent guards on each side effect)
-- [x] npm install: `@stripe/stripe-js` (^9.4.0) + `@stripe/react-stripe-js` (^6.3.0)
-- [x] Stripe Elements truly lazy-mounted via `next/dynamic` (StripeCheckout chunk only loads when payment step renders — `/advisory/book` bundle dropped 11 kB → 6.53 kB)
-- [x] Phase 1 waitlist code deleted (`components/advisory/BookWaitlistForm.tsx` + `app/api/advisory/waitlist/`). Supabase table `advisory_book_waitlist` retained for Phase 2 launch announcement export
-- [ ] Sample Brief #2 (Buyer Roadmap) — Stephen target end of Phase 2
-
-### Phase 3 — Homepage rebrand to three peer paths ✅ SHIPPED 2026-05-06
-
-Reports: `/reports/2026-05-06-phase-3-shipped.md`, `/reports/2026-05-06-homepage-headlines.md`
-
-- [x] Three homepage headline candidates delivered → Stephen picks before merge (default: Option A)
-- [x] Hero rewrite: typography-only via `components/homepage/ThreePathsHero.tsx`. Stephen photo slots in via `lib/homepage-config.ts` data change when shoot lands
-- [x] Three peer cards: DIY tools / Hire by hour / Hire as agent. Advisory featured via existing bg-black weighted-card pattern
-- [x] Below-fold: WhatYouWalkAwayWith (Brief explainer + 3 sample snippets in placeholder mode), ThreeTracks (reused), WhatWePublish (recent /blog posts), FromStephen (text-only), Testimonials + Newsletter kept verbatim
-- [x] Header: 5 top-level peers (Find Homes / Communities / Pipeline / Advisory / Home Value); dropdowns dropped; About / Blog / Contact in secondary nav; Buyers / Sellers / Mortgage Calc / Property Mgmt / Market Reports demoted to footer
-- [x] SiteFooter: 4 nav columns (Explore / Advisory / Resources / Company); `lg:grid-cols-6` with firm-info col-span-2; compliance bar unchanged
-- [x] Old hero commit hash captured in Phase 3 report: `57e6a9b`
-- [x] `lib/homepage-config.ts` + `data/sample-briefs.ts` (swappable without code changes)
-- [ ] Sample Brief #3 (Sell-or-Rent) — Stephen target end of Phase 3
-
-### Phase 4 — `/learn` library (restructure from `/blog`) ✅ SHIPPED 2026-05-06
-
-Reports: `/reports/2026-05-06-phase-4-shipped.md`, `/reports/2026-05-06-greatest-hits-curation-ask.md`
-
-- [x] `data/blog.ts` → `data/learn.ts` via `git mv`; exports renamed via sed (BlogPost → LearnPost, blogPosts → learnPosts, etc.). 1,832 lines of article content untouched
-- [x] `lib/learn-taxonomy.ts` with category (fsbo/buying/sell-or-rent/nashville-market) × stage (research/decision/action) decoration map for 22 of 25 articles
-- [x] `/learn` (filterable index via ?category= ?stage= URL params), `/learn/[slug]` (Article schema + contextual AdvisoryCTA + author byline + related posts/neighborhoods), `/learn/greatest-hits`, `/learn/feed.xml` (RSS 2.0)
-- [x] 301 `/blog/*` → `/learn/*` in next.config.mjs
-- [x] `<AdvisoryCTA>` rendered at end of articles where `advisoryTrack` is mapped (12 of 25 articles cross-promote a track)
-- [x] FSBO empty state: `/learn?category=fsbo` shows "first piece coming soon" + CTA to `/advisory/fsbo`. No fabricated content
-- [x] Greatest Hits curation ask delivered → Stephen picks 8–12 entries with reader job-to-be-done framing
-- [x] RSS feed live at `/learn/feed.xml` with 1-hour CDN cache
-- [x] `/blog` routes deleted; consumers updated (sitemap, communities/[slug], WhatWePublish, Header, SiteFooter)
-
-### Phase 5 — RentCast on community pages + Pipeline data cross-links ✅ SHIPPED 2026-05-06
-
-Report: `/reports/2026-05-06-phase-5-shipped.md`
-
-- [x] `<NeighborhoodPipeline zips={...}/>` reusable — building_permits scoped per ZIP, empty state for non-coverage
-- [x] `<NeighborhoodRental zips={...}/>` reusable — RentCast `/listings/rental/long-term` + median rent + 4 listings
-- [x] `<NeighborhoodMetrics zips={...}/>` reusable — listings_cache (sale data) with MLS-Grid-pending placeholder
-- [x] `<NeighborhoodAdvisoryCTAs communityName={...}/>` reusable — FSBO + Sell-or-Rent cards
-- [x] `lib/rentcast.ts` extended with `getNeighborhoodRentals(zip)`
-- [x] 56 community pages rewritten to brief's 10-section structure with tier-gated editorial (Tier 1 = full content, Tier 2 = first 3 sections, Tier 3 = first 1). Existing `tier` field on each community drives the gate
-- [x] Cross-link on `/homes-for-sale/[id]`: NeighborhoodPipeline + buyer-roadmap AdvisoryCTA
-- [x] Cross-link on `/pipeline/[zip]`: communities-in-this-ZIP grid + buyer-roadmap AdvisoryCTA. Main `/pipeline` map intentionally unchanged
-- [x] Community pages: `revalidate = 604_800` (7 days) to stay inside RentCast Foundation quota
-- [ ] Top-10 Tier-1 communities list — pending Stephen. Single-edit lights up full editorial for those 10 by setting `tier: 1` in `data/communities.ts`
-- [ ] Lifestyle content trim on Tier 1 — content-level edit, not structural; deferred to Stephen's editorial pass
-
-### Phase 6 — E-sign integration + admin polish ✅ SHIPPED 2026-05-06
-
-Report: `/reports/2026-05-06-phase-6-shipped.md`
-
-- [x] Vendor-agnostic `lib/esign.ts` with HelloSign + DocuSign fetch implementations + parser helpers. Fallback to placeholder PDF email when no vendor configured
-- [x] `/api/advisory/esign-webhook` accepts both vendors, flips `engagement_letter_status` to `signed`. Idempotent
-- [x] `lib/advisory-flow.ts` wires e-sign send into post-payment side effects (additive — placeholder PDF email stays alive)
-- [x] Migration 013 applied — `esign_provider`, `esign_signature_request_id`, `esign_send_failed_reason` columns + partial index
-- [x] Stephen admin at `/agents/advisory` (HMAC-gated) — list with stats, per-booking detail with intake + RentCast prepull, Deliver-Brief + Cancel-booking forms
-- [x] `/api/agents/advisory/[id]/cancel` — sets canceled_at, deletes Calendar event, emails client. Stripe refund stays manual per brief
-- [x] AgentNav component + /agents chooser page linking contract + advisory tools
-- [ ] Vendor pick (HelloSign or DocuSign) — Stephen sets `ESIGN_VENDOR` + vendor keys when ready
-
----
-
-## ✅ Advisory build complete (Phases 0–6 shipped 2026-05-06)
-
-The autonomous Advisory rebuild is structurally done. Remaining items are all data-file or env-var swaps — no code changes:
-
-- [ ] Stephen-Nashville hero photo → slot via `lib/homepage-config.ts`
-- [ ] Top-10 Tier-1 community list → set `tier: 1` in `data/communities.ts`
-- [ ] 8–12 Greatest Hits picks → edit `GREATEST_HITS` in `lib/learn-taxonomy.ts`
-- [ ] FSBO `/learn` topic list → entries in `data/learn.ts` + `LEARN_TAXONOMY`
-- [ ] 3 Sample Decision Briefs → flip `status: 'published'` + add `bottomLine` in `data/sample-briefs.ts`
-- [ ] Stripe live keys + $200 product + webhook secret in Vercel env
-- [ ] Google OAuth + HHR Advisory calendar ID in Vercel env
-- [ ] Resend sender domains (`alerts@`, `advisory@`) verified
-- [ ] E-sign vendor pick (`ESIGN_VENDOR=hellosign|docusign` + keys)
-- [ ] Apply migration 011 (spatial_ref_sys RLS) via Supabase Dashboard SQL Editor
 
 ---
 
 ## ⚠️ OPEN DECISIONS (gate launch)
 
 - [!] **MLS Grid Realtracs pricing** — Real cost confirmed at MLS Grid application. Stephen to call Realtracs 615-385-0777 or email info@mlsgrid.com when submitting. Verified third-party listing shows ~$250/mo.
-- [ ] **RentCast plan tier** — Key is live and working (2026-05-04). Tier confirmation deferred — doesn't gate launch. Confirm in RentCast dashboard whether this is Foundation $74/mo (1,000 calls) or Growth $199/mo (5,000 calls) so we know our budget for the cache strategy.
+- [!] **RentCast plan tier** — Cheapest tier with AVM + comps is Foundation $74/mo (1,000 calls). Stephen approves Foundation, or upgrades to Growth ($199/mo, 5,000 calls)?
 
 ## ✅ DECISIONS RESOLVED (2026-04-17)
 
@@ -216,11 +57,11 @@ All 8 sections per ROADMAP §6.1. Composed inline in `app/page.tsx` (single-file
 - [ ] axe-core full sweep — verify on preview
 - [ ] If Stephen confirms a specific Nashville architectural photo for the hero, swap in (currently text-only hero per spec)
 
-### Blocker 3 — House Haven Value ✅ RENTCAST LIVE · AWAITS HUBSPOT + RESEND
+### Blocker 3 — House Haven Value ✅ CODE SHIPPED, AWAITS API KEYS
 
-Per ROADMAP §7. AVM is live in production as of 2026-05-04. Lead-capture pipeline (HubSpot + Resend) still mocked until those keys land.
+Per ROADMAP §7. UI ships with mock-fallback estimates; real numbers activate the moment RentCast is connected.
 
-- [x] `RENTCAST_API_KEY` set in Vercel (production + preview + development) — 2026-05-04. Env ID `ZAHTHCAOPSyvwBpY`. Redeployed `dpl_2gVfXTF3kCxZLSjkQV4wp2q3ToRJ` (72s, READY+PROMOTED). Smoke-tested `4400 Murphy Rd, Sylvan Park` → `source: rentcast`, $290k/$483k/$676k, 5 comps. ✅ LIVE.
+- [!] Stephen sets `RENTCAST_API_KEY` in Vercel (Foundation tier $74/mo confirmed)
 - [!] Stephen sets `HUBSPOT_PRIVATE_APP_TOKEN` (portal 242305648). Custom properties needed: `house_haven_source` (single-line text), `selling_timeline` (single-line text)
 - [!] Stephen sets `RESEND_API_KEY` and verifies `alerts@househavenrealty.com` sender domain
 - [ ] Stephen sets `GOOGLE_PLACES_API_KEY` (post-launch enhancement; current input is plain text and works fine without autocomplete)
@@ -237,8 +78,7 @@ Per ROADMAP §7. AVM is live in production as of 2026-05-04. Lead-capture pipeli
 - [x] No email wall before estimate appears
 - [x] Disclaimer: "This is an automated estimate based on public records and recent sales. It is not an appraisal."
 - [x] NAR 2026 commission disclosure on form + page footer
-- [x] RentCast smoke test ✅ — 4400 Murphy Rd Sylvan Park returned real estimate + 5 comps via prod `/api/value`
-- [ ] On HubSpot + Resend keys: verify CMA form submit lands a contact in portal 242305648, fires Stephen alert email, fires lead confirmation email
+- [ ] On API keys: smoke test with real Sylvan Park address; verify HubSpot contact + Stephen email + lead email
 
 ### Blocker 4 — Nashville Pipeline Rebrand ✅ SHIPPED
 
@@ -351,7 +191,6 @@ Pipeline product redesign beyond the original launch scope — triggered by Step
 
 ## Change Log
 
-- **2026-05-04 — RentCast live in production.** `RENTCAST_API_KEY` set on Vercel (prod + preview + dev) via REST API. Redeployed `dpl_2gVfXTF3kCxZLSjkQV4wp2q3ToRJ` from `6379edf` in 72s, READY + PROMOTED across all aliases (`project-bmq0e.vercel.app`, `househavenrealty.com`, `www.househavenrealty.com`). Smoke test on `4400 Murphy Rd, Nashville TN 37209`: `source: rentcast`, low/mid/high $290k/$483k/$676k, 5 comps within 0.5mi/6mo. Supabase `valuation_cache` writing on cache miss (30-day TTL). Blocker 3 status: RENTCAST LIVE → AWAITS HUBSPOT + RESEND. Sidebar observation: Vercel deployment aliases now include `househavenrealty.com` and `www.househavenrealty.com` — DNS may have already cut over or is pre-configured to. Verify before announcing launch.
 - **2026-04-17 (later) — All 4 launch blockers built, awaiting API keys.** Pipeline rebrand: NashBuilds → Nashville Pipeline / House Haven Pipeline (file moves, find/replace, 301s, Dataset schema, empty states, permit popup rewrite, "how to use" modal). Compliance: NAR 2026 commission-negotiable disclosure component mounted on Sellers, Home Valuation, Value, IDX disclaimer; TCPA aligned to spec §5.4 verbatim. House Haven Value: full /value page + ValueClient + RentCast/HubSpot/Resend libs (graceful mock fallback when keys missing) + Supabase migration 003 + 2 API routes. Realtracs IDX skeleton: MLS Grid client + listings cache migration 004 + ListingCard/Grid/SearchFilters components + full /homes-for-sale and detail page with NAR-compliant attribution + RealEstateListing schema. Homepage: 8 sections per §6.1, brokerage-first, brand-kit-true. Deleted orphaned `/new-construction` route (consolidated into Pipeline via 301). Final: type-check ✅, lint ✅, build ✅ (homepage 3.57 kB, /pipeline 7.68 kB, /value 3.39 kB).
 - **2026-04-17 — v2 pivot.** Rewrote `docs/ROADMAP.md` and `docs/TODO.md` to Master Build Spec v2. Locked the 4-blocker launch model: Realtracs IDX, homepage rebuild, House Haven Value, Nashville Pipeline rebrand. Verified 3 spec inaccuracies via web research and flagged at top of each doc (MLS Grid pricing, RentCast tiering, NAR 2026 disclosure). Catalogued 30+ NashBuilds references awaiting rename. Surfaced Modulus-vs-Fraunces typography conflict and B/W-vs-warm-accent palette conflict to Stephen as decisions needed.
 - **2026-04-16 (session 4)** — Vercel deploys fixed (`framework: null` → `nextjs` via `vercel.json`). Rebuilt new construction map on PermitPilot architecture (MapLibre + ArcGIS). Logo package + Modulus fonts placed. 22 Tier 2 + 15 Tier 3 community pages. NashBuilds shipped end-to-end at `/new-builds` (saturation scoring, builder profiles, alert signup, mobile drawer, 15 ZIP pages). 25 blog posts. Brand kit applied (B/W/Grey, Modulus, squared forms). 152 routes, all green.

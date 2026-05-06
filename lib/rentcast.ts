@@ -1,9 +1,6 @@
-// RentCast client. Server-side only — never import from a Client Component.
-// When RENTCAST_API_KEY is unset, returns deterministic mock data so the UI
-// ships before billing is set up. Real API kicks in the moment the key is
-// added.
-
-const RENTCAST_API_BASE = 'https://api.rentcast.io/v1'
+// RentCast AVM client. Server-side only — never import from a Client Component.
+// When RENTCAST_API_KEY is unset, returns deterministic mock data so the UI ships
+// before billing is set up. Real API kicks in the moment the key is added.
 
 export interface RentCastComp {
   address: string
@@ -68,7 +65,7 @@ export async function getValuation(address: string): Promise<RentCastValuation> 
   if (!apiKey) return mockValuation(address)
 
   try {
-    const url = new URL(`${RENTCAST_API_BASE}/avm/value`)
+    const url = new URL('https://api.rentcast.io/v1/avm/value')
     url.searchParams.set('address', address)
     const res = await fetch(url.toString(), {
       headers: {
@@ -130,98 +127,4 @@ export function normalizeAddress(input: string): string {
     .toLowerCase()
     .replace(/\s+/g, ' ')
     .replace(/[.,]/g, '')
-}
-
-// ─── Neighborhood-level rental data ───────────────────────────────────────
-// Used on community pages. Returns recent rental listings + median rent for
-// the ZIP. Mock fallback when no API key.
-
-export interface RentalListing {
-  address: string
-  rent: number | null
-  bedrooms: number | null
-  bathrooms: number | null
-  squareFootage: number | null
-  daysOnMarket: number | null
-  listedDate: string | null
-}
-
-export interface NeighborhoodRentalData {
-  zip: string
-  listingCount: number
-  medianRent: number | null
-  listings: RentalListing[]
-  source: 'rentcast' | 'mock'
-}
-
-function mockNeighborhoodRental(zip: string): NeighborhoodRentalData {
-  const seed = Array.from(zip).reduce((s, c) => s + c.charCodeAt(0), 0)
-  const median = 1800 + (seed % 1400)
-  const listings: RentalListing[] = Array.from({ length: 4 }).map((_, i) => ({
-    address: `${100 * (i + 1)} block of Sample St, Nashville TN ${zip}`,
-    rent: median + (i - 1) * 200,
-    bedrooms: 2 + (i % 3),
-    bathrooms: 1.5 + (i % 2 === 0 ? 0 : 0.5),
-    squareFootage: 1100 + i * 180,
-    daysOnMarket: 5 + i * 4,
-    listedDate: new Date(Date.now() - (5 + i * 7) * 86_400_000).toISOString().slice(0, 10),
-  }))
-  return { zip, listingCount: listings.length, medianRent: median, listings, source: 'mock' }
-}
-
-export async function getNeighborhoodRentals(zip: string): Promise<NeighborhoodRentalData> {
-  const apiKey = process.env.RENTCAST_API_KEY
-  if (!apiKey) return mockNeighborhoodRental(zip)
-
-  try {
-    const url = new URL(`${RENTCAST_API_BASE}/listings/rental/long-term`)
-    url.searchParams.set('zipCode', zip)
-    url.searchParams.set('status', 'Active')
-    url.searchParams.set('limit', '20')
-    const res = await fetch(url.toString(), {
-      headers: { 'X-Api-Key': apiKey, Accept: 'application/json' },
-    })
-    if (!res.ok) {
-      console.error('[rentcast] rental listings non-OK', res.status)
-      return mockNeighborhoodRental(zip)
-    }
-    const raw = await res.json() as Array<{
-      formattedAddress?: string
-      price?: number
-      bedrooms?: number
-      bathrooms?: number
-      squareFootage?: number
-      daysOnMarket?: number
-      listedDate?: string
-    }>
-
-    const listings: RentalListing[] = raw.map((r) => ({
-      address: maskAddress(r.formattedAddress ?? ''),
-      rent: r.price ?? null,
-      bedrooms: r.bedrooms ?? null,
-      bathrooms: r.bathrooms ?? null,
-      squareFootage: r.squareFootage ?? null,
-      daysOnMarket: r.daysOnMarket ?? null,
-      listedDate: r.listedDate ?? null,
-    }))
-
-    const rents = listings
-      .map((l) => l.rent)
-      .filter((r): r is number => typeof r === 'number' && r > 0)
-      .sort((a, b) => a - b)
-    const medianRent = rents.length
-      ? rents[Math.floor(rents.length / 2)]
-      : null
-
-    return {
-      zip,
-      listingCount: listings.length,
-      medianRent,
-      listings: listings.slice(0, 4),
-      source: 'rentcast',
-    }
-  } catch (err) {
-    console.error('[rentcast] rental listings threw', err)
-    return mockNeighborhoodRental(zip)
-  }
 }

@@ -1,31 +1,21 @@
 # House Haven Realty — Claude Code Configuration
 
 ## What this project is
-Custom Next.js 14 website for House Haven Realty (househavenrealty.com), replacing a $300+/month Blok template with a high-performance lead-generating brokerage site. **175 routes** deploying green on Vercel; production aliases `househavenrealty.com`, `www.househavenrealty.com`, `project-bmq0e.vercel.app` all serving the latest build.
+Custom Next.js 14 website for House Haven Realty (househavenrealty.com), replacing a $300+/month Blok template with a high-performance lead-generating brokerage site. Currently 152 routes deploying green on Vercel; pre-launch on `project-bmq0e.vercel.app` until DNS cutover.
 
-**Specs (read in this order before making changes):**
-1. `reports/2026-05-06-advisory-build-complete.md` — current state of the site (6 Advisory phases shipped 2026-05-06)
-2. `docs/ROADMAP.md` (Master Build Spec v2 + v2.1 amendment banner)
-3. `docs/TODO.md` (live tracker; Phases 0–6 marked shipped, Stephen-pending data/env swaps listed at the bottom)
+**Spec (locked, source of truth):** `docs/ROADMAP.md` (Master Build Spec v2)
+**Live tracker:** `docs/TODO.md`
+**Read both at the start of every session before making changes.**
 
-## Current state: HHR Advisory live in production (mock mode)
+## Current priority: launch-ready
+Ship the 4 launch blockers, then domain cutover. **Nothing else.** Every other tool/page is a Post-Launch Layer.
 
-The site has THREE peer paths now:
-1. **Use the tools** — DIY (Find Homes, Nashville Pipeline, Home Value, Communities). Free, no email
-2. **Hire us by the hour** — HHR Advisory ($200 Decision Brief, 1 hr consult, written Brief in 48 hours, 3 tracks: FSBO / Buyer Roadmap / Sell-or-Rent). NEW
-3. **Hire us as your agent** — standard commission
+1. Realtracs IDX via MLS Grid (`/homes-for-sale` + `/homes-for-sale/[mlsId]`)
+2. Homepage rebuilt brokerage-first (8 sections per ROADMAP §6.1)
+3. House Haven Value (`/value` — RentCast AVM, no signup wall)
+4. Nashville Pipeline rebrand (current `/new-builds` → `/pipeline`, preserve all data)
 
-The Advisory product is structurally separated from commission — the fee buys the advice, not a transaction. This is the strategic anchor.
-
-**Mock mode is the default.** `/advisory/book` runs end-to-end today without Stripe/Calendar/Resend keys. Booking row lands in `advisory_bookings` Supabase table; emails dry-run to Vercel function logs. Live mode flips automatically when Stephen sets vendor env vars (no code change required). See `reports/2026-05-06-advisory-build-complete.md` for the full integration matrix and what activates each one.
-
-**Original 4 launch blockers status:**
-1. Realtracs IDX via MLS Grid — code shipped, awaits `MLS_GRID_API_KEY`
-2. Homepage rebuilt brokerage-first — superseded by Phase 3 three-peer-paths rebrand (v2.1 amendment)
-3. House Haven Value (`/value`, RentCast AVM, no signup wall) — LIVE in prod since 2026-05-04
-4. Nashville Pipeline rebrand — DONE (Phase 0–era)
-
-If a request would expand scope or rewrite locked decisions, push back and point at the relevant spec section.
+If a request would expand scope before launch, push back and point at the spec.
 
 ## Strategic frame (from ROADMAP §1)
 
