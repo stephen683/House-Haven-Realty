@@ -20,19 +20,24 @@ Six phases sequenced so the Advisory revenue surface ships as early as possible.
 - [!] Create Stripe $200 product in live mode; capture `STRIPE_SECRET_KEY` / `STRIPE_PUBLISHABLE_KEY` / `STRIPE_WEBHOOK_SECRET` — **gates Phase 2**
 - [ ] Confirm `ADVISORY_DISCLOSURE_TEXT` default is acceptable (or Stephen provides custom) — **soft gate for Phase 1**
 
-### Phase 1 — `/advisory` argument surface (no booking, no payment)
+### Phase 1 — `/advisory` argument surface (no booking, no payment) ✅ SHIPPED 2026-05-06
 
-- [ ] `/advisory` main argument page (hero, how-it-works, three tracks, what's-in-a-Brief, why-this-exists, FAQ, disclosure)
-- [ ] `/advisory/fsbo` track page
-- [ ] `/advisory/buyer-roadmap` track page
-- [ ] `/advisory/sell-or-rent` track page
-- [ ] `/advisory/samples/[track]` placeholder routes (banner: "Sample Brief in production — check back soon")
-- [ ] `/advisory/book` placeholder with email-capture waitlist (Stephen tightening item 7)
-- [ ] Supabase migration `009_advisory_book_waitlist.sql`
-- [ ] Header gets `Advisory` nav entry (no other nav changes yet)
-- [ ] Reusable `<AdvisoryCTA context={...}/>` component for cross-link reuse in Phases 4–5
-- [ ] `Service` schema on `/advisory` and each track; `FAQPage` for the FAQ
-- [ ] First sample Brief (FSBO) shipped if Stephen delivers content; otherwise placeholder remains
+Report: `/reports/2026-05-06-phase-1-shipped.md`
+
+- [x] `/advisory` main argument page (hero, how-it-works, three tracks, what's-in-a-Brief, why-this-exists, FAQ, disclosure)
+- [x] `/advisory/fsbo` track page (with NAR commission disclosure)
+- [x] `/advisory/buyer-roadmap` track page
+- [x] `/advisory/sell-or-rent` track page (with NAR commission disclosure)
+- [x] `/advisory/samples/[track]` placeholder routes (banner: "Sample Brief in production — check back soon")
+- [x] `/advisory/book` placeholder with email-capture waitlist (Stephen tightening item 7)
+- [x] `POST /api/advisory/waitlist` with dedupe by lower(email)
+- [x] Supabase migration `009_advisory_book_waitlist` applied to project `eefqcgetyxdrvchkwhrq`
+- [x] Header gets `Advisory` nav entry between Communities and Buyers (full restructure → Phase 3)
+- [x] Reusable `<AdvisoryCTA context={...}/>` component staged for Phases 4–5
+- [x] `Service` + `FAQPage` JSON-LD on `/advisory`; per-page `metadata` on every advisory route
+- [x] Sitemap: 8 new advisory entries
+- [ ] FSBO sample Brief — awaits Stephen's draft (placeholder live in the meantime)
+- [!] Surfaced: migrations 003 (value_tool) + 004 (listings_cache) marked [x] in TODO but not applied to Supabase. Recommend applying before Phase 2.
 
 ### Phase 2 — Booking flow (Stripe + Google Calendar + Resend)
 

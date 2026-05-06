@@ -3,6 +3,7 @@ import { communities } from '@/data/communities'
 import { visibleTeam } from '@/data/team'
 import { blogPosts } from '@/data/blog'
 import { PIPELINE_ZIPS } from '@/lib/pipeline-zips'
+import { ADVISORY_TRACKS } from '@/lib/advisory-config'
 
 const BASE_URL = 'https://househavenrealty.com'
 
@@ -12,6 +13,8 @@ const staticRoutes: { path: string; changeFrequency: MetadataRoute.Sitemap[numbe
   { path: '/pipeline', changeFrequency: 'daily', priority: 0.95 },
   { path: '/pipeline/builders', changeFrequency: 'weekly', priority: 0.8 },
   { path: '/value', changeFrequency: 'monthly', priority: 0.9 },
+  { path: '/advisory', changeFrequency: 'weekly', priority: 0.95 },
+  { path: '/advisory/book', changeFrequency: 'weekly', priority: 0.7 },
   { path: '/communities', changeFrequency: 'weekly', priority: 0.8 },
   { path: '/about', changeFrequency: 'monthly', priority: 0.6 },
   { path: '/team', changeFrequency: 'monthly', priority: 0.6 },
@@ -70,6 +73,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: 'daily',
       priority: 0.85,
+    })
+  }
+
+  // Advisory track + sample pages
+  for (const t of ADVISORY_TRACKS) {
+    entries.push({
+      url: `${BASE_URL}/advisory/${t.slug}`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    })
+    entries.push({
+      url: `${BASE_URL}/advisory/samples/${t.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.6,
     })
   }
 

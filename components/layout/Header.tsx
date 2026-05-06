@@ -16,6 +16,16 @@ const primaryNav = [
   },
   { label: 'Communities', href: '/communities' },
   {
+    label: 'Advisory',
+    href: '/advisory',
+    children: [
+      { label: 'How HHR Advisory works', href: '/advisory' },
+      { label: 'FSBO Sanity-Check', href: '/advisory/fsbo' },
+      { label: 'Buyer Roadmap', href: '/advisory/buyer-roadmap' },
+      { label: 'Sell-or-Rent', href: '/advisory/sell-or-rent' },
+    ],
+  },
+  {
     label: 'Buyers',
     href: '/buyers',
     children: [
