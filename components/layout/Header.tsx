@@ -28,7 +28,7 @@ const primaryNav = [
     href: '/sellers',
     children: [
       { label: 'Selling Your Home', href: '/sellers' },
-      { label: "What's My Home Worth?", href: '/home-valuation' },
+      { label: "What's My Home Worth?", href: '/value' },
       { label: 'Property Management', href: '/property-management' },
     ],
   },
@@ -103,7 +103,7 @@ export default function Header() {
               (615) 624-4766
             </a>
             <Link
-              href="/home-valuation"
+              href="/value"
               className="inline-flex items-center px-4 py-2 rounded-lg bg-househaven-navy text-white text-sm font-medium hover:bg-househaven-navy-light transition"
             >
               Home Value
@@ -149,7 +149,7 @@ export default function Header() {
                 (615) 624-4766
               </a>
               <Link
-                href="/home-valuation"
+                href="/value"
                 onClick={() => setOpen(false)}
                 className="inline-flex items-center px-4 py-2 rounded-lg bg-househaven-navy text-white text-sm font-medium"
               >

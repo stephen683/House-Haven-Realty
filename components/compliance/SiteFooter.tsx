@@ -17,7 +17,7 @@ const footerNav = {
   Services: [
     { label: 'Buyers', href: '/buyers' },
     { label: 'Sellers', href: '/sellers' },
-    { label: "What's My Home Worth?", href: '/home-valuation' },
+    { label: "What's My Home Worth?", href: '/value' },
     { label: 'Property Management', href: '/property-management' },
     { label: 'Mortgage Calculator', href: '/buyers#mortgage-calculator' },
   ],

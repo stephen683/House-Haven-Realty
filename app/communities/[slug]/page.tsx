@@ -115,7 +115,7 @@ export default function CommunityPage({ params }: CommunityPageProps) {
               Search {c.name} homes
             </Link>
             <Link
-              href="/home-valuation"
+              href="/value"
               className="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-white/30 text-white font-semibold hover:bg-white/10 transition text-sm"
             >
               What&rsquo;s my home worth?

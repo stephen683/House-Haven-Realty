@@ -34,8 +34,9 @@ const nextConfig = {
       { source: '/homes-for-sale-featured/:slug*', destination: '/homes-for-sale', permanent: true },
       { source: '/featured-listings', destination: '/homes-for-sale', permanent: true },
 
-      // Seller tools
-      { source: '/whats-my-home-worth', destination: '/home-valuation', permanent: true },
+      // Seller tools — /home-valuation consolidated into /value (RentCast-live, no email wall)
+      { source: '/whats-my-home-worth', destination: '/value', permanent: true },
+      { source: '/home-valuation', destination: '/value', permanent: true },
       { source: '/calculate-my-payments', destination: '/buyers', permanent: true },
 
       // Team

@@ -1,9 +1,31 @@
 # House Haven Realty — Master Build Spec v2
 
-**Status:** Locked. Execution-ready.
+**Status:** Locked, **with v2.1 amendment for Advisory pivot (2026-05-06).**
 **Date locked:** 2026-04-16 (this rewrite: 2026-04-17)
 **Author:** Stephen Delahoussaye (vision & architecture) · Claude (compilation)
 **Supersedes:** v1.0 roadmap (2026-04-14). v1 content is gone — this document is the only source of truth.
+
+---
+
+## ⚠️ v2.1 AMENDMENT — HHR ADVISORY PIVOT (2026-05-06)
+
+A strategic pivot landed 2026-05-06: HHR Advisory ($200/hour Decision Brief, three tracks: FSBO Sanity-Check / Buyer Roadmap / Sell-or-Rent) is added as a **peer product to brokerage representation**. The site's front door is restructured around three peer paths: DIY tools (free) / Hire by hour (Advisory, $200) / Hire as agent (standard commission).
+
+**Superseded sections of v2:**
+- **§ 6.1 (Homepage):** brokerage-first 8-section homepage replaced by three-peer-paths architecture. Locked tagline ("Nashville real estate, for people who want to see the whole picture") replaced by structural-argument hero ("Real estate has been all-or-nothing. We changed that." or equivalent — Stephen picks from candidates).
+- **§ 13 (Kill list):** "No new blog posts until Layer 1" is lifted for the Advisory build. `/blog` is restructured into `/learn` (categories: FSBO / Buying / Sell-or-Rent / Nashville Market) with FSBO/Sell-or-Rent topic scaffolding. **All other kill-list items remain in force** (no chatbot, no accounts, no Zillow display, no exit-intent popups, etc.).
+
+**Preserved from v2:**
+- All compliance (TREC, NAR IDX, NAR 2026 disclosure, Fair Housing, TCPA, ADA — § 5)
+- Brand kit (Modulus + B/W/Grey, no accent — § 6.3)
+- Locked stats (500+ closed, $250M+, since 2016 — § 1)
+- Pipeline as flagship moat (do-not-modify-core — § 8)
+- House Haven Value tool with no-email-wall promise (§ 7) — RentCast live since 2026-05-04, `/value` is canonical
+- Realtracs IDX via MLS Grid, NAR-compliant attribution (§ 3.1, §§ 5.2)
+- Nashville Pipeline branding (Public-facing) / House Haven Pipeline (internal — § 2.2)
+- Naming pattern "House Haven [Thing]" — Advisory is the exception, branded "HHR Advisory" because the abbreviation matters for consumer parsing of the new product surface
+
+**Tracker:** `docs/TODO.md` "🚀 Advisory Build" section. Phase reports land in `/reports/[YYYY-MM-DD]-*.md`.
 
 ---
 

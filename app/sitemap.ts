@@ -9,7 +9,6 @@ const BASE_URL = 'https://househavenrealty.com'
 const staticRoutes: { path: string; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency']; priority: number }[] = [
   { path: '/', changeFrequency: 'weekly', priority: 1.0 },
   { path: '/homes-for-sale', changeFrequency: 'daily', priority: 0.9 },
-  { path: '/home-valuation', changeFrequency: 'monthly', priority: 0.9 },
   { path: '/pipeline', changeFrequency: 'daily', priority: 0.95 },
   { path: '/pipeline/builders', changeFrequency: 'weekly', priority: 0.8 },
   { path: '/value', changeFrequency: 'monthly', priority: 0.9 },
