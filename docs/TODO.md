@@ -37,7 +37,16 @@ Report: `/reports/2026-05-06-phase-1-shipped.md`
 - [x] `Service` + `FAQPage` JSON-LD on `/advisory`; per-page `metadata` on every advisory route
 - [x] Sitemap: 8 new advisory entries
 - [ ] FSBO sample Brief — awaits Stephen's draft (placeholder live in the meantime)
-- [!] Surfaced: migrations 003 (value_tool) + 004 (listings_cache) marked [x] in TODO but not applied to Supabase. Recommend applying before Phase 2.
+
+### Phase 1.5 — Supabase cleanup ✅ SHIPPED 2026-05-06
+
+Report: `/reports/2026-05-06-phase-1.5-cleanup.md`
+
+- [x] Applied migration `003_value_tool` to Supabase (creates `valuation_cache`, `cma_requests`)
+- [x] Applied migration `004_listings_cache` to Supabase
+- [x] Dropped legacy `valuation_requests` table (orphaned by Phase 0 /value consolidation, superseded by `cma_requests`)
+- [x] New migration file `010_drop_legacy_valuation_requests.sql` recording the drop in version control
+- [x] Verified post-migration schema state via `list_tables`
 
 ### Phase 2 — Booking flow (Stripe + Google Calendar + Resend)
 
