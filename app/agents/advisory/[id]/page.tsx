@@ -6,6 +6,7 @@ import { getBookingById } from '@/lib/advisory-bookings'
 import AgentNav from '@/components/agents/AgentNav'
 import DeliverBriefForm from './DeliverBriefForm'
 import CancelBookingForm from './CancelBookingForm'
+import ConvertToPaidForm from './ConvertToPaidForm'
 
 export const metadata: Metadata = {
   title: 'Booking detail — Advisory admin',
@@ -159,12 +160,20 @@ export default async function AdvisoryBookingDetail({ params }: PageProps) {
 
             {!booking.canceled_at && (
               <>
-                <Card title={`Deliver Decision Brief${booking.brief_status === 'delivered' ? ' (already delivered)' : ''}`}>
-                  <DeliverBriefForm
-                    bookingId={booking.id}
-                    alreadyDelivered={booking.brief_status === 'delivered'}
-                  />
-                </Card>
+                {booking.booking_type === 'paid_brief' && (
+                  <Card title={`Deliver Decision Brief${booking.brief_status === 'delivered' ? ' (already delivered)' : ''}`}>
+                    <DeliverBriefForm
+                      bookingId={booking.id}
+                      alreadyDelivered={booking.brief_status === 'delivered'}
+                    />
+                  </Card>
+                )}
+
+                {booking.booking_type === 'discovery_call' && (
+                  <Card title="Convert to paid Decision Brief">
+                    <ConvertToPaidForm bookingId={booking.id} />
+                  </Card>
+                )}
 
                 <Card title="Cancel booking">
                   <CancelBookingForm bookingId={booking.id} />
