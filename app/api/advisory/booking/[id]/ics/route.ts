@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import { getBookingById } from '@/lib/advisory-bookings'
-import { getTrack } from '@/lib/advisory-config'
 
 export const runtime = 'nodejs'
 
@@ -27,8 +26,7 @@ export async function GET(
 
   const start = new Date(booking.slot_utc)
   const end = new Date(start.getTime() + 60 * 60 * 1000)
-  const trackName = getTrack(booking.track)?.name ?? 'Decision Brief'
-  const summary = `HHR Advisory — ${trackName}`
+  const summary = 'HHR Advisory — Decision Brief'
   const description = `Decision Brief consult on Google Meet${
     booking.meet_link ? ': ' + booking.meet_link : '.'
   }\n\nBooking ID: ${booking.id}`

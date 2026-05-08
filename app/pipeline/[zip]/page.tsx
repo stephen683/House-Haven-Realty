@@ -412,7 +412,6 @@ export default async function ZipPage({ params }: ZipPageProps) {
       <section className="bg-white pb-16 lg:pb-20">
         <div className="max-w-3xl mx-auto px-4 lg:px-6">
           <AdvisoryCTA
-            track="buyer-roadmap"
             context={`buyers exploring new construction in ${params.zip}`}
           />
         </div>

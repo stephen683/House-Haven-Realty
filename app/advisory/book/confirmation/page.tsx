@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getBookingById, type AdvisoryBookingRow } from '@/lib/advisory-bookings'
-import { getTrack } from '@/lib/advisory-config'
 import AdvisoryDisclosure from '@/components/advisory/Disclosure'
+
+const PRODUCT_NAME = 'Decision Brief'
 
 export const metadata: Metadata = {
   title: 'Booked — HHR Advisory',
@@ -31,14 +32,13 @@ function fmtCentral(iso: string | null): string {
 
 function externalCalendarLinks(
   booking: AdvisoryBookingRow,
-  trackName: string,
 ): { google: string | null; outlook: string | null } {
   if (!booking.slot_utc) return { google: null, outlook: null }
   const start = new Date(booking.slot_utc)
   const end = new Date(start.getTime() + 60 * 60 * 1000)
   const fmtUtc = (d: Date) =>
     d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
-  const title = encodeURIComponent(`HHR Advisory — ${trackName}`)
+  const title = encodeURIComponent(`HHR Advisory — ${PRODUCT_NAME}`)
   const details = encodeURIComponent(
     `Decision Brief consult.${booking.meet_link ? ` Google Meet: ${booking.meet_link}` : ''}`,
   )
@@ -54,9 +54,7 @@ export default async function ConfirmationPage({ searchParams }: PageProps) {
   const booking = await getBookingById(id)
   if (!booking) notFound()
 
-  const track = getTrack(booking.track)
-  const trackName = track?.name ?? 'Decision Brief'
-  const { google, outlook } = externalCalendarLinks(booking, trackName)
+  const { google, outlook } = externalCalendarLinks(booking)
 
   // Stripe redirects with payment_intent + redirect_status. If status is not
   // 'succeeded' the payment may still be processing or have failed; we show

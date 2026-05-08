@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import {
-  ADVISORY_TRACKS,
-  ADVISORY_PRICE_USD,
-  type AdvisoryTrackSlug,
-} from '@/lib/advisory-config'
+import { ADVISORY_PRICE_USD } from '@/lib/advisory-config'
 import { validateSlotIsAvailable } from '@/lib/advisory-slots'
 import { prepullRentCast, type PrepullData } from '@/lib/advisory-prepull'
 import {
@@ -19,10 +15,7 @@ import { runPostPaymentSideEffects } from '@/lib/advisory-flow'
 export const runtime = 'nodejs'
 export const maxDuration = 60
 
-const VALID_TRACKS = new Set<string>(ADVISORY_TRACKS.map((t) => t.slug as string))
-
 interface IntakeBody {
-  track?: string
   intake?: Record<string, unknown>
   slotUtcIso?: string
 }
@@ -42,11 +35,6 @@ export async function POST(request: NextRequest) {
   } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
-
-  if (!body.track || !VALID_TRACKS.has(body.track)) {
-    return NextResponse.json({ error: 'Invalid track' }, { status: 400 })
-  }
-  const track = body.track as AdvisoryTrackSlug
 
   const intake = (body.intake ?? {}) as Record<string, unknown>
   const name = s(intake.name)
@@ -78,16 +66,16 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  // RentCast pre-pull for tracks where address is collected
+  // RentCast pre-pull when intake mentions a property address
   let rentcastPrepull: PrepullData | null = null
-  if (track === 'fsbo' || track === 'sell-or-rent') {
-    const addr = s(intake.propertyAddress)
+  const addr = s(intake.propertyAddress)
+  if (addr) {
     rentcastPrepull = await prepullRentCast(addr)
   }
 
   // Create booking row (status: pending)
   const booking = await createBooking({
-    track,
+    bookingType: 'paid_brief',
     clientName: name,
     clientEmail: email,
     clientPhone: phone || undefined,
@@ -108,8 +96,8 @@ export async function POST(request: NextRequest) {
       amountCents: booking.amount_cents,
       bookingId: booking.id,
       email,
-      description: `HHR Advisory — ${track}`,
-      metadata: { track, slot_utc: slotUtc.toISOString() },
+      description: 'HHR Advisory — Decision Brief',
+      metadata: { slot_utc: slotUtc.toISOString() },
     })
   } catch (err) {
     console.error('[create-intent] stripe failed', err)

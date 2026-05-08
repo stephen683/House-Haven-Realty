@@ -3,7 +3,6 @@ import { communities } from '@/data/communities'
 import { visibleTeam } from '@/data/team'
 import { learnPosts } from '@/data/learn'
 import { PIPELINE_ZIPS } from '@/lib/pipeline-zips'
-import { ADVISORY_TRACKS } from '@/lib/advisory-config'
 
 const BASE_URL = 'https://househavenrealty.com'
 
@@ -74,22 +73,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: 'daily',
       priority: 0.85,
-    })
-  }
-
-  // Advisory track + sample pages
-  for (const t of ADVISORY_TRACKS) {
-    entries.push({
-      url: `${BASE_URL}/advisory/${t.slug}`,
-      lastModified: now,
-      changeFrequency: 'weekly',
-      priority: 0.85,
-    })
-    entries.push({
-      url: `${BASE_URL}/advisory/samples/${t.slug}`,
-      lastModified: now,
-      changeFrequency: 'monthly',
-      priority: 0.6,
     })
   }
 

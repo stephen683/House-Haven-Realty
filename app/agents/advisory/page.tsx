@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation'
 import { isAgentAuthed } from '@/lib/agent-auth'
 import { createClient } from '@/lib/supabase/server'
 import AgentNav from '@/components/agents/AgentNav'
-import { ADVISORY_TRACKS } from '@/lib/advisory-config'
 import type { AdvisoryBookingRow } from '@/lib/advisory-bookings'
 
 export const metadata: Metadata = {
@@ -90,10 +89,8 @@ export default async function AdvisoryAdminIndex() {
     (b) => b.payment_status === 'succeeded' && !b.canceled_at,
   )
   const totalRevenue = month.reduce((s, b) => s + (b.amount_cents ?? 0), 0)
-  const byTrack = ADVISORY_TRACKS.map((t) => ({
-    name: t.name,
-    count: month.filter((b) => b.track === t.slug).length,
-  }))
+  const paidBriefs = month.filter((b) => b.booking_type === 'paid_brief').length
+  const discoveryCalls = month.filter((b) => b.booking_type === 'discovery_call').length
 
   return (
     <main className="min-h-screen bg-househaven-surface">
@@ -111,9 +108,8 @@ export default async function AdvisoryAdminIndex() {
         <section className="grid sm:grid-cols-4 gap-4 mb-10">
           <Stat value={String(month.length)} label="Booked (30d)" />
           <Stat value={fmtMoney(totalRevenue)} label="Revenue (30d)" />
-          {byTrack.map((t) => (
-            <Stat key={t.name} value={String(t.count)} label={t.name} />
-          ))}
+          <Stat value={String(paidBriefs)} label="Paid Briefs (30d)" />
+          <Stat value={String(discoveryCalls)} label="Discovery calls (30d)" />
         </section>
 
         {/* Upcoming */}
@@ -173,15 +169,14 @@ function BookingsTable({
           <tr className="text-left text-xs uppercase tracking-wider text-househaven-text-muted">
             <th className="px-4 py-3">Slot (Central)</th>
             <th className="px-4 py-3">Client</th>
-            <th className="px-4 py-3">Track</th>
+            <th className="px-4 py-3">Type</th>
             <th className="px-4 py-3">Payment</th>
             <th className="px-4 py-3">Brief</th>
           </tr>
         </thead>
         <tbody>
           {bookings.map((b) => {
-            const trackName =
-              ADVISORY_TRACKS.find((t) => t.slug === b.track)?.shortName ?? b.track
+            const typeLabel = b.booking_type === 'discovery_call' ? 'Discovery' : 'Paid Brief'
             const isCanceled = !!b.canceled_at
             return (
               <tr
@@ -207,7 +202,7 @@ function BookingsTable({
                   </p>
                 </td>
                 <td className="px-4 py-3 align-top">
-                  <span className="text-xs">{trackName}</span>
+                  <span className="text-xs">{typeLabel}</span>
                 </td>
                 <td className="px-4 py-3 align-top">
                   {statusBadge(b.payment_status, paymentIntent(b.payment_status))}

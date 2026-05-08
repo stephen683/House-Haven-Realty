@@ -221,7 +221,6 @@ export default async function ListingDetailPage({ params }: ListingDetailProps) 
       <section className="bg-white py-16 lg:py-20">
         <div className="max-w-3xl mx-auto px-4 lg:px-6">
           <AdvisoryCTA
-            track="buyer-roadmap"
             context={`buyers evaluating ${listing.address.city} homes`}
           />
         </div>

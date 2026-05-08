@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import AdvisoryHero from '@/components/advisory/Hero'
 import HowItWorks from '@/components/advisory/HowItWorks'
-import ThreeTracks from '@/components/advisory/ThreeTracks'
 import WhatsInTheBrief from '@/components/advisory/WhatsInTheBrief'
 import WhyThisExists from '@/components/advisory/WhyThisExists'
 import FAQ, { type FAQItem } from '@/components/advisory/FAQ'
@@ -15,13 +14,18 @@ import {
   ADVISORY_BRIEF_TURNAROUND_LABEL,
 } from '@/lib/advisory-config'
 
+// Phase 7 placeholder — Phase 8 rewrites this page for cold-traffic conversion
+// (TikTok / Reels / Shorts) with hero variants, money-back guarantee, sample
+// Brief preview, and a free 15-min discovery-call CTA. For now it ships the
+// universal HHR Advisory framing (no tracks) so the route stays functional.
+
 export const metadata: Metadata = {
   title: 'HHR Advisory — pay for the advice, not the transaction',
-  description: `One hour with a Nashville broker. Written Decision Brief in 48 hours. $${ADVISORY_PRICE_USD} flat, pre-paid. No commission attached. House Haven Realty's third path: the brokerage you can hire by the hour.`,
+  description: `One hour with a Nashville broker. Written Decision Brief in 48 hours. $${ADVISORY_PRICE_USD} flat, pre-paid. No commission attached.`,
   alternates: { canonical: '/advisory' },
   openGraph: {
     title: 'HHR Advisory — a Nashville brokerage you can hire by the hour',
-    description: `One hour. Written Brief in 48 hours. $${ADVISORY_PRICE_USD} flat, pre-paid. The advice is not paid by your transaction.`,
+    description: `One hour. Written Brief in 48 hours. $${ADVISORY_PRICE_USD} flat, pre-paid.`,
     url: 'https://househavenrealty.com/advisory',
     type: 'website',
   },
@@ -35,10 +39,6 @@ const FAQ_ITEMS: FAQItem[] = [
   {
     q: 'Does the Advisory fee count toward future commission if I list with you?',
     a: 'No. The economic separation is the point. The fee is for advice; it never converts into a credit, discount, or deposit on a future transaction. If you decide to list with House Haven later, you pay full standard commission, and your $200 stays $200 — paid for what it bought.',
-  },
-  {
-    q: 'Will you try to take my FSBO listing during the consult?',
-    a: 'No. The FSBO Sanity-Check exists because we are not pitching you on listing with us. If you ask us about it, we will tell you what we honestly think and recommend a few brokerages to talk to. If you do not ask, we do not bring it up.',
   },
   {
     q: 'Can you review my contract or explain a clause?',
@@ -121,14 +121,12 @@ export default function AdvisoryPage() {
       />
 
       <AdvisoryHero
-        eyebrow="HHR Advisory · A new way to work with House Haven"
-        headline="Real estate has been all-or-nothing. We changed that."
-        lede="Three paths now: free tools you use yourself, a paid hour with a broker who is not trying to take your transaction, or full representation under standard commission. Same brokerage, same office, same broker. You pick the level of help."
+        eyebrow="HHR Advisory · Pay for the advice, not the transaction"
+        headline="One hour with a Nashville broker. Written Decision Brief in 48 hours."
+        lede={`$${ADVISORY_PRICE_USD} flat, pre-paid. No commission attached. The advice is not paid by your transaction — so the conversation is honest in a way a free consultation cannot be.`}
       />
 
       <HowItWorks />
-
-      <ThreeTracks heading="Three tracks. Pick the one that matches where you are." />
 
       <WhatsInTheBrief />
 
@@ -145,12 +143,8 @@ export default function AdvisoryPage() {
               href="/advisory/book"
               className="inline-flex items-center px-8 py-4 rounded-lg bg-black text-white font-semibold hover:bg-househaven-navy-light transition text-base"
             >
-              Pick a track and book a Decision Brief →
+              Book a Decision Brief →
             </Link>
-            <p className="mt-4 text-xs text-househaven-text-muted">
-              Booking opens shortly. Until then we will add you to the list and email you the day
-              it is live.
-            </p>
           </div>
 
           <div className="mt-12">

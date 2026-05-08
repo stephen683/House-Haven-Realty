@@ -6,11 +6,11 @@ import {
 } from '@/lib/advisory-bookings'
 import { deleteEvent } from '@/lib/google-calendar'
 import { sendEmail } from '@/lib/resend'
-import { ADVISORY_TRACKS } from '@/lib/advisory-config'
 
 export const runtime = 'nodejs'
 
 const FROM_ADVISORY = 'House Haven Advisory <advisory@househavenrealty.com>'
+const PRODUCT_NAME = 'Decision Brief'
 
 function fmtCentral(iso: string | null): string {
   if (!iso) return ''
@@ -60,15 +60,13 @@ export async function POST(
   })
 
   // Notify the client
-  const trackName =
-    ADVISORY_TRACKS.find((t) => t.slug === booking.track)?.name ?? 'Decision Brief'
   await sendEmail({
     from: FROM_ADVISORY,
     to: booking.client_email,
-    subject: `Canceled: your ${trackName} consult`,
+    subject: `Canceled: your ${PRODUCT_NAME} consult`,
     text: `Hi ${booking.client_name.split(/\s+/)[0]},
 
-Your ${trackName} consult on ${fmtCentral(booking.slot_central ?? booking.slot_utc)} has been canceled.
+Your ${PRODUCT_NAME} consult on ${fmtCentral(booking.slot_central ?? booking.slot_utc)} has been canceled.
 
 Reason: ${reason}
 

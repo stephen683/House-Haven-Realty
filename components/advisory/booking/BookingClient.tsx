@@ -3,12 +3,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import {
-  ADVISORY_TRACKS,
-  type AdvisoryTrack,
-  type AdvisoryTrackSlug,
-} from '@/lib/advisory-config'
-import TrackPicker from './TrackPicker'
 import IntakeForm, { type IntakeData } from './IntakeForm'
 import SlotPicker, { type Slot } from './SlotPicker'
 
@@ -22,11 +16,7 @@ const StripeCheckout = dynamic(() => import('./StripeCheckout'), {
   ),
 })
 
-type Step = 'track' | 'intake' | 'slot' | 'payment'
-
-interface BookingClientProps {
-  initialTrack?: AdvisoryTrackSlug
-}
+type Step = 'intake' | 'slot' | 'payment'
 
 interface CreateIntentLiveResponse {
   mode: 'live'
@@ -44,29 +34,24 @@ type CreateIntentResponse =
   | CreateIntentMockResponse
   | { error: string }
 
-export default function BookingClient({ initialTrack }: BookingClientProps) {
+export default function BookingClient() {
   const router = useRouter()
-  const [step, setStep] = useState<Step>(initialTrack ? 'intake' : 'track')
-  const [track, setTrack] = useState<AdvisoryTrackSlug | null>(initialTrack ?? null)
+  const [step, setStep] = useState<Step>('intake')
   const [intake, setIntake] = useState<IntakeData | null>(null)
   const [slot, setSlot] = useState<Slot | null>(null)
   const [intentResult, setIntentResult] = useState<CreateIntentLiveResponse | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  function trackData(): AdvisoryTrack | null {
-    return track ? ADVISORY_TRACKS.find((t) => t.slug === track) ?? null : null
-  }
-
   async function startCheckout(finalSlot: Slot) {
-    if (!track || !intake) return
+    if (!intake) return
     setSubmitting(true)
     setError(null)
     try {
       const res = await fetch('/api/advisory/create-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ track, intake, slotUtcIso: finalSlot.utc }),
+        body: JSON.stringify({ intake, slotUtcIso: finalSlot.utc }),
       })
       const data = (await res.json()) as CreateIntentResponse
       if (!res.ok) {
@@ -92,21 +77,10 @@ export default function BookingClient({ initialTrack }: BookingClientProps) {
 
   return (
     <div className="space-y-8">
-      <Stepper currentStep={step} hasInitialTrack={!!initialTrack} />
+      <Stepper currentStep={step} />
 
-      {step === 'track' && (
-        <TrackPicker
-          onSelect={(s) => {
-            setTrack(s)
-            setStep('intake')
-          }}
-        />
-      )}
-
-      {step === 'intake' && track && (
+      {step === 'intake' && (
         <IntakeForm
-          track={track}
-          onBack={initialTrack ? undefined : () => setStep('track')}
           onSubmit={(data) => {
             setIntake(data)
             setStep('slot')
@@ -114,7 +88,7 @@ export default function BookingClient({ initialTrack }: BookingClientProps) {
         />
       )}
 
-      {step === 'slot' && track && intake && (
+      {step === 'slot' && intake && (
         <SlotPicker
           onBack={() => setStep('intake')}
           onSelect={(s) => {
@@ -125,12 +99,12 @@ export default function BookingClient({ initialTrack }: BookingClientProps) {
         />
       )}
 
-      {step === 'payment' && intentResult && slot && trackData() && (
+      {step === 'payment' && intentResult && slot && (
         <StripeCheckout
           clientSecret={intentResult.clientSecret}
           publishableKey={intentResult.publishableKey}
           bookingId={intentResult.bookingId}
-          trackName={trackData()!.name}
+          trackName="Decision Brief"
           slot={slot}
         />
       )}
@@ -144,15 +118,8 @@ export default function BookingClient({ initialTrack }: BookingClientProps) {
   )
 }
 
-function Stepper({
-  currentStep,
-  hasInitialTrack,
-}: {
-  currentStep: Step
-  hasInitialTrack: boolean
-}) {
+function Stepper({ currentStep }: { currentStep: Step }) {
   const steps: Array<{ key: Step; label: string }> = [
-    ...(hasInitialTrack ? [] : [{ key: 'track' as Step, label: 'Track' }]),
     { key: 'intake', label: 'Intake' },
     { key: 'slot', label: 'Slot' },
     { key: 'payment', label: 'Payment' },

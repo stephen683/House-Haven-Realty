@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { isAgentAuthed } from '@/lib/agent-auth'
 import { getBookingById } from '@/lib/advisory-bookings'
-import { ADVISORY_TRACKS } from '@/lib/advisory-config'
 import AgentNav from '@/components/agents/AgentNav'
 import DeliverBriefForm from './DeliverBriefForm'
 import CancelBookingForm from './CancelBookingForm'
@@ -38,8 +37,8 @@ export default async function AdvisoryBookingDetail({ params }: PageProps) {
   const booking = await getBookingById(params.id)
   if (!booking) notFound()
 
-  const trackName =
-    ADVISORY_TRACKS.find((t) => t.slug === booking.track)?.name ?? booking.track
+  const typeLabel =
+    booking.booking_type === 'discovery_call' ? 'Discovery call' : 'Paid Decision Brief'
 
   const intake = booking.intake_responses as Record<string, unknown>
   const rentcast = booking.rentcast_prepull as Record<string, unknown> | null
@@ -58,7 +57,7 @@ export default async function AdvisoryBookingDetail({ params }: PageProps) {
 
         <header className="mt-4 mb-8">
           <p className="text-xs uppercase tracking-[0.18em] text-househaven-text-muted">
-            {trackName}
+            {typeLabel}
           </p>
           <h1 className="font-serif text-3xl text-househaven-navy mt-1">
             {booking.client_name}

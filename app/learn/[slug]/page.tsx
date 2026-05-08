@@ -163,12 +163,10 @@ export default function LearnPostPage({ params }: PostPageProps) {
           ))}
         </div>
 
-        {/* Contextual Advisory CTA — keyed off the article's mapped track */}
-        {tax.advisoryTrack && (
-          <div className="mt-16 max-w-3xl">
-            <AdvisoryCTA track={tax.advisoryTrack} />
-          </div>
-        )}
+        {/* Contextual Advisory CTA — every learn article surfaces it */}
+        <div className="mt-16 max-w-3xl">
+          <AdvisoryCTA />
+        </div>
 
         {/* Author bottom byline */}
         {author && (
