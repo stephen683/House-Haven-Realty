@@ -1,25 +1,29 @@
 import NewsletterSignup from '@/components/forms/NewsletterSignup'
 import TestimonialCarousel from '@/components/sections/TestimonialCarousel'
-import ThreePathsHero from '@/components/homepage/ThreePathsHero'
-import ThreePathsCards from '@/components/homepage/ThreePathsCards'
-import WhatWePublish from '@/components/homepage/WhatWePublish'
-import FromStephen from '@/components/homepage/FromStephen'
+import BrokerageHero from '@/components/homepage/BrokerageHero'
+import StephenStory from '@/components/homepage/StephenStory'
+import ServiceLines from '@/components/homepage/ServiceLines'
+import WhatWeBuilt from '@/components/homepage/WhatWeBuilt'
+import RecentTransactions from '@/components/homepage/RecentTransactions'
 
 export const revalidate = 900
 
-// Phase 7 placeholder — homepage rebuild is Phase 10. ThreeTracks /
-// WhatYouWalkAwayWith were removed when ADVISORY_TRACKS was stripped; the
-// remaining sections still render and the page stays usable in the meantime.
+// Phase 10 brokerage-first rebuild. Sections per
+// reports/2026-05-08-homepage-hero-candidates.md:
+// hero / Stephen's story / four service lines (buyer rep, seller rep,
+// Advisory, Door Collectors) / what we built for Nashville (4 tools) /
+// recent transactions (placeholder) / testimonials / newsletter.
 
 export default function HomePage() {
   return (
     <main>
-      <ThreePathsHero />
-      <ThreePathsCards />
-      <WhatWePublish />
-      <FromStephen />
+      <BrokerageHero />
+      <StephenStory />
+      <ServiceLines />
+      <WhatWeBuilt />
+      <RecentTransactions />
 
-      <section className="bg-white py-20 lg:py-28">
+      <section className="bg-househaven-surface py-20 lg:py-28">
         <div className="max-w-6xl mx-auto px-4 lg:px-6">
           <div className="mb-10">
             <p className="text-xs uppercase tracking-[0.2em] text-househaven-text-muted">
