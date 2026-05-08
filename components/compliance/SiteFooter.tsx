@@ -16,6 +16,7 @@ const footerNav = {
   ],
   Advisory: [
     { label: 'How HHR Advisory works', href: '/advisory' },
+    { label: 'Free 15-min discovery call', href: '/advisory/discovery-call' },
     { label: 'Book a Decision Brief', href: '/advisory/book' },
   ],
   Resources: [

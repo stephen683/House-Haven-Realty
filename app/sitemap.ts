@@ -13,6 +13,7 @@ const staticRoutes: { path: string; changeFrequency: MetadataRoute.Sitemap[numbe
   { path: '/pipeline/builders', changeFrequency: 'weekly', priority: 0.8 },
   { path: '/value', changeFrequency: 'monthly', priority: 0.9 },
   { path: '/advisory', changeFrequency: 'weekly', priority: 0.95 },
+  { path: '/advisory/discovery-call', changeFrequency: 'weekly', priority: 0.85 },
   { path: '/advisory/book', changeFrequency: 'weekly', priority: 0.7 },
   { path: '/communities', changeFrequency: 'weekly', priority: 0.8 },
   { path: '/about', changeFrequency: 'monthly', priority: 0.6 },
