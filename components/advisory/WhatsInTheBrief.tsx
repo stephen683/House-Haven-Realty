@@ -1,3 +1,5 @@
+import SamplePreview from './SamplePreview'
+
 const PARTS = [
   {
     label: 'Bottom Line',
@@ -44,6 +46,10 @@ export default function WhatsInTheBrief() {
             </li>
           ))}
         </ol>
+
+        <div className="mt-12">
+          <SamplePreview />
+        </div>
       </div>
     </section>
   )

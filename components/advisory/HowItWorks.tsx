@@ -1,8 +1,11 @@
+// Four-step explainer for the paid Decision Brief flow. Universal — no
+// per-track branching. The discovery-call page describes its own flow.
+
 const STEPS = [
   {
     n: '1',
-    title: 'Pick a track and complete intake.',
-    body: 'FSBO Sanity-Check, Buyer Roadmap, or Sell-or-Rent. The intake is short — under five minutes — and it tells me what you actually want to walk away with.',
+    title: 'Tell us your situation.',
+    body: 'A short intake — under five minutes — that captures the decision you are trying to make and the questions you most want answered. Specificity here makes the hour worth more.',
   },
   {
     n: '2',
@@ -12,12 +15,12 @@ const STEPS = [
   {
     n: '3',
     title: 'One hour on Google Meet.',
-    body: 'Tuesday or Thursday, Central Time. The link is in your calendar invite. Bring your spouse, your business partner, your notebook — whoever needs to be in the room.',
+    body: 'Tuesday or Thursday, Central Time. Bring your spouse, your business partner, your notebook — whoever needs to be in the room.',
   },
   {
     n: '4',
     title: 'Written Decision Brief in 48 hours.',
-    body: 'A PDF in your inbox: bottom line, recommendations, framework, and the action items you asked for. Yours to keep, share, or hand to whoever you hire next.',
+    body: 'A PDF in your inbox: bottom line, recommendations, framework, action items. Yours to keep, share, or hand to whoever you hire next.',
   },
 ]
 
@@ -25,7 +28,9 @@ export default function HowItWorks() {
   return (
     <section className="bg-white py-20 lg:py-24 border-t border-black/5">
       <div className="max-w-5xl mx-auto px-4 lg:px-6">
-        <p className="text-xs uppercase tracking-[0.2em] text-househaven-text-muted">How it works</p>
+        <p className="text-xs uppercase tracking-[0.2em] text-househaven-text-muted">
+          How it works
+        </p>
         <h2 className="font-serif text-3xl lg:text-4xl text-househaven-navy mt-2">
           Four steps. No hidden gates.
         </h2>
