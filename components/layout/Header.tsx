@@ -4,22 +4,17 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 
-// Phase 3 — five top-level peers. No dropdowns. About / Blog / Contact live in
-// the secondary bar on the right (and footer); Buyers / Sellers / Mortgage
-// Calculator / Property Management / Market Reports demoted to footer.
+// Phase 7 — five top-level peers. About is now primary (brokerage-led
+// framing); Home Value, Contact, social, and disclosures live in the footer.
 const primaryNav = [
   { label: 'Find Homes', href: '/homes-for-sale' },
   { label: 'Communities', href: '/communities' },
   { label: 'Pipeline', href: '/pipeline' },
   { label: 'Advisory', href: '/advisory' },
-  { label: 'Home Value', href: '/value' },
+  { label: 'About', href: '/about' },
 ]
 
-const secondaryNav = [
-  { label: 'About', href: '/about' },
-  { label: 'Learn', href: '/learn' },
-  { label: 'Contact', href: '/contact' },
-]
+const secondaryNav = [{ label: 'Learn', href: '/learn' }]
 
 export default function Header() {
   const [open, setOpen] = useState(false)
