@@ -15,12 +15,53 @@ export function getAdvisoryDisclosure(): string {
   return env && env.length > 0 ? env : DEFAULT_DISCLOSURE_TEXT
 }
 
-// Slot-window rules and timezone for the paid Decision Brief flow.
 export const ADVISORY_TIMEZONE = 'America/Chicago' as const
-export const ADVISORY_SLOT_WINDOWS = [
-  { dayOfWeek: 2, times: ['09:00', '10:30'] }, // Tuesday
-  { dayOfWeek: 4, times: ['13:00', '14:30'] }, // Thursday
-] as const
-export const ADVISORY_BOOKING_LEAD_HOURS = 48
-export const ADVISORY_MAX_SLOTS_PER_WEEK = 4
-export const ADVISORY_MAX_SLOTS_PER_MONTH = 8
+
+// Slot configs are parameterized so the same advisory-slots.ts machinery
+// serves both flows. Conflicts (calendar busy + existing bookings of the
+// other type) are computed cross-type so a paid 60-min consult blocks
+// any overlapping 15-min discovery call and vice versa.
+
+export interface SlotConfig {
+  bookingType: 'paid_brief' | 'discovery_call'
+  windows: ReadonlyArray<{ dayOfWeek: number; times: ReadonlyArray<string> }>
+  durationMinutes: number
+  leadHours: number
+  maxPerWeek: number
+  maxPerMonth: number
+}
+
+// Paid Decision Brief — Tuesday + Thursday, 60-minute consults.
+export const PAID_BRIEF_SLOT_CONFIG: SlotConfig = {
+  bookingType: 'paid_brief',
+  windows: [
+    { dayOfWeek: 2, times: ['09:00', '10:30'] }, // Tuesday
+    { dayOfWeek: 4, times: ['13:00', '14:30'] }, // Thursday
+  ],
+  durationMinutes: 60,
+  leadHours: 48,
+  maxPerWeek: 4,
+  maxPerMonth: 8,
+}
+
+// Free 15-min discovery call — Mon/Wed/Fri 9-11 AM CT in 15-min increments.
+// Cap is 6/week so Stephen can run the funnel without it dominating his week.
+export const DISCOVERY_CALL_SLOT_CONFIG: SlotConfig = {
+  bookingType: 'discovery_call',
+  windows: [
+    { dayOfWeek: 1, times: ['09:00', '09:15', '09:30', '09:45', '10:00', '10:15', '10:30', '10:45'] }, // Monday
+    { dayOfWeek: 3, times: ['09:00', '09:15', '09:30', '09:45', '10:00', '10:15', '10:30', '10:45'] }, // Wednesday
+    { dayOfWeek: 5, times: ['09:00', '09:15', '09:30', '09:45', '10:00', '10:15', '10:30', '10:45'] }, // Friday
+  ],
+  durationMinutes: 15,
+  leadHours: 48,
+  maxPerWeek: 6,
+  maxPerMonth: 24,
+}
+
+// Back-compat exports — kept temporarily so call sites that haven't moved to
+// SlotConfig still resolve. New code should import the SlotConfig objects.
+export const ADVISORY_SLOT_WINDOWS = PAID_BRIEF_SLOT_CONFIG.windows
+export const ADVISORY_BOOKING_LEAD_HOURS = PAID_BRIEF_SLOT_CONFIG.leadHours
+export const ADVISORY_MAX_SLOTS_PER_WEEK = PAID_BRIEF_SLOT_CONFIG.maxPerWeek
+export const ADVISORY_MAX_SLOTS_PER_MONTH = PAID_BRIEF_SLOT_CONFIG.maxPerMonth

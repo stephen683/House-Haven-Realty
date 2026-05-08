@@ -12,10 +12,15 @@ import {
   sendBookingConfirmation,
   sendEngagementLetter,
   notifyStephenOfNewBooking,
+  sendDiscoveryCallConfirmation,
+  notifyStephenOfDiscoveryCall,
 } from '@/lib/advisory-emails'
 import { sendEngagementLetterForSignature } from '@/lib/esign'
+import {
+  PAID_BRIEF_SLOT_CONFIG,
+  DISCOVERY_CALL_SLOT_CONFIG,
+} from '@/lib/advisory-config'
 
-const SLOT_DURATION_MINUTES = 60
 const STEPHEN_EMAIL = 'stephen@househavenrealty.com'
 
 export async function runPostPaymentSideEffects(
@@ -32,7 +37,9 @@ export async function runPostPaymentSideEffects(
   // Calendar event (idempotent: only create if we don't already have one)
   if (!booking.google_calendar_event_id && booking.slot_utc) {
     const start = new Date(booking.slot_utc)
-    const end = new Date(start.getTime() + SLOT_DURATION_MINUTES * 60_000)
+    const end = new Date(
+      start.getTime() + PAID_BRIEF_SLOT_CONFIG.durationMinutes * 60_000,
+    )
     const event = await createEvent({
       startUtc: start,
       endUtc: end,
@@ -87,6 +94,53 @@ export async function runPostPaymentSideEffects(
         })
       }
     }
+  }
+
+  return { ok: true }
+}
+
+// Discovery call has no Stripe leg — this runs synchronously after the
+// booking row is created. Idempotent on calendar + emails.
+export async function runPostDiscoveryBookingSideEffects(
+  bookingId: string,
+): Promise<{ ok: boolean }> {
+  const booking = await getBookingById(bookingId)
+  if (!booking || booking.booking_type !== 'discovery_call') return { ok: false }
+
+  if (!booking.google_calendar_event_id && booking.slot_utc) {
+    const start = new Date(booking.slot_utc)
+    const end = new Date(
+      start.getTime() + DISCOVERY_CALL_SLOT_CONFIG.durationMinutes * 60_000,
+    )
+    const event = await createEvent({
+      startUtc: start,
+      endUtc: end,
+      summary: `HHR Advisory — Discovery call (${booking.client_name})`,
+      description: `Free 15-min discovery call.\n\nClient: ${booking.client_name} <${booking.client_email}>\nBooking ID: ${bookingId}`,
+      attendeeEmails: [booking.client_email, STEPHEN_EMAIL],
+      conferenceRequestId: `hhr-discovery-${bookingId}`,
+    })
+    await updateBooking(bookingId, {
+      googleCalendarEventId: event.eventId,
+      meetLink: event.meetLink ?? undefined,
+    })
+  }
+
+  // Re-fetch with calendar fields populated for email templates
+  const updated = await getBookingById(bookingId)
+  if (!updated) return { ok: false }
+
+  // Idempotency guard: stamp engagement_letter_sent_at after the email batch
+  // so a repeat run doesn't re-send. Discovery calls don't require an
+  // engagement letter, but the column gives us a single guard for "first
+  // run completed."
+  if (!updated.engagement_letter_sent_at) {
+    await sendDiscoveryCallConfirmation(updated)
+    await notifyStephenOfDiscoveryCall(updated)
+    await updateBooking(bookingId, {
+      engagementLetterStatus: 'not_required',
+      engagementLetterSentAt: new Date(),
+    })
   }
 
   return { ok: true }

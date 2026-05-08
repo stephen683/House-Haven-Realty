@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { ADVISORY_PRICE_USD } from '@/lib/advisory-config'
+import { ADVISORY_PRICE_USD, PAID_BRIEF_SLOT_CONFIG } from '@/lib/advisory-config'
 import { validateSlotIsAvailable } from '@/lib/advisory-slots'
 import { prepullRentCast, type PrepullData } from '@/lib/advisory-prepull'
 import {
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Server-enforce slot availability + slot-window rules
-  const slotCheck = await validateSlotIsAvailable(slotUtc)
+  const slotCheck = await validateSlotIsAvailable(slotUtc, PAID_BRIEF_SLOT_CONFIG)
   if (!slotCheck.ok) {
     return NextResponse.json(
       { error: 'Slot is no longer available. Please pick another.' },

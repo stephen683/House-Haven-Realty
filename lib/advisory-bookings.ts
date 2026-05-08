@@ -35,7 +35,9 @@ export interface AdvisoryBookingRow {
   brief_status: BriefStatus
   brief_delivered_at: string | null
   reminder_48h_sent_at: string | null
+  reminder_24h_sent_at: string | null
   reminder_2h_sent_at: string | null
+  reminder_1h_sent_at: string | null
   canceled_at: string | null
   cancellation_reason: string | null
   admin_notes: string | null
@@ -120,7 +122,9 @@ export interface UpdateBookingInput {
   briefStatus?: BriefStatus
   briefDeliveredAt?: Date
   reminder48hSentAt?: Date
+  reminder24hSentAt?: Date
   reminder2hSentAt?: Date
+  reminder1hSentAt?: Date
   canceledAt?: Date
   cancellationReason?: string
   adminNotes?: string
@@ -149,8 +153,12 @@ function toDb(input: UpdateBookingInput): Record<string, unknown> {
     out.brief_delivered_at = input.briefDeliveredAt.toISOString()
   if (input.reminder48hSentAt !== undefined)
     out.reminder_48h_sent_at = input.reminder48hSentAt.toISOString()
+  if (input.reminder24hSentAt !== undefined)
+    out.reminder_24h_sent_at = input.reminder24hSentAt.toISOString()
   if (input.reminder2hSentAt !== undefined)
     out.reminder_2h_sent_at = input.reminder2hSentAt.toISOString()
+  if (input.reminder1hSentAt !== undefined)
+    out.reminder_1h_sent_at = input.reminder1hSentAt.toISOString()
   if (input.canceledAt !== undefined) out.canceled_at = input.canceledAt.toISOString()
   if (input.cancellationReason !== undefined)
     out.cancellation_reason = input.cancellationReason
@@ -180,27 +188,46 @@ export async function updateBooking(
 }
 
 // Bookings within `windowHours` of their start that haven't yet had the
-// reminder fired. The cron driver picks 48h or 2h based on which timestamp
-// column is null.
+// reminder fired. Paid Briefs use 48h + 2h windows; discovery calls use
+// 24h + 1h. The cron driver fires each window for the matching booking
+// types and stamps the right reminder column.
+export type ReminderWindowHours = 48 | 24 | 2 | 1
+
+const REMINDER_COLUMN: Record<ReminderWindowHours, string> = {
+  48: 'reminder_48h_sent_at',
+  24: 'reminder_24h_sent_at',
+  2: 'reminder_2h_sent_at',
+  1: 'reminder_1h_sent_at',
+}
+
 export async function listBookingsForReminderWindow(
-  windowHours: 48 | 2,
+  windowHours: ReminderWindowHours,
+  bookingType: BookingType,
 ): Promise<AdvisoryBookingRow[]> {
   const supabase = await createClient()
   const now = Date.now()
-  // Look in a range that brackets the target window with a one-hour
-  // tolerance, so a 15-min cron at the right time will catch it.
+  // Bracket the target window with a tolerance based on the cron interval
+  // (advisory-reminders runs every 15 min, so 30-min half-window is safe).
   const lowerMin = now + (windowHours - 0.5) * 3600 * 1000
   const upperMax = now + (windowHours + 0.5) * 3600 * 1000
-  const sentColumn = windowHours === 48 ? 'reminder_48h_sent_at' : 'reminder_2h_sent_at'
+  const sentColumn = REMINDER_COLUMN[windowHours]
 
-  const { data, error } = await supabase
+  const query = supabase
     .from('advisory_bookings')
     .select('*')
-    .eq('payment_status', 'succeeded')
+    .eq('booking_type', bookingType)
     .is('canceled_at', null)
     .is(sentColumn, null)
     .gt('slot_utc', new Date(lowerMin).toISOString())
     .lt('slot_utc', new Date(upperMax).toISOString())
+
+  // Paid Briefs require a successful payment before reminders fire.
+  // Discovery calls don't have a payment, so any non-canceled row is in.
+  if (bookingType === 'paid_brief') {
+    query.eq('payment_status', 'succeeded')
+  }
+
+  const { data, error } = await query
 
   if (error) {
     console.error('[advisory-bookings] list-reminder-window failed', error.message)

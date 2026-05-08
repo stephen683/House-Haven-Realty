@@ -129,6 +129,95 @@ House Haven Realty`
   })
 }
 
+// Discovery-call templates — free 15-min cold-traffic conversion call.
+// Three templates per spec: confirm + 24h + 1h reminder.
+
+export async function sendDiscoveryCallConfirmation(
+  booking: AdvisoryBookingRow,
+): Promise<{ ok: boolean }> {
+  const subject = `Confirmed: discovery call ${fmtCentral(booking.slot_central)}`
+  const text = `Hi ${firstName(booking.client_name)},
+
+Confirmed: your free 15-minute discovery call is on ${fmtCentral(booking.slot_central)} (Central Time).
+
+Google Meet: ${booking.meet_link ?? '(in your calendar invite)'}
+
+What this call covers:
+- The decision you are actually trying to make.
+- Whether the Decision Brief is the right deliverable for it.
+- What you would walk away from a paid consult with — concretely.
+- If we are not the right fit, who in Nashville probably is.
+
+There is no payment, no pitch, and no follow-up sequence. Reminders 24 hours and 1 hour before.
+
+If anything changes, reply to this email or call (615) 624-4766.
+
+— Stephen
+House Haven Realty`
+  return sendEmail({ from: FROM_ADVISORY, to: booking.client_email, subject, text })
+}
+
+export async function sendDiscoveryReminder24h(
+  booking: AdvisoryBookingRow,
+): Promise<{ ok: boolean }> {
+  const text = `Hi ${firstName(booking.client_name)},
+
+Quick reminder: your discovery call is in 24 hours — ${fmtCentral(booking.slot_central)} (Central Time).
+
+It's 15 minutes. Come with whatever decision is in front of you, in your own words. We'll tell you whether the Decision Brief is the right deliverable.
+
+Google Meet: ${booking.meet_link ?? '(in your calendar invite)'}
+
+— Stephen`
+  return sendEmail({
+    from: FROM_ADVISORY,
+    to: booking.client_email,
+    subject: 'Reminder: discovery call in 24 hours',
+    text,
+  })
+}
+
+export async function sendDiscoveryReminder1h(
+  booking: AdvisoryBookingRow,
+): Promise<{ ok: boolean }> {
+  const text = `Hi ${firstName(booking.client_name)},
+
+We are on in an hour.
+
+Google Meet: ${booking.meet_link ?? '(in your calendar invite)'}
+
+— Stephen`
+  return sendEmail({
+    from: FROM_ADVISORY,
+    to: booking.client_email,
+    subject: 'Starting in 1 hour',
+    text,
+  })
+}
+
+export async function notifyStephenOfDiscoveryCall(
+  booking: AdvisoryBookingRow,
+): Promise<{ ok: boolean }> {
+  const phoneLine = booking.client_phone ? ` · ${booking.client_phone}` : ''
+  const intake = booking.intake_responses as Record<string, unknown>
+  const text = `New discovery call booked.
+
+Client: ${booking.client_name} <${booking.client_email}>${phoneLine}
+Slot: ${fmtCentral(booking.slot_central)} (Central)
+Booking ID: ${booking.id}
+
+Intake responses:
+${JSON.stringify(intake, null, 2)}
+
+Stephen-only admin: if the call leads to a paid Brief, convert via /api/agents/advisory/${booking.id}/convert-to-paid.`
+  return sendEmail({
+    from: FROM_ALERTS,
+    to: STEPHEN_EMAIL,
+    subject: `New discovery call — ${booking.client_name}`,
+    text,
+  })
+}
+
 export async function notifyStephenOfNewBooking(
   booking: AdvisoryBookingRow,
 ): Promise<{ ok: boolean }> {

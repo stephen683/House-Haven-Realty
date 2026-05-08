@@ -1,20 +1,26 @@
 // Server-side slot calculation.
 // Handles America/Chicago wall-clock → UTC conversion correctly across DST,
-// applies the slot-window policy, 48-hour booking lead, weekly + monthly
-// caps, and Google Calendar busy-time conflicts. Used by the
-// /api/advisory/calendar-slots route and by the create-intent route to
-// guard against client-tampered slot values.
+// applies the slot-window policy, lead-hour minimum, weekly + monthly caps,
+// and Google Calendar busy-time conflicts. Used by the
+// /api/advisory/calendar-slots route and by both create-intent
+// (paid_brief) and discovery-call (discovery_call) routes to guard against
+// client-tampered slot values.
 
 import {
-  ADVISORY_SLOT_WINDOWS,
-  ADVISORY_BOOKING_LEAD_HOURS,
-  ADVISORY_MAX_SLOTS_PER_WEEK,
-  ADVISORY_MAX_SLOTS_PER_MONTH,
+  PAID_BRIEF_SLOT_CONFIG,
+  DISCOVERY_CALL_SLOT_CONFIG,
+  type SlotConfig,
 } from '@/lib/advisory-config'
 import { listBusy } from '@/lib/google-calendar'
 import { createClient } from '@/lib/supabase/server'
 
-export const SLOT_DURATION_MINUTES = 60
+export type BookingTypeForSlots = SlotConfig['bookingType']
+
+export function getSlotConfig(bookingType: BookingTypeForSlots): SlotConfig {
+  return bookingType === 'discovery_call'
+    ? DISCOVERY_CALL_SLOT_CONFIG
+    : PAID_BRIEF_SLOT_CONFIG
+}
 
 // Convert a wall-clock time in America/Chicago to a UTC Date instant.
 // Iterative algorithm: handles DST transitions correctly by checking what
@@ -86,7 +92,11 @@ function getChicagoDateParts(date: Date): {
   }
 }
 
-export function getCandidateSlots(start: Date, end: Date): Date[] {
+export function getCandidateSlots(
+  start: Date,
+  end: Date,
+  config: SlotConfig,
+): Date[] {
   const slots: Date[] = []
   const cursor = new Date(start)
   cursor.setUTCDate(cursor.getUTCDate() - 1)
@@ -94,7 +104,7 @@ export function getCandidateSlots(start: Date, end: Date): Date[] {
   stop.setUTCDate(stop.getUTCDate() + 1)
   while (cursor <= stop) {
     const { year, month, day, dayOfWeek } = getChicagoDateParts(cursor)
-    for (const window of ADVISORY_SLOT_WINDOWS) {
+    for (const window of config.windows) {
       if (window.dayOfWeek !== dayOfWeek) continue
       for (const time of window.times) {
         const [h, m] = time.split(':').map(Number)
@@ -150,22 +160,29 @@ export function formatCentralLabel(date: Date): string {
   })
 }
 
+interface BookingForConflict {
+  slot_utc: string
+  booking_type: 'paid_brief' | 'discovery_call'
+}
+
 export async function getAvailableSlots(
   start: Date,
   end: Date,
+  config: SlotConfig,
 ): Promise<AvailableSlotsResult> {
-  const candidates = getCandidateSlots(start, end)
+  const candidates = getCandidateSlots(start, end, config)
   const now = Date.now()
-  const minMs = now + ADVISORY_BOOKING_LEAD_HOURS * 3600 * 1000
+  const minMs = now + config.leadHours * 3600 * 1000
 
-  // 48-hour booking lead
+  // Lead-hour minimum
   let available = candidates.filter((s) => s.getTime() >= minMs)
 
   // Google Calendar busy
   const busyResult = await listBusy(start, end)
+  const candidateDurationMs = config.durationMinutes * 60_000
   available = available.filter((slot) => {
     const slotMs = slot.getTime()
-    const slotEndMs = slotMs + SLOT_DURATION_MINUTES * 60_000
+    const slotEndMs = slotMs + candidateDurationMs
     return !busyResult.busyRanges.some((b) => {
       const bStart = new Date(b.start).getTime()
       const bEnd = new Date(b.end).getTime()
@@ -173,38 +190,54 @@ export async function getAvailableSlots(
     })
   })
 
-  // Existing bookings — scan from start of the calendar month containing `start`
-  // so weekly + monthly caps are accurate.
+  // Existing bookings — scan from start of the calendar month containing
+  // `start`. Conflicts apply across booking types: a paid 60-min consult
+  // blocks any 15-min discovery call that overlaps it, and vice versa.
   const supabase = await createClient()
   const monthStart = new Date(
     Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), 1),
   )
   const { data: bookings } = await supabase
     .from('advisory_bookings')
-    .select('slot_utc')
+    .select('slot_utc, booking_type')
     .gte('slot_utc', monthStart.toISOString())
     .in('payment_status', ['pending', 'succeeded'])
     .is('canceled_at', null)
 
-  const bookedSet = new Set<number>()
-  const monthCounts = new Map<string, number>()
+  const bookingConflicts: Array<{ start: number; end: number }> = []
+  const monthCounts = new Map<string, number>() // typed-cap counts only for our config.bookingType
   const weekCounts = new Map<string, number>()
-  for (const b of bookings ?? []) {
-    if (!b.slot_utc) continue
-    const d = new Date(b.slot_utc as string)
-    bookedSet.add(d.getTime())
-    monthCounts.set(monthKey(d), (monthCounts.get(monthKey(d)) ?? 0) + 1)
-    weekCounts.set(weekKey(d), (weekCounts.get(weekKey(d)) ?? 0) + 1)
+  for (const raw of (bookings ?? []) as BookingForConflict[]) {
+    if (!raw.slot_utc) continue
+    const d = new Date(raw.slot_utc)
+    const dur =
+      raw.booking_type === 'discovery_call'
+        ? DISCOVERY_CALL_SLOT_CONFIG.durationMinutes
+        : PAID_BRIEF_SLOT_CONFIG.durationMinutes
+    bookingConflicts.push({
+      start: d.getTime(),
+      end: d.getTime() + dur * 60_000,
+    })
+    if (raw.booking_type === config.bookingType) {
+      monthCounts.set(monthKey(d), (monthCounts.get(monthKey(d)) ?? 0) + 1)
+      weekCounts.set(weekKey(d), (weekCounts.get(weekKey(d)) ?? 0) + 1)
+    }
   }
 
-  // Filter already-booked slots
-  available = available.filter((slot) => !bookedSet.has(slot.getTime()))
+  // Filter overlapping bookings (cross-type)
+  available = available.filter((slot) => {
+    const slotMs = slot.getTime()
+    const slotEndMs = slotMs + candidateDurationMs
+    return !bookingConflicts.some(
+      (c) => slotMs < c.end && slotEndMs > c.start,
+    )
+  })
 
-  // Apply weekly + monthly caps
+  // Apply per-type weekly + monthly caps
   available = available.filter((slot) => {
     const wk = weekCounts.get(weekKey(slot)) ?? 0
     const mo = monthCounts.get(monthKey(slot)) ?? 0
-    return wk < ADVISORY_MAX_SLOTS_PER_WEEK && mo < ADVISORY_MAX_SLOTS_PER_MONTH
+    return wk < config.maxPerWeek && mo < config.maxPerMonth
   })
 
   return {
@@ -216,14 +249,16 @@ export async function getAvailableSlots(
   }
 }
 
-// Used by /api/advisory/create-intent to confirm the slot the client picked
-// is still available (race-condition guard between slot-pick and submit).
+// Used by the create-intent + discovery-call routes to confirm the slot
+// the client picked is still available (race-condition guard between
+// slot-pick and submit).
 export async function validateSlotIsAvailable(
   slotUtc: Date,
+  config: SlotConfig,
 ): Promise<{ ok: boolean; reason?: string }> {
   const start = new Date(slotUtc.getTime() - 86_400_000)
   const end = new Date(slotUtc.getTime() + 86_400_000)
-  const result = await getAvailableSlots(start, end)
+  const result = await getAvailableSlots(start, end, config)
   const found = result.slots.find(
     (s) => new Date(s.utc).getTime() === slotUtc.getTime(),
   )
