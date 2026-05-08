@@ -3,7 +3,12 @@ import {
   listBookingsForReminderWindow,
   updateBooking,
 } from '@/lib/advisory-bookings'
-import { sendReminder48h, sendReminder2h } from '@/lib/advisory-emails'
+import {
+  sendReminder48h,
+  sendReminder2h,
+  sendDiscoveryReminder24h,
+  sendDiscoveryReminder1h,
+} from '@/lib/advisory-emails'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
@@ -15,27 +20,53 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const results = { sent48h: 0, sent2h: 0, errors: 0 }
+  const results = {
+    paid_48h: 0,
+    paid_2h: 0,
+    discovery_24h: 0,
+    discovery_1h: 0,
+    errors: 0,
+  }
 
-  // 48-hour window
-  const bookings48 = await listBookingsForReminderWindow(48)
-  for (const b of bookings48) {
+  // Paid Brief — 48h reminder
+  for (const b of await listBookingsForReminderWindow(48, 'paid_brief')) {
     const r = await sendReminder48h(b)
     if (r.ok) {
       await updateBooking(b.id, { reminder48hSentAt: new Date() })
-      results.sent48h++
+      results.paid_48h++
     } else {
       results.errors++
     }
   }
 
-  // 2-hour window
-  const bookings2 = await listBookingsForReminderWindow(2)
-  for (const b of bookings2) {
+  // Paid Brief — 2h reminder
+  for (const b of await listBookingsForReminderWindow(2, 'paid_brief')) {
     const r = await sendReminder2h(b)
     if (r.ok) {
       await updateBooking(b.id, { reminder2hSentAt: new Date() })
-      results.sent2h++
+      results.paid_2h++
+    } else {
+      results.errors++
+    }
+  }
+
+  // Discovery call — 24h reminder
+  for (const b of await listBookingsForReminderWindow(24, 'discovery_call')) {
+    const r = await sendDiscoveryReminder24h(b)
+    if (r.ok) {
+      await updateBooking(b.id, { reminder24hSentAt: new Date() })
+      results.discovery_24h++
+    } else {
+      results.errors++
+    }
+  }
+
+  // Discovery call — 1h reminder
+  for (const b of await listBookingsForReminderWindow(1, 'discovery_call')) {
+    const r = await sendDiscoveryReminder1h(b)
+    if (r.ok) {
+      await updateBooking(b.id, { reminder1hSentAt: new Date() })
+      results.discovery_1h++
     } else {
       results.errors++
     }

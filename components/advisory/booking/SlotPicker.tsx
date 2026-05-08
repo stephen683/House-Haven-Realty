@@ -7,16 +7,29 @@ export interface Slot {
   centralLabel: string
 }
 
+type SlotType = 'paid_brief' | 'discovery_call'
+
 interface SlotPickerProps {
   onSelect: (slot: Slot) => void
   onBack: () => void
   submitting: boolean
+  slotType?: SlotType
+  info?: string
+  ctaLabel?: string
+  ctaSubmittingLabel?: string
 }
 
 interface SlotsResponse {
   slots?: Slot[]
   source?: 'live' | 'mock'
   error?: string
+}
+
+const DEFAULT_INFO: Record<SlotType, string> = {
+  paid_brief:
+    'All times Central. Tuesday 9:00 / 10:30 AM and Thursday 1:00 / 2:30 PM are the regular consult windows.',
+  discovery_call:
+    'All times Central. 15-minute slots run Monday, Wednesday, and Friday from 9–11 AM.',
 }
 
 // "Tuesday, March 10, 9:00 AM CST" → "Tuesday, March 10" + "9:00 AM CST"
@@ -31,7 +44,15 @@ function splitLabel(label: string): { day: string; time: string } {
   return { day: label, time: '' }
 }
 
-export default function SlotPicker({ onSelect, onBack, submitting }: SlotPickerProps) {
+export default function SlotPicker({
+  onSelect,
+  onBack,
+  submitting,
+  slotType = 'paid_brief',
+  info,
+  ctaLabel = 'Continue to payment →',
+  ctaSubmittingLabel = 'Setting up checkout…',
+}: SlotPickerProps) {
   const [slots, setSlots] = useState<Slot[] | null>(null)
   const [source, setSource] = useState<'live' | 'mock' | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -41,7 +62,7 @@ export default function SlotPicker({ onSelect, onBack, submitting }: SlotPickerP
     const from = new Date(Date.now() + 48 * 3600 * 1000).toISOString()
     const to = new Date(Date.now() + 30 * 86_400_000).toISOString()
     fetch(
-      `/api/advisory/calendar-slots?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,
+      `/api/advisory/calendar-slots?type=${encodeURIComponent(slotType)}&from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,
     )
       .then((r) => r.json())
       .then((data: SlotsResponse) => {
@@ -52,7 +73,7 @@ export default function SlotPicker({ onSelect, onBack, submitting }: SlotPickerP
         }
       })
       .catch(() => setError('Could not load slots. Try again.'))
-  }, [])
+  }, [slotType])
 
   // Group slots by day
   const byDay = (slots ?? []).reduce<Record<string, Slot[]>>((acc, s) => {
@@ -66,8 +87,7 @@ export default function SlotPicker({ onSelect, onBack, submitting }: SlotPickerP
     <div className="rounded-xl border border-black/10 bg-white p-6 lg:p-8">
       <h2 className="font-serif text-2xl text-househaven-navy">Pick your slot.</h2>
       <p className="mt-2 text-sm text-househaven-text-muted">
-        All times Central. Tuesday 9:00 / 10:30 AM and Thursday 1:00 / 2:30 PM are the
-        regular consult windows.
+        {info ?? DEFAULT_INFO[slotType]}
       </p>
       {source === 'mock' && (
         <p className="mt-3 text-xs text-amber-700 bg-amber-50 rounded px-3 py-2 inline-block">
@@ -138,7 +158,7 @@ export default function SlotPicker({ onSelect, onBack, submitting }: SlotPickerP
           }}
           className="flex-1 px-5 py-2.5 rounded-lg bg-black text-white text-sm font-semibold hover:bg-househaven-navy-light disabled:opacity-60"
         >
-          {submitting ? 'Setting up checkout…' : 'Continue to payment →'}
+          {submitting ? ctaSubmittingLabel : ctaLabel}
         </button>
       </div>
     </div>
