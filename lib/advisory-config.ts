@@ -15,8 +15,6 @@ export function getAdvisoryDisclosure(): string {
   return env && env.length > 0 ? env : DEFAULT_DISCLOSURE_TEXT
 }
 
-export const ADVISORY_TIMEZONE = 'America/Chicago' as const
-
 // Slot configs are parameterized so the same advisory-slots.ts machinery
 // serves both flows. Conflicts (calendar busy + existing bookings of the
 // other type) are computed cross-type so a paid 60-min consult blocks
@@ -58,10 +56,3 @@ export const DISCOVERY_CALL_SLOT_CONFIG: SlotConfig = {
   maxPerWeek: 6,
   maxPerMonth: 24,
 }
-
-// Back-compat exports — kept temporarily so call sites that haven't moved to
-// SlotConfig still resolve. New code should import the SlotConfig objects.
-export const ADVISORY_SLOT_WINDOWS = PAID_BRIEF_SLOT_CONFIG.windows
-export const ADVISORY_BOOKING_LEAD_HOURS = PAID_BRIEF_SLOT_CONFIG.leadHours
-export const ADVISORY_MAX_SLOTS_PER_WEEK = PAID_BRIEF_SLOT_CONFIG.maxPerWeek
-export const ADVISORY_MAX_SLOTS_PER_MONTH = PAID_BRIEF_SLOT_CONFIG.maxPerMonth
