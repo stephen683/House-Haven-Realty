@@ -3,18 +3,19 @@
 // failures never drop a booking.
 
 import { createClient } from '@/lib/supabase/server'
-import type { AdvisoryTrackSlug } from '@/lib/advisory-config'
 import type { ESignVendor } from '@/lib/esign'
 
 export type PaymentStatus = 'pending' | 'succeeded' | 'failed' | 'refunded'
 export type EngagementStatus = 'not_sent' | 'sent' | 'signed' | 'not_required'
 export type BriefStatus = 'not_started' | 'drafted' | 'delivered'
+export type BookingType = 'paid_brief' | 'discovery_call'
 
 export interface AdvisoryBookingRow {
   id: string
   created_at: string
   updated_at: string
-  track: AdvisoryTrackSlug
+  track: string
+  booking_type: BookingType
   client_name: string
   client_email: string
   client_phone: string | null
@@ -45,7 +46,7 @@ export interface AdvisoryBookingRow {
 }
 
 export interface CreateBookingInput {
-  track: AdvisoryTrackSlug
+  bookingType?: BookingType
   clientName: string
   clientEmail: string
   clientPhone?: string
@@ -63,7 +64,8 @@ export async function createBooking(
   const { data, error } = await supabase
     .from('advisory_bookings')
     .insert({
-      track: input.track,
+      track: 'general',
+      booking_type: input.bookingType ?? 'paid_brief',
       client_name: input.clientName,
       client_email: input.clientEmail.trim().toLowerCase(),
       client_phone: input.clientPhone ?? null,

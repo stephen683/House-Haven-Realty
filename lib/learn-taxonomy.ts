@@ -9,8 +9,6 @@
 // the FSBO topic list. Until then the category-filter UI shows an empty
 // state ("No FSBO articles yet — first one coming soon").
 
-import type { AdvisoryTrackSlug } from '@/lib/advisory-config'
-
 export type LearnCategory = 'fsbo' | 'buying' | 'sell-or-rent' | 'nashville-market'
 
 export type LearnStage = 'research' | 'decision' | 'action'
@@ -59,129 +57,41 @@ export const LEARN_STAGES: { slug: LearnStage; label: string; description: strin
 interface TaxonomyEntry {
   category: LearnCategory
   stage: LearnStage
-  // Optional: which Advisory track the article cross-promotes
-  advisoryTrack?: AdvisoryTrackSlug
 }
 
-// Slug → (category, stage, optional advisoryTrack). Articles not in the map
-// fall through to the default ('nashville-market' / 'research').
+// Slug → (category, stage). Articles not in the map fall through to the
+// default ('nashville-market' / 'research').
 export const LEARN_TAXONOMY: Record<string, TaxonomyEntry> = {
   // Buying — research / decision
-  'first-time-buyer-programs-tn': {
-    category: 'buying',
-    stage: 'decision',
-    advisoryTrack: 'buyer-roadmap',
-  },
-  'rent-vs-buy-nashville-2026': {
-    category: 'buying',
-    stage: 'decision',
-    advisoryTrack: 'buyer-roadmap',
-  },
-  'new-construction-contracts-nashville': {
-    category: 'buying',
-    stage: 'action',
-    advisoryTrack: 'buyer-roadmap',
-  },
-  'best-neighborhoods-nashville-families-2026': {
-    category: 'buying',
-    stage: 'research',
-    advisoryTrack: 'buyer-roadmap',
-  },
-  'nashville-home-inspection-guide': {
-    category: 'buying',
-    stage: 'action',
-    advisoryTrack: 'buyer-roadmap',
-  },
-  'nashville-new-construction-what-to-know': {
-    category: 'buying',
-    stage: 'research',
-    advisoryTrack: 'buyer-roadmap',
-  },
-  'nashville-closing-costs-explained': {
-    category: 'buying',
-    stage: 'decision',
-    advisoryTrack: 'buyer-roadmap',
-  },
-  'how-to-choose-nashville-real-estate-agent': {
-    category: 'buying',
-    stage: 'decision',
-  },
-  'nashville-hoa-guide': {
-    category: 'buying',
-    stage: 'research',
-  },
-  'nashville-va-loan-guide': {
-    category: 'buying',
-    stage: 'decision',
-    advisoryTrack: 'buyer-roadmap',
-  },
-  'understanding-nashville-flood-zones': {
-    category: 'buying',
-    stage: 'research',
-  },
+  'first-time-buyer-programs-tn': { category: 'buying', stage: 'decision' },
+  'rent-vs-buy-nashville-2026': { category: 'buying', stage: 'decision' },
+  'new-construction-contracts-nashville': { category: 'buying', stage: 'action' },
+  'best-neighborhoods-nashville-families-2026': { category: 'buying', stage: 'research' },
+  'nashville-home-inspection-guide': { category: 'buying', stage: 'action' },
+  'nashville-new-construction-what-to-know': { category: 'buying', stage: 'research' },
+  'nashville-closing-costs-explained': { category: 'buying', stage: 'decision' },
+  'how-to-choose-nashville-real-estate-agent': { category: 'buying', stage: 'decision' },
+  'nashville-hoa-guide': { category: 'buying', stage: 'research' },
+  'nashville-va-loan-guide': { category: 'buying', stage: 'decision' },
+  'understanding-nashville-flood-zones': { category: 'buying', stage: 'research' },
 
   // Sell-or-Rent
-  'selling-your-nashville-home-spring-2026': {
-    category: 'sell-or-rent',
-    stage: 'decision',
-    advisoryTrack: 'sell-or-rent',
-  },
-  'nashville-investment-property-guide-2026': {
-    category: 'sell-or-rent',
-    stage: 'research',
-    advisoryTrack: 'sell-or-rent',
-  },
-  'downsizing-in-nashville': {
-    category: 'sell-or-rent',
-    stage: 'decision',
-    advisoryTrack: 'sell-or-rent',
-  },
+  'selling-your-nashville-home-spring-2026': { category: 'sell-or-rent', stage: 'decision' },
+  'nashville-investment-property-guide-2026': { category: 'sell-or-rent', stage: 'research' },
+  'downsizing-in-nashville': { category: 'sell-or-rent', stage: 'decision' },
 
   // Nashville market — research and reports
-  'moving-to-nashville-2026': {
-    category: 'nashville-market',
-    stage: 'research',
-  },
-  'nashville-market-report-april-2026': {
-    category: 'nashville-market',
-    stage: 'research',
-  },
-  'nashville-property-tax-guide-2026': {
-    category: 'nashville-market',
-    stage: 'research',
-  },
-  'best-nashville-suburbs-commuters': {
-    category: 'nashville-market',
-    stage: 'research',
-  },
-  'nashville-relocation-guide-remote-workers': {
-    category: 'nashville-market',
-    stage: 'research',
-  },
-  'nashville-real-estate-market-forecast-2026': {
-    category: 'nashville-market',
-    stage: 'research',
-  },
-  'living-in-franklin-tn-2026': {
-    category: 'nashville-market',
-    stage: 'research',
-  },
-  'living-in-brentwood-tn': {
-    category: 'nashville-market',
-    stage: 'research',
-  },
-  'mt-juliet-tn-guide': {
-    category: 'nashville-market',
-    stage: 'research',
-  },
-  'hendersonville-tn-guide': {
-    category: 'nashville-market',
-    stage: 'research',
-  },
-  'spring-hill-tn-guide': {
-    category: 'nashville-market',
-    stage: 'research',
-  },
+  'moving-to-nashville-2026': { category: 'nashville-market', stage: 'research' },
+  'nashville-market-report-april-2026': { category: 'nashville-market', stage: 'research' },
+  'nashville-property-tax-guide-2026': { category: 'nashville-market', stage: 'research' },
+  'best-nashville-suburbs-commuters': { category: 'nashville-market', stage: 'research' },
+  'nashville-relocation-guide-remote-workers': { category: 'nashville-market', stage: 'research' },
+  'nashville-real-estate-market-forecast-2026': { category: 'nashville-market', stage: 'research' },
+  'living-in-franklin-tn-2026': { category: 'nashville-market', stage: 'research' },
+  'living-in-brentwood-tn': { category: 'nashville-market', stage: 'research' },
+  'mt-juliet-tn-guide': { category: 'nashville-market', stage: 'research' },
+  'hendersonville-tn-guide': { category: 'nashville-market', stage: 'research' },
+  'spring-hill-tn-guide': { category: 'nashville-market', stage: 'research' },
 }
 
 export function getLearnTaxonomy(slug: string): TaxonomyEntry {

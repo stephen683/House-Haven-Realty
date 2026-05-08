@@ -3,12 +3,12 @@
 // RESEND_API_KEY is unset — no real sends until key lands.
 
 import { sendEmail } from '@/lib/resend'
-import { getTrack } from '@/lib/advisory-config'
 import type { AdvisoryBookingRow } from '@/lib/advisory-bookings'
 
 const FROM_ADVISORY = 'House Haven Advisory <advisory@househavenrealty.com>'
 const FROM_ALERTS = 'House Haven Alerts <alerts@househavenrealty.com>'
 const STEPHEN_EMAIL = 'stephen@househavenrealty.com'
+const PRODUCT_NAME = 'Decision Brief'
 
 function firstName(full: string): string {
   return full.trim().split(/\s+/)[0] ?? ''
@@ -27,18 +27,13 @@ function fmtCentral(iso: string | null): string {
   })
 }
 
-function trackName(slug: string): string {
-  return getTrack(slug)?.name ?? 'Decision Brief'
-}
-
 export async function sendBookingConfirmation(
   booking: AdvisoryBookingRow,
 ): Promise<{ ok: boolean }> {
-  const name = trackName(booking.track)
-  const subject = `Confirmed: ${name} on ${fmtCentral(booking.slot_central)}`
+  const subject = `Confirmed: ${PRODUCT_NAME} on ${fmtCentral(booking.slot_central)}`
   const text = `Hi ${firstName(booking.client_name)},
 
-Confirmed: your ${name} consult is on ${fmtCentral(booking.slot_central)} (Central Time).
+Confirmed: your ${PRODUCT_NAME} consult is on ${fmtCentral(booking.slot_central)} (Central Time).
 
 Google Meet: ${booking.meet_link ?? '(in your calendar invite)'}
 
@@ -57,8 +52,6 @@ House Haven Realty`
 export async function sendEngagementLetter(
   booking: AdvisoryBookingRow,
 ): Promise<{ ok: boolean }> {
-  // Phase 2 ships placeholder template via env var.
-  // Phase 6 swaps for HelloSign/DocuSign e-sign.
   const url = process.env.ADVISORY_ENGAGEMENT_LETTER_TEMPLATE_URL ?? ''
   const subject = 'Your engagement letter — HHR Advisory'
   const text = `Hi ${firstName(booking.client_name)},
@@ -76,15 +69,14 @@ House Haven Realty`
 export async function sendReminder48h(
   booking: AdvisoryBookingRow,
 ): Promise<{ ok: boolean }> {
-  const name = trackName(booking.track)
   const text = `Hi ${firstName(booking.client_name)},
 
-Quick reminder: your ${name} consult is in 48 hours — ${fmtCentral(booking.slot_central)}.
+Quick reminder: your ${PRODUCT_NAME} consult is in 48 hours — ${fmtCentral(booking.slot_central)}.
 
 A few things to come prepared:
 - The 2 or 3 questions you most want answered (you wrote them on intake).
-- For FSBO and Sell-or-Rent, any property details that the public records would not show.
-- For Buyer Roadmap, your latest pre-approval letter or a screenshot of your current loan calculator.
+- For property-specific decisions, any property details that the public records would not show.
+- For buyer questions, your latest pre-approval letter or a screenshot of your current loan calculator.
 
 Google Meet: ${booking.meet_link ?? '(in your calendar invite)'}
 
@@ -92,7 +84,7 @@ Google Meet: ${booking.meet_link ?? '(in your calendar invite)'}
   return sendEmail({
     from: FROM_ADVISORY,
     to: booking.client_email,
-    subject: `Reminder: ${name} in 48 hours`,
+    subject: `Reminder: ${PRODUCT_NAME} in 48 hours`,
     text,
   })
 }
@@ -119,10 +111,9 @@ export async function sendBriefDelivery(
   booking: AdvisoryBookingRow,
   briefPdfUrl: string,
 ): Promise<{ ok: boolean }> {
-  const name = trackName(booking.track)
   const text = `Hi ${firstName(booking.client_name)},
 
-Your ${name} Decision Brief is ready.
+Your ${PRODUCT_NAME} is ready.
 
 Brief: ${briefPdfUrl}
 
@@ -133,7 +124,7 @@ House Haven Realty`
   return sendEmail({
     from: FROM_ADVISORY,
     to: booking.client_email,
-    subject: `Your ${name} Decision Brief`,
+    subject: `Your ${PRODUCT_NAME}`,
     text,
   })
 }
@@ -141,12 +132,11 @@ House Haven Realty`
 export async function notifyStephenOfNewBooking(
   booking: AdvisoryBookingRow,
 ): Promise<{ ok: boolean }> {
-  const name = trackName(booking.track)
   const phoneLine = booking.client_phone ? ` · ${booking.client_phone}` : ''
   const rentcastBlock = booking.rentcast_prepull
     ? `\nRentCast pre-pull:\n${JSON.stringify(booking.rentcast_prepull, null, 2)}\n`
     : ''
-  const text = `New ${name} booking.
+  const text = `New ${PRODUCT_NAME} booking.
 
 Client: ${booking.client_name} <${booking.client_email}>${phoneLine}
 Slot: ${fmtCentral(booking.slot_central)} (Central)
@@ -160,7 +150,7 @@ Stephen-only admin: write the Brief, then trigger delivery via /api/advisory/del
   return sendEmail({
     from: FROM_ALERTS,
     to: STEPHEN_EMAIL,
-    subject: `New ${name} booking — ${booking.client_name}`,
+    subject: `New ${PRODUCT_NAME} booking — ${booking.client_name}`,
     text,
   })
 }

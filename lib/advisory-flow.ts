@@ -6,7 +6,6 @@
 //
 // Idempotent. Each side effect has its own guard so re-running is safe.
 
-import { ADVISORY_TRACKS } from '@/lib/advisory-config'
 import { getBookingById, updateBooking } from '@/lib/advisory-bookings'
 import { createEvent } from '@/lib/google-calendar'
 import {
@@ -34,13 +33,10 @@ export async function runPostPaymentSideEffects(
   if (!booking.google_calendar_event_id && booking.slot_utc) {
     const start = new Date(booking.slot_utc)
     const end = new Date(start.getTime() + SLOT_DURATION_MINUTES * 60_000)
-    const trackName =
-      ADVISORY_TRACKS.find((t) => t.slug === booking.track)?.name ??
-      'Decision Brief'
     const event = await createEvent({
       startUtc: start,
       endUtc: end,
-      summary: `HHR Advisory — ${trackName} (${booking.client_name})`,
+      summary: `HHR Advisory — Decision Brief (${booking.client_name})`,
       description: `HHR Advisory consult.\n\nClient: ${booking.client_name} <${booking.client_email}>\nBooking ID: ${bookingId}`,
       attendeeEmails: [booking.client_email, STEPHEN_EMAIL],
       conferenceRequestId: `hhr-advisory-${bookingId}`,
@@ -69,8 +65,6 @@ export async function runPostPaymentSideEffects(
     // Try e-sign send. Falls back silently when no vendor configured —
     // sendEngagementLetter (placeholder PDF email) above remains the
     // canonical engagement-letter delivery in fallback mode.
-    const trackName =
-      ADVISORY_TRACKS.find((t) => t.slug === updated.track)?.name ?? 'Decision Brief'
     const templateRef =
       process.env.ADVISORY_ENGAGEMENT_LETTER_TEMPLATE_URL ?? ''
     if (templateRef) {
@@ -78,7 +72,7 @@ export async function runPostPaymentSideEffects(
         bookingId,
         clientName: updated.client_name,
         clientEmail: updated.client_email,
-        trackName,
+        trackName: 'Decision Brief',
         templateRef,
       })
       if (esign.signatureRequestId && esign.provider) {
