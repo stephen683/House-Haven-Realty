@@ -174,7 +174,11 @@ export async function POST(req: NextRequest) {
         },
         body: JSON.stringify({
           from: 'House Haven Web <notifications@househavenrealty.com>',
-          to: ['stephen@househavenrealty.com', 'maria@househavenrealty.com'],
+          to: [
+            'stephen@househavenrealty.com',
+            'maria@househavenrealty.com',
+            'camil@househavenrealty.com',
+          ],
           cc: [row.agent_email],
           reply_to: row.agent_email,
           subject: `New contract — ${row.property_address} — ${fmtMoney(row.contract_price)}`,
