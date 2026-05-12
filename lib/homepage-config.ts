@@ -1,13 +1,12 @@
-// Homepage copy that Stephen swaps without code changes. Headline default is
-// Candidate A from /reports/2026-05-08-homepage-hero-candidates.md. Switching
-// to Candidate B or C is a string edit here. Primary CTA defaults to
-// "Talk to Stephen"; secondary points to /homes-for-sale.
+// Homepage copy. Candidate C selected 2026-05-12 per
+// /reports/2026-05-08-homepage-hero-candidates.md. Alternates A and B stay
+// in that report. Primary CTA = "Talk to Stephen"; secondary points to
+// /homes-for-sale.
 
-export const HOMEPAGE_HEADLINE =
-  'A small Nashville brokerage. Five hundred clients in. Still picky about the next one.'
+export const HOMEPAGE_HEADLINE = 'Buy. Sell. Advise. Hold.'
 
 export const HOMEPAGE_SUBHEAD =
-  "We've closed 500+ homes and $250M in volume since 2016. We work as full-representation buyer's and seller's agents, hire-by-the-hour Advisory, and (with our sister company Door Collectors) property management. Nashville-based, Stephen-owned."
+  'A Nashville brokerage that handles the four real-estate decisions you actually have. Buyer representation. Seller representation. Hire-by-the-hour Advisory. Property management through our sister company Door Collectors.'
 
 export const HOMEPAGE_EYEBROW =
   'House Haven Realty · Nashville, Tennessee'
