@@ -78,16 +78,6 @@ export const teamMembers: TeamMember[] = [
     sortOrder: 7,
   },
   {
-    slug: 'amber-bouldin',
-    name: 'Amber Bouldin',
-    title: 'REALTOR®',
-    headshotUrl: 'https://media.agentaprd.com/sites/213/amber-bouldin-headshot.webp',
-    bioPageUrl: 'https://househavenrealty.com/meet-amber-bouldin/',
-    bio:
-      'Amber helps buyers and sellers across Nashville and Middle Tennessee with the personal, hands-on attention that House Haven is known for. She believes every client deserves a REALTOR® who listens first and advises second.',
-    sortOrder: 8,
-  },
-  {
     slug: 'chuck-starks',
     name: 'Chuck Starks',
     title: 'REALTOR®',
