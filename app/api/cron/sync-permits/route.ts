@@ -10,6 +10,11 @@ export const maxDuration = 60 // allow up to 60s for large fetches
  * into Supabase, decoupling the permit map from live API availability.
  *
  * Configured in vercel.json: "crons": [{ "path": "/api/cron/sync-permits", "schedule": "0 6 * * *" }]
+ *
+ * Every failure path returns a non-2xx with the reason in the body. This route
+ * previously reported `{ ok: true, synced: 0 }` on an empty fetch and swallowed
+ * per-chunk upsert errors into console.error, which is how building_permits
+ * stayed empty for months without any signal.
  */
 export async function GET(request: Request) {
   // Verify cron secret to prevent unauthorized access
@@ -36,11 +41,16 @@ export async function GET(request: Request) {
     const permits = await fetchRecentPermits({ days: 180, limit: 1000 })
 
     if (permits.length === 0) {
-      return NextResponse.json({
-        ok: true,
-        message: 'No permits returned from Socrata API',
-        synced: 0,
-      })
+      return NextResponse.json(
+        {
+          ok: false,
+          error: 'ArcGIS returned no permits — nothing to sync',
+          fetched: 0,
+          upserted: 0,
+          timestamp: new Date().toISOString(),
+        },
+        { status: 502 },
+      )
     }
 
     // Upsert into building_permits table
@@ -67,7 +77,8 @@ export async function GET(request: Request) {
       updated_at: new Date().toISOString(),
     }))
 
-    // Batch upsert in chunks of 100
+    // Batch upsert in chunks of 100. A chunk error aborts the run — a partial
+    // sync reported as success is indistinguishable from a working one.
     let upserted = 0
     for (let i = 0; i < rows.length; i += 100) {
       const chunk = rows.slice(i, i + 100)
@@ -77,9 +88,33 @@ export async function GET(request: Request) {
 
       if (error) {
         console.error(`[cron/sync-permits] chunk ${i} failed:`, error.message)
-      } else {
-        upserted += chunk.length
+        return NextResponse.json(
+          {
+            ok: false,
+            error: 'Upsert failed',
+            details: error.message,
+            chunkStart: i,
+            fetched: permits.length,
+            upserted,
+            timestamp: new Date().toISOString(),
+          },
+          { status: 500 },
+        )
       }
+      upserted += chunk.length
+    }
+
+    if (upserted === 0) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: 'No rows upserted',
+          fetched: permits.length,
+          upserted: 0,
+          timestamp: new Date().toISOString(),
+        },
+        { status: 500 },
+      )
     }
 
     return NextResponse.json({
