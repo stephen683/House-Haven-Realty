@@ -216,7 +216,7 @@ export default function PipelineSearchBar({
         void applyRow(rows[active])
       }
     },
-    [open, rows, active, applyRow, text, filters, onChange],
+    [open, rows, active, applyRow, text],
   )
 
   // Group rows for rendering while keeping one flat index for keyboard nav.
