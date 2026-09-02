@@ -144,3 +144,64 @@ GET /api/pipeline/search?zip=37216&bathroomsMin=2&propertyType=single_family,tow
 
 Public payloads carry street name only — no house number, parcel, or
 coordinates — confirmed on every response above.
+
+---
+
+## Security round — deploy `dpl_3mfSGaVitrbXmvwxU3QLH8KWUMHA`, commit `dad0848`
+
+### building_permits closed to the browser key
+
+Before: the anon key in the browser bundle could read every column
+(parcel, full address, coordinates) and — through a policy named
+"Service role write access" but granted to `public` with qual `true` —
+insert, update and delete rows. `anon` also held table-level
+INSERT/UPDATE/DELETE/TRUNCATE grants.
+
+After (`building_permits_rls_narrow_and_public_view`,
+`building_permits_public_view_read_only`):
+
+- `building_permits_public` view: street-only address, no parcel, no
+  coordinates, no description. SELECT only for anon/authenticated — Supabase
+  default privileges had auto-granted writes on the new view, and because it
+  runs as its owner a DELETE through it would have bypassed RLS; revoked and
+  verified as the anon role.
+- Both policies dropped, all table privileges revoked from anon/authenticated.
+  Zero policies, zero anon grants remain. Service role bypasses RLS, so the
+  cron, search, suggest, GeoJSON and canary paths are unchanged.
+- SQL redaction in the view matches `streetOnly()` in TypeScript on 200
+  real addresses sampled from production (`tests/street-parity.test.ts`).
+
+Readers moved: BuilderCard now reads the view, groups on `contractor_key`,
+and links with the shared `slugifyBuilder` (its local copy produced
+`nvr-inc-t-a-ryan-homes`, which 404s). The stage route's parcel lookup —
+the only other anon-key reader — moved to the service role; verified live,
+it still returns the parcel (APN 128150D08200CO, 0.21 ac, RS20).
+
+### Deleted, as authorized
+
+- `components/pipeline/MapSearch.tsx`
+- `public._permit_backfill_raw` (verify: table gone, 3,513 rows and
+  `unit_count` backfill intact)
+- `http` Postgres extension (verify: gone, `pipeline_search_suggest` intact)
+
+### Found, not fixed — needs a decision: the same hole on 16 other tables
+
+Every table in the project carries a "service role" policy that is actually
+granted to `public` with qual `true`, and `anon` holds full write grants:
+
+`advisory_book_waitlist, advisory_bookings, agents, blog_posts, canary_runs,
+canary_state, cma_requests, communities, contact_submissions,
+contract_submissions, leads, listings_cache, permit_stages,
+property_notify_requests, valuation_cache`
+
+The browser key can read and delete `leads`, `contact_submissions` and
+`contract_submissions` — TCPA consent records and client PII.
+
+Not fixed here because some paths depend on it: the stage route writes
+`permit_stages` with the anon client and only works because that table is
+open. Plan, per table: (1) list every reader/writer and which client it
+uses; (2) move writes to the service role in route handlers; (3) replace the
+public ALL policy with none (service role bypasses RLS) and, where the
+browser must read, a SELECT-only policy or a redacted view; (4) revoke
+non-SELECT grants from anon/authenticated; (5) verify as the anon role in the
+migration. Do `leads`, `contact_submissions`, `contract_submissions` first.
