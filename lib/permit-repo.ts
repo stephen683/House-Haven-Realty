@@ -85,26 +85,39 @@ function client() {
   return createClient(url, key, { auth: { persistSession: false } })
 }
 
+/** PostgREST answers at most this many rows per request, whatever `.limit()` asks for. */
+const PAGE = 1000
+
 /**
- * Every cached permit, newest first. Returns [] (and logs) when the cache is
- * unreachable or empty so callers can fall back to the live feed.
+ * Every cached permit, newest first, paged past PostgREST's per-request cap.
+ * Returns [] (and logs) when the cache is unreachable or empty so callers can
+ * fall back to the live feed.
  */
 export async function loadCachedPermits(options: { limit?: number } = {}): Promise<NormalizedPermit[]> {
   const supabase = client()
   if (!supabase) return []
   const limit = options.limit ?? 10_000
+  const rows: Row[] = []
 
-  const { data, error } = await supabase
-    .from('building_permits')
-    .select(COLUMNS)
-    .order('date_issued', { ascending: false, nullsFirst: false })
-    .limit(limit)
+  for (let from = 0; from < limit; from += PAGE) {
+    const to = Math.min(from + PAGE, limit) - 1
+    const { data, error } = await supabase
+      .from('building_permits')
+      .select(COLUMNS)
+      .order('date_issued', { ascending: false, nullsFirst: false })
+      .order('permit_number', { ascending: true })
+      .range(from, to)
 
-  if (error) {
-    console.error('[permit-repo] read failed:', error.message)
-    return []
+    if (error) {
+      console.error('[permit-repo] read failed:', error.message)
+      break
+    }
+    const page = (data ?? []) as unknown as Row[]
+    rows.push(...page)
+    if (page.length < to - from + 1) break
   }
-  return ((data ?? []) as unknown as Row[]).map(rowToPermit)
+
+  return rows.map(rowToPermit)
 }
 
 /**
