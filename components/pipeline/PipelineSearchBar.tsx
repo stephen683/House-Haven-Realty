@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { toggleInList, type FilterState } from '@/lib/pipeline-filters'
+import { toggleInList, isZipQuery, type FilterState } from '@/lib/pipeline-filters'
 
 interface SuggestBuilder { label: string; count: number; slug: string }
 interface SuggestZip { label: string; count: number; name: string | null }
@@ -72,7 +72,7 @@ export default function PipelineSearchBar({
       if (ctrl.signal.aborted) return
 
       const next: Row[] = [
-        { kind: 'freetext', label: q, meta: 'address or builder text' },
+        { kind: 'freetext', label: q, meta: isZipQuery(q) ? 'filter by ZIP' : 'address, builder, or ZIP text' },
       ]
 
       if (corpus.status === 'fulfilled' && corpus.value) {
@@ -155,8 +155,19 @@ export default function PipelineSearchBar({
           setText('')
           break
         case 'street':
-        case 'freetext':
           onChange({ ...filters, q: row.label })
+          break
+        case 'freetext':
+          if (isZipQuery(row.label)) {
+            onChange({
+              ...filters,
+              zips: filters.zips.includes(row.label.trim()) ? filters.zips : [...filters.zips, row.label.trim()],
+              q: '',
+            })
+            setText('')
+          } else {
+            onChange({ ...filters, q: row.label })
+          }
           break
         case 'address': {
           onChange({ ...filters, q: '' })
@@ -190,7 +201,7 @@ export default function PipelineSearchBar({
       if (!open || rows.length === 0) {
         if (e.key === 'Enter' && text.trim()) {
           e.preventDefault()
-          onChange({ ...filters, q: text.trim() })
+          void applyRow({ kind: 'freetext', label: text.trim(), meta: '' })
         }
         return
       }

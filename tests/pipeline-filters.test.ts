@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {
+  isZipQuery,
   EMPTY_FILTERS,
   filterStateToExpression,
   filterStateToSearchParams,
@@ -34,6 +35,12 @@ describe('filterStateToExpression', () => {
     expect(e).toContain('downcase')
     expect(e).toContain('address')
     expect(e).toContain('contractor')
+  })
+
+  it('free text also matches the ZIP column — a typed "37216" can never return 0 for a ZIP with permits', () => {
+    const e = JSON.stringify(filterStateToExpression(f({ q: '37216' })))
+    expect(e).toContain('["get","zip"]')
+    expect(e).toContain('37216')
   })
 
   it('matches contractor on the upper-cased grouping key', () => {
@@ -103,5 +110,15 @@ describe('filterStateToSearchParams', () => {
     // disappear from the map when a beds filter is set, matching the API.
     const e = JSON.stringify(filterStateToExpression(f({ beds: '3' })))
     expect(e).toContain('"coalesce",["get","bedrooms"],-1')
+  })
+})
+
+describe('isZipQuery', () => {
+  it('recognises a bare 5-digit ZIP and nothing else', () => {
+    expect(isZipQuery('37216')).toBe(true)
+    expect(isZipQuery(' 37216 ')).toBe(true)
+    expect(isZipQuery('3721')).toBe(false)
+    expect(isZipQuery('37216 inglewood')).toBe(false)
+    expect(isZipQuery('woodmont')).toBe(false)
   })
 })

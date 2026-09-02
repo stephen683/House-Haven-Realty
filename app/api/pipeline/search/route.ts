@@ -66,7 +66,7 @@ function serviceClient() {
 function applyCriteria(query: PermitQuery, c: PermitSearchCriteria): PermitQuery {
   let q = query
 
-  if (c.q) q = q.or(`address.ilike.%${c.q}%,contractor.ilike.%${c.q}%`)
+  if (c.q) q = q.or(`address.ilike.%${c.q}%,contractor.ilike.%${c.q}%,zip.ilike.%${c.q}%`)
   if (c.zips.length) q = q.in('zip', c.zips)
   if (c.propertyTypes.length) q = q.in('property_type', c.propertyTypes)
   if (c.costMin !== null) q = q.gte('construction_cost', c.costMin)

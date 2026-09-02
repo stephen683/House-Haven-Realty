@@ -134,6 +134,23 @@ test.describe('Nashville Pipeline search', () => {
       .toContain('"condo"')
   })
 
+  test('typing a ZIP and pressing Enter filters by ZIP, not free text', async ({ page }, info) => {
+    const requests = await mockNetwork(page)
+    await page.goto('/pipeline')
+    if (info.project.name === 'mobile') await page.getByTestId('view-list').click()
+
+    const input = page.getByTestId('search-input')
+    await input.fill('37216')
+    await expect(page.getByTestId('search-listbox')).toContainText('filter by ZIP')
+    await input.press('Enter')
+
+    await expect(page.getByTestId('active-chips')).toContainText('ZIP')
+    await expect(page.getByTestId('active-chips')).toContainText('37216')
+    await expect(page.getByTestId('active-chips')).not.toContainText('Text')
+    await expect.poll(() => requests.at(-1)?.searchParams.get('zip')).toBe('37216')
+    await expect.poll(() => requests.at(-1)?.searchParams.has('q')).toBe(false)
+  })
+
   test('filters: condo + 3 beds + 2.5 baths + ZIP drive the API and the map', async ({ page }, info) => {
     const requests = await mockNetwork(page)
     await page.goto('/pipeline')

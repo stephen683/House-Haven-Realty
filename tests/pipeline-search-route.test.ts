@@ -162,7 +162,9 @@ describe('GET /api/pipeline/search', () => {
     expect(kinds).toContain('gte:bathrooms')
     expect(recorded.filters.find((f) => f[1] === 'property_type')?.[2]).toEqual(['townhome', 'condo'])
     expect(kinds).toContain('eq:contractor_key')
-    expect(recorded.filters.find((f) => f[0] === 'or')?.[1]).toContain('veritas')
+    const orClause = recorded.filters.find((f) => f[0] === 'or')?.[1] as string
+    expect(orClause).toContain('address.ilike.%veritas%')
+    expect(orClause).toContain('zip.ilike.%veritas%')
     // grouping key, not raw casing
     expect(recorded.filters.find((f) => f[1] === 'contractor_key')?.[2]).toBe('CDM CONSTRUCTION')
   })

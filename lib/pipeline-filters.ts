@@ -80,14 +80,15 @@ export function filterStateToExpression(f: FilterState): FilterSpecification | n
     c.push(['==', ['upcase', ['coalesce', ['get', 'contractor'], '']], f.contractorKey])
   }
 
-  // Mirrors SQL `address ilike %q% OR contractor ilike %q%`. `in` with a string
-  // haystack is a substring test in the MapLibre expression spec.
+  // Mirrors SQL `address ilike %q% OR contractor ilike %q% OR zip ilike %q%`.
+  // `in` with a string haystack is a substring test in the MapLibre spec.
   const q = f.q.trim().toLowerCase()
   if (q) {
     c.push([
       'any',
       ['in', q, ['downcase', ['coalesce', ['get', 'address'], '']]],
       ['in', q, ['downcase', ['coalesce', ['get', 'contractor'], '']]],
+      ['in', q, ['downcase', ['coalesce', ['get', 'zip'], '']]],
     ])
   }
 
@@ -146,6 +147,9 @@ export function activeFilterCount(f: FilterState): number {
     f.contractorKey !== '',
   ].filter(Boolean).length
 }
+
+/** A bare 5-digit query is a ZIP, and should filter as one. */
+export const isZipQuery = (s: string) => /^\d{5}$/.test(s.trim())
 
 export function toggleInList(list: string[], value: string): string[] {
   return list.includes(value) ? list.filter((v) => v !== value) : [...list, value]
