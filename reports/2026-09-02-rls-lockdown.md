@@ -90,3 +90,20 @@ app-owned function for anon execute and is the pattern to reuse.
 
 Launch blocker #1 — `/homes-for-sale` has no MLS data and no IDX
 disclaimer; it needs MLS Grid credentials and is a separate build.
+
+## Live write proof
+
+The canary cron runs on the service role every 15 minutes. Its first run
+after the tables closed:
+
+```
+19:00:14 UTC  canary_runs   +7 rows   (INSERT on a closed table)
+              canary_state  upserted  (UPSERT on a closed table)
+              all 7 checks ok, including:
+                DB public.building_permits (rows > 0, fresh within 7d)
+                GET /api/pipeline/permit/[id]/stage
+                GET /api/permits/geojson
+```
+
+Reads and writes on the service role are unaffected by the lockdown; the
+anon role is refused at the database, verified in every migration.
