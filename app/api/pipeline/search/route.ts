@@ -74,6 +74,7 @@ function applyCriteria(query: PermitQuery, c: PermitSearchCriteria): PermitQuery
   if (c.sqftMin !== null) q = q.gte('sqft', c.sqftMin)
   if (c.sqftMax !== null) q = q.lte('sqft', c.sqftMax)
   if (c.bedroomsMin !== null) q = q.gte('bedrooms', c.bedroomsMin)
+  if (c.bathroomsMin !== null) q = q.gte('bathrooms', c.bathroomsMin)
   if (c.dateFrom) q = q.gte('date_issued', `${c.dateFrom}T00:00:00Z`)
   if (c.dateTo) q = q.lte('date_issued', `${c.dateTo}T23:59:59.999Z`)
   if (c.contractorKey) q = q.eq('contractor_key', c.contractorKey)
@@ -144,7 +145,12 @@ export async function GET(request: Request) {
   }
 
   // Coverage is measured, never asserted — see computeCoverage.
-  const [{ data: minRow }, { data: maxRow }] = await Promise.all([
+  const headCount = (col: string | null) => {
+    let q = supabase.from('building_permits').select('permit_number', { count: 'exact', head: true })
+    if (col) q = q.not(col, 'is', null)
+    return q
+  }
+  const [{ data: minRow }, { data: maxRow }, allN, bedsN, bathsN, sqftN] = await Promise.all([
     supabase
       .from('building_permits')
       .select('date_issued')
@@ -159,7 +165,18 @@ export async function GET(request: Request) {
       .order('date_issued', { ascending: false })
       .limit(1)
       .maybeSingle(),
+    headCount(null),
+    headCount('bedrooms'),
+    headCount('bathrooms'),
+    headCount('sqft'),
   ])
+
+  const recorded = {
+    total: allN.count ?? 0,
+    bedrooms: bedsN.count ?? 0,
+    bathrooms: bathsN.count ?? 0,
+    sqft: sqftN.count ?? 0,
+  }
 
   const total = count ?? 0
   const results = isAgent
@@ -180,6 +197,7 @@ export async function GET(request: Request) {
       coverage: computeCoverage(
         (minRow as { date_issued: string } | null)?.date_issued ?? null,
         (maxRow as { date_issued: string } | null)?.date_issued ?? null,
+        recorded,
       ),
     },
     { headers: { 'Cache-Control': 'no-store' } },

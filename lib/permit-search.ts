@@ -29,6 +29,7 @@ export interface PermitSearchCriteria {
   sqftMin: number | null
   sqftMax: number | null
   bedroomsMin: number | null
+  bathroomsMin: number | null
   dateFrom: string | null
   dateTo: string | null
   contractorKey: string | null
@@ -44,6 +45,14 @@ function intOrNull(raw: string | null, opts: { min?: number; max?: number } = {}
   if (!Number.isFinite(n)) return null
   const clamped = Math.min(Math.max(n, opts.min ?? -Infinity), opts.max ?? Infinity)
   return Math.trunc(clamped)
+}
+
+/** Like intOrNull but keeps halves — 2.5 baths is real data. */
+function numOrNull(raw: string | null, opts: { min?: number; max?: number } = {}): number | null {
+  if (raw === null || raw.trim() === '') return null
+  const n = Number(raw)
+  if (!Number.isFinite(n)) return null
+  return Math.min(Math.max(n, opts.min ?? -Infinity), opts.max ?? Infinity)
 }
 
 /** ISO date (YYYY-MM-DD) or null. Rejects anything else rather than guessing. */
@@ -100,6 +109,7 @@ export function parseSearchCriteria(sp: URLSearchParams): PermitSearchCriteria {
     sqftMin: intOrNull(sp.get('sqftMin'), { min: 0 }),
     sqftMax: intOrNull(sp.get('sqftMax'), { min: 0 }),
     bedroomsMin: intOrNull(sp.get('bedroomsMin'), { min: 0, max: 20 }),
+    bathroomsMin: numOrNull(sp.get('bathroomsMin'), { min: 0, max: 20 }),
     dateFrom: isoDateOrNull(sp.get('dateFrom')),
     dateTo: isoDateOrNull(sp.get('dateTo')),
     contractorKey: contractorRaw?.trim() ? contractorRaw.toUpperCase().trim() : null,
@@ -213,11 +223,24 @@ export function toAgentResult(
 
 // ─── Coverage ───────────────────────────────────────────
 
+export interface RecordedRates {
+  total: number
+  bedrooms: number
+  bathrooms: number
+  sqft: number
+}
+
 export interface Coverage {
   from: string | null
   to: string | null
   days: number | null
   label: string
+  /**
+   * Beds, baths and sqft are parsed from Metro's free-text permit purpose and
+   * are absent on most rehab/condo permits. Surfaced so the UI can say so
+   * instead of letting a beds filter silently look like "no condos exist".
+   */
+  recorded: RecordedRates | null
 }
 
 /**
@@ -225,14 +248,18 @@ export interface Coverage {
  * before the 180-day request window ever binds, so coverage is computed from
  * the actual min/max of date_issued and never hardcoded.
  */
-export function computeCoverage(min: string | null, max: string | null): Coverage {
+export function computeCoverage(
+  min: string | null,
+  max: string | null,
+  recorded: RecordedRates | null = null,
+): Coverage {
   if (!min || !max) {
-    return { from: null, to: null, days: null, label: 'Coverage unknown — no permits loaded' }
+    return { from: null, to: null, days: null, label: 'Coverage unknown — no permits loaded', recorded }
   }
   const from = new Date(min)
   const to = new Date(max)
   if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime())) {
-    return { from: null, to: null, days: null, label: 'Coverage unknown' }
+    return { from: null, to: null, days: null, label: 'Coverage unknown', recorded }
   }
   const days = Math.max(1, Math.round((to.getTime() - from.getTime()) / 86_400_000))
   const fmt = (d: Date) =>
@@ -242,6 +269,7 @@ export function computeCoverage(min: string | null, max: string | null): Coverag
     to: max,
     days,
     label: `${days} days of permits — ${fmt(from)} to ${fmt(to)}`,
+    recorded,
   }
 }
 

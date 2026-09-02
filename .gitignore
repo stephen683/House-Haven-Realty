@@ -36,3 +36,8 @@ Brand  Kit - House Haven.pdf
 
 # Local reference screenshots (not committed)
 lib/screenshots/
+
+# Playwright
+/test-results/
+/playwright-report/
+/e2e/last-run.log

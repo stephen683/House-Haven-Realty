@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { FilterSpecification } from 'maplibre-gl'
 import PipelineSearchBar from '@/components/pipeline/PipelineSearchBar'
 import MapFilters from '@/components/pipeline/MapFilters'
-import PermitSearchPanel from '@/components/pipeline/PermitSearchPanel'
+import PermitSearchPanel, { type SearchCoverage } from '@/components/pipeline/PermitSearchPanel'
 import AlertSignup from '@/components/pipeline/AlertSignup'
 import {
   EMPTY_FILTERS,
@@ -43,6 +43,8 @@ interface PipelineAppProps {
   allScores: ZipSaturationScore[]
 }
 
+const compact = (n: number) => new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(n)
+
 function scoreColor(score: number) {
   if (score >= 80) return 'bg-red-500'
   if (score >= 60) return 'bg-orange-500'
@@ -76,7 +78,17 @@ export default function PipelineApp({
   // derived from this, so the list and the map can never disagree.
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS)
   const [showSearch, setShowSearch] = useState(true)
-  const [coverageLabel, setCoverageLabel] = useState<string | null>(null)
+  const [coverage, setCoverage] = useState<SearchCoverage | null>(null)
+  const [resultTotal, setResultTotal] = useState<number | null>(null)
+  // Mobile shows one surface at a time; desktop shows both side by side.
+  const [mobileView, setMobileView] = useState<'map' | 'list'>('map')
+
+  // MapLibre sizes to its container once; after a display toggle it needs a
+  // nudge or the canvas stays at the hidden size.
+  useEffect(() => {
+    const id = requestAnimationFrame(() => window.dispatchEvent(new Event('resize')))
+    return () => cancelAnimationFrame(id)
+  }, [mobileView, showSearch])
   const [showHelp, setShowHelp] = useState(false)
   const [showHotZips, setShowHotZips] = useState(false)
 
@@ -177,7 +189,7 @@ export default function PipelineApp({
             filters={filters}
             onChange={handleFilterChange}
             onFlyTo={handleFlyTo}
-            coverageLabel={coverageLabel}
+            coverageLabel={coverage?.label ?? null}
           />
         </div>
         <div className="max-w-[1600px] mx-auto px-4 lg:px-6 py-2.5 flex items-center gap-3">
@@ -185,7 +197,24 @@ export default function PipelineApp({
             filters={filters}
             onChange={handleFilterChange}
             availableZips={availableZips}
+            recorded={coverage?.recorded ?? null}
           />
+          <div className="lg:hidden inline-flex rounded-xl border-2 border-black/10 overflow-hidden" role="group" aria-label="View">
+            {(['map', 'list'] as const).map((v) => (
+              <button
+                key={v}
+                type="button"
+                aria-pressed={mobileView === v}
+                data-testid={`view-${v}`}
+                onClick={() => setMobileView(v)}
+                className={`px-3 py-2 text-xs font-semibold transition ${
+                  mobileView === v ? 'bg-black text-white' : 'bg-white text-househaven-text'
+                }`}
+              >
+                {v === 'map' ? 'Map' : `List${resultTotal !== null ? ` ${compact(resultTotal)}` : ''}`}
+              </button>
+            ))}
+          </div>
           <button
             type="button"
             onClick={() => setShowSearch((v) => !v)}
@@ -222,15 +251,21 @@ export default function PipelineApp({
       </div>
 
       <div className="flex-1 flex min-h-0 relative">
-        <div className="flex-1 min-w-0 relative">
+        <div
+          className={`flex-1 min-w-0 relative ${mobileView === 'map' ? 'flex' : 'hidden'} lg:flex flex-col`}
+          data-testid="map-region"
+        >
           <MapView
             onPermitSelect={handlePermitSelect}
             filterExpression={filterExpression}
             zipColorMap={zipColorMap}
           />
 
-          {permitCount === 0 && (
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          {resultTotal === 0 && (
+            <div
+              className={`absolute inset-0 flex items-center justify-center pointer-events-none ${showSearch && !selectedPermit ? 'lg:hidden' : ''}`}
+              data-testid="map-empty"
+            >
               <div className="bg-white/95 backdrop-blur rounded-lg shadow-lg px-6 py-5 max-w-sm text-center pointer-events-auto">
                 <p className="font-serif text-lg text-househaven-navy">
                   No permits match those filters.
@@ -291,7 +326,7 @@ export default function PipelineApp({
                       key={s.zip}
                       type="button"
                       onClick={() => {
-                        setFilters((f) => ({ ...f, zip: s.zip }))
+                        setFilters((f) => ({ ...f, zips: [s.zip] }))
                       }}
                       className="w-full flex items-center justify-between text-xs px-1.5 py-1 rounded hover:bg-househaven-surface transition text-left"
                     >
@@ -326,13 +361,17 @@ export default function PipelineApp({
           </div>
         </div>
 
-        {showSearch && !selectedPermit && (
-          <div className="hidden lg:flex min-h-0">
+        {!selectedPermit && (
+          <div
+            className={`min-h-0 flex-1 lg:flex-none ${mobileView === 'list' ? 'flex' : 'hidden'} ${showSearch ? 'lg:flex' : 'lg:hidden'}`}
+            data-testid="results-region"
+          >
             <PermitSearchPanel
               filters={filters}
               onChange={handleFilterChange}
               availableZips={availableZips}
-              onCoverage={setCoverageLabel}
+              onCoverage={setCoverage}
+              onTotal={setResultTotal}
             />
           </div>
         )}

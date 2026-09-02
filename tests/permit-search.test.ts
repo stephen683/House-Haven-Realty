@@ -64,6 +64,11 @@ describe('parseSearchCriteria', () => {
     expect(parseSearchCriteria(sp('dateFrom=2026-09-01')).dateFrom).toBe('2026-09-01')
   })
 
+  it('keeps half baths', () => {
+    expect(parseSearchCriteria(sp('bathroomsMin=2.5')).bathroomsMin).toBe(2.5)
+    expect(parseSearchCriteria(sp('bathroomsMin=abc')).bathroomsMin).toBeNull()
+  })
+
   it('normalizes contractor to the upper/trim grouping key', () => {
     expect(parseSearchCriteria(sp('contractor=  cdm construction ')).contractorKey).toBe(
       'CDM CONSTRUCTION',
@@ -160,6 +165,13 @@ describe('computeCoverage — never claim a window the data lacks', () => {
     expect(c.days).toBe(95)
     expect(c.label).toContain('95 days')
     expect(c.label).not.toContain('180')
+  })
+
+  it('carries recorded-rate facts so the UI can state them', () => {
+    const c = computeCoverage('2025-09-03T05:00:00.000Z', '2026-09-01T05:00:00.000Z',
+      { total: 3513, bedrooms: 582, bathrooms: 569, sqft: 2889 })
+    expect(c.recorded?.bedrooms).toBe(582)
+    expect(c.recorded?.total).toBe(3513)
   })
 
   it('says so when there is no data rather than implying coverage', () => {

@@ -134,13 +134,19 @@ export default function MapView({ onPermitSelect, filterExpression, zipColorMap 
       minZoom: 9,
     })
 
-    map.addControl(new maplibregl.NavigationControl(), 'top-right')
+    // Bottom-left: the Hot ZIPs toggle owns the top-right corner.
+    map.addControl(new maplibregl.NavigationControl(), 'bottom-left')
+
+    if (process.env.NODE_ENV !== 'production') {
+      // Test hook: lets e2e assert the source loaded and filters applied.
+      ;(window as unknown as { __pipelineMap?: maplibregl.Map }).__pipelineMap = map
+    }
 
     map.on('load', () => {
       // Add GeoJSON source — MapLibre fetches the URL directly
       map.addSource('permits', {
         type: 'geojson',
-        data: '/api/permits/geojson?days=180&limit=500',
+        data: '/api/permits/geojson',
       })
 
       // Main circle layer — colored by recency

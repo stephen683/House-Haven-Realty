@@ -27,6 +27,14 @@ interface SearchResult {
   parcel?: string | null
 }
 
+export interface SearchCoverage {
+  from: string | null
+  to: string | null
+  days: number | null
+  label: string
+  recorded: { total: number; bedrooms: number; bathrooms: number; sqft: number } | null
+}
+
 interface SearchResponse {
   surface: 'public' | 'agent'
   results: SearchResult[]
@@ -34,7 +42,7 @@ interface SearchResponse {
   pageSize: number
   total: number
   totalPages: number
-  coverage: { from: string | null; to: string | null; days: number | null; label: string }
+  coverage: SearchCoverage
 }
 
 type SortField = 'date_issued' | 'construction_cost'
@@ -43,8 +51,10 @@ interface PermitSearchPanelProps {
   filters: FilterState
   onChange: (next: FilterState) => void
   availableZips: string[]
-  /** Lets the search bar show the same measured window in its footer. */
-  onCoverage?: (label: string | null) => void
+  /** Lifted so the search bar and the filter panel can show the same measured facts. */
+  onCoverage?: (coverage: SearchCoverage | null) => void
+  /** Lifted so the map overlay can react to the live filtered count. */
+  onTotal?: (total: number | null) => void
 }
 
 const TYPE_LABEL: Record<string, string> = {
@@ -77,6 +87,7 @@ export default function PermitSearchPanel({
   onChange,
   availableZips,
   onCoverage,
+  onTotal,
 }: PermitSearchPanelProps) {
   const [data, setData] = useState<SearchResponse | null>(null)
   const [loading, setLoading] = useState(false)
@@ -124,8 +135,12 @@ export default function PermitSearchPanel({
   }, [queryString])
 
   useEffect(() => {
-    onCoverage?.(data?.coverage.label ?? null)
-  }, [data?.coverage.label, onCoverage])
+    onCoverage?.(data?.coverage ?? null)
+  }, [data?.coverage, onCoverage])
+
+  useEffect(() => {
+    onTotal?.(loading ? null : (data?.total ?? null))
+  }, [data?.total, loading, onTotal])
 
   const toggleSort = useCallback(
     (field: SortField) => {
@@ -145,58 +160,15 @@ export default function PermitSearchPanel({
 
   return (
     <aside
-      className="w-full lg:w-[420px] shrink-0 border-l border-black/5 bg-white flex flex-col min-h-0"
+      className="w-full lg:w-[420px] shrink-0 lg:border-l border-black/5 bg-white flex flex-col min-h-0"
       aria-label="Permit search results"
+      data-testid="results-panel"
     >
       {/* Search input */}
       <div className="px-4 py-3 border-b border-black/5 space-y-2.5 shrink-0">
-        <label htmlFor="permit-search" className="sr-only">
-          Search permits by street or builder
-        </label>
-        <input
-          id="permit-search"
-          type="search"
-          value={filters.q}
-          onChange={(e) => onChange({ ...filters, q: e.target.value })}
-          placeholder="Search street or builder…"
-          className="w-full px-3 py-2 rounded-lg border border-black/10 text-sm focus:outline-none focus:ring-1 focus:ring-househaven-navy/30"
-        />
-
-        <div className="flex gap-2">
-          <input
-            type="number"
-            inputMode="numeric"
-            value={filters.sqftMin}
-            onChange={(e) => onChange({ ...filters, sqftMin: e.target.value })}
-            placeholder="Min sqft"
-            aria-label="Minimum square feet"
-            className="w-full px-2.5 py-1.5 rounded-lg border border-black/10 text-xs focus:outline-none focus:ring-1 focus:ring-househaven-navy/30"
-          />
-          <input
-            type="number"
-            inputMode="numeric"
-            value={filters.sqftMax}
-            onChange={(e) => onChange({ ...filters, sqftMax: e.target.value })}
-            placeholder="Max sqft"
-            aria-label="Maximum square feet"
-            className="w-full px-2.5 py-1.5 rounded-lg border border-black/10 text-xs focus:outline-none focus:ring-1 focus:ring-househaven-navy/30"
-          />
-        </div>
-
-        {filters.contractorKey && (
-          <button
-            type="button"
-            onClick={() => onChange({ ...filters, contractorKey: '' })}
-            className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-black text-white text-[11px]"
-          >
-            Builder: {filters.contractorKey}
-            <span aria-hidden="true">&times;</span>
-            <span className="sr-only">Clear builder filter</span>
-          </button>
-        )}
-
+        <p className="text-[10px] font-bold uppercase tracking-widest text-househaven-navy">Results</p>
         <div className="flex items-center justify-between gap-2">
-          <p className="text-[11px] text-househaven-text-muted" aria-live="polite">
+          <p className="text-[11px] text-househaven-text-muted" aria-live="polite" data-testid="results-count">
             {loading
               ? 'Searching…'
               : failed
@@ -251,9 +223,9 @@ export default function PermitSearchPanel({
           </div>
         )}
 
-        <ul className="divide-y divide-black/5">
+        <ul className="divide-y divide-black/5" data-testid="results-list">
           {results.map((r) => (
-            <li key={r.permitNumber} className="px-4 py-3">
+            <li key={r.permitNumber} className="px-4 py-3" data-testid="result-row">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-househaven-navy truncate">
@@ -262,7 +234,9 @@ export default function PermitSearchPanel({
                   <p className="text-[11px] text-househaven-text-muted mt-0.5">
                     {r.zip ?? '—'} &middot; {TYPE_LABEL[r.propertyType ?? 'unknown'] ?? r.propertyType}
                     {r.sqft ? ` · ${r.sqft.toLocaleString()} sqft` : ''}
-                    {r.bedrooms ? ` · ${r.bedrooms} bd` : ''}
+                    {r.bedrooms || r.bathrooms
+                      ? ` · ${r.bedrooms ?? '—'} bd / ${r.bathrooms ?? '—'} ba`
+                      : ' · beds/baths not on permit'}
                   </p>
                   {r.builder && (
                     <p className="text-[11px] mt-0.5 truncate">
@@ -343,8 +317,15 @@ export default function PermitSearchPanel({
 
       {/* Coverage — measured from the data, never hardcoded */}
       <div className="px-4 py-2.5 border-t border-black/5 bg-househaven-surface shrink-0 space-y-1.5">
-        <p className="text-[10px] text-househaven-text-muted leading-relaxed">
+        <p className="text-[10px] text-househaven-text-muted leading-relaxed" data-testid="coverage-line">
           {data?.coverage.label ?? 'Loading coverage…'}
+          {data?.coverage.recorded && data.coverage.recorded.total > 0 && (
+            <>
+              {' '}&middot; beds on{' '}
+              {Math.round((100 * data.coverage.recorded.bedrooms) / data.coverage.recorded.total)}%,
+              sqft on {Math.round((100 * data.coverage.recorded.sqft) / data.coverage.recorded.total)}% of permits
+            </>
+          )}
         </p>
         {isAgent && (
           <a

@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import type { FilterState } from '@/lib/pipeline-filters'
+import { toggleInList, type FilterState } from '@/lib/pipeline-filters'
 
 interface SuggestBuilder { label: string; count: number; slug: string }
 interface SuggestZip { label: string; count: number; name: string | null }
@@ -147,7 +147,11 @@ export default function PipelineSearchBar({
           setText('')
           break
         case 'zip':
-          onChange({ ...filters, zip: row.label, q: '' })
+          onChange({
+            ...filters,
+            zips: filters.zips.includes(row.label) ? filters.zips : [...filters.zips, row.label],
+            q: '',
+          })
           setText('')
           break
         case 'street':
@@ -221,10 +225,25 @@ export default function PipelineSearchBar({
       prefix: 'Builder',
       clear: () => onChange({ ...filters, contractorKey: '' }),
     },
-    filters.zip && {
-      label: filters.zip,
+    ...filters.zips.map((z) => ({
+      label: z,
       prefix: 'ZIP',
-      clear: () => onChange({ ...filters, zip: '' }),
+      clear: () => onChange({ ...filters, zips: toggleInList(filters.zips, z) }),
+    })),
+    ...filters.propertyTypes.map((t) => ({
+      label: t.replace('_', ' '),
+      prefix: 'Type',
+      clear: () => onChange({ ...filters, propertyTypes: toggleInList(filters.propertyTypes, t) }),
+    })),
+    filters.beds && {
+      label: `${filters.beds}+ beds`,
+      prefix: 'Beds',
+      clear: () => onChange({ ...filters, beds: '' }),
+    },
+    filters.baths && {
+      label: `${filters.baths}+ baths`,
+      prefix: 'Baths',
+      clear: () => onChange({ ...filters, baths: '' }),
     },
     filters.q && {
       label: filters.q,
@@ -260,6 +279,7 @@ export default function PipelineSearchBar({
           aria-autocomplete="list"
           aria-activedescendant={open && rows[active] ? `pipeline-opt-${active}` : undefined}
           aria-label="Search Davidson County new construction"
+          data-testid="search-input"
         />
         {loading && (
           <div className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 border-2 border-black/20 border-t-black rounded-full animate-spin" aria-hidden="true" />
@@ -279,7 +299,7 @@ export default function PipelineSearchBar({
       </div>
 
       {chips.length > 0 && (
-        <div className="flex flex-wrap items-center gap-1.5 mt-2">
+        <div className="flex flex-wrap items-center gap-1.5 mt-2" data-testid="active-chips">
           {chips.map((c) => (
             <button
               key={`${c.prefix}-${c.label}`}
@@ -301,6 +321,7 @@ export default function PipelineSearchBar({
           id={listId}
           role="listbox"
           aria-label="Search suggestions"
+          data-testid="search-listbox"
           className="absolute z-[60] mt-2 w-full bg-white border-2 border-black/10 rounded-xl shadow-2xl overflow-hidden max-h-[420px] overflow-y-auto"
         >
           {groups.map((group) => (

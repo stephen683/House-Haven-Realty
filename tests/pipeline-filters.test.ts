@@ -18,7 +18,7 @@ describe('filterStateToExpression', () => {
   })
 
   it('builds an all-conditions expression', () => {
-    const e = filterStateToExpression(f({ zip: '37216', beds: '3' })) as unknown[]
+    const e = filterStateToExpression(f({ zips: ['37216'], beds: '3' })) as unknown[]
     expect(e[0]).toBe('all')
     expect(e).toHaveLength(3)
   })
@@ -50,14 +50,16 @@ describe('filterStateToSearchParams', () => {
 
   it('maps every filter to its API parameter', () => {
     const sp = filterStateToSearchParams(
-      f({ q: 'veritas', zip: '37216', beds: '3', propertyType: 'townhome',
+      f({ q: 'veritas', zips: ['37216', '37206'], beds: '3', baths: '2.5',
+          propertyTypes: ['townhome', 'condo'],
           costMin: '100000', costMax: '900000', sqftMin: '1000', sqftMax: '3000',
           contractorKey: 'CDM CONSTRUCTION' }),
     )
     expect(sp.get('q')).toBe('veritas')
-    expect(sp.get('zip')).toBe('37216')
+    expect(sp.get('zip')).toBe('37216,37206')
     expect(sp.get('bedroomsMin')).toBe('3')
-    expect(sp.get('propertyType')).toBe('townhome')
+    expect(sp.get('bathroomsMin')).toBe('2.5')
+    expect(sp.get('propertyType')).toBe('townhome,condo')
     expect(sp.get('costMin')).toBe('100000')
     expect(sp.get('costMax')).toBe('900000')
     expect(sp.get('sqftMin')).toBe('1000')
@@ -83,10 +85,23 @@ describe('filterStateToSearchParams', () => {
   })
 
   it('every filter that narrows the map also narrows the query', () => {
-    const state = f({ zip: '37216', beds: '3', propertyType: 'townhome',
+    const state = f({ zips: ['37216'], beds: '3', baths: '2', propertyTypes: ['townhome'],
                       costMin: '1', sqftMin: '1', q: 'x', contractorKey: 'Y' })
     expect(filterStateToExpression(state)).not.toBeNull()
     expect(filterStateToSearchParams(state).toString().length).toBeGreaterThan(0)
-    expect(activeFilterCount(state)).toBe(7)
+    expect(activeFilterCount(state)).toBe(8)
+  })
+
+  it('multi-select zips and types use `in` with a literal list on the map', () => {
+    const e = JSON.stringify(filterStateToExpression(f({ zips: ['37216', '37206'], propertyTypes: ['condo'] })))
+    expect(e).toContain('"literal",["37216","37206"]')
+    expect(e).toContain('"literal",["condo"]')
+  })
+
+  it('a null bedroom count fails a beds filter on the map, exactly like SQL', () => {
+    // coalesce(null, -1) >= 3 is false — a permit with no recorded beds must
+    // disappear from the map when a beds filter is set, matching the API.
+    const e = JSON.stringify(filterStateToExpression(f({ beds: '3' })))
+    expect(e).toContain('"coalesce",["get","bedrooms"],-1')
   })
 })

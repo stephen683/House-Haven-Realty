@@ -81,6 +81,7 @@ export async function GET(request: Request) {
       property_type: p.propertyType,
       parcel: p.parcel,
       subdivision: p.subdivision,
+      unit_count: p.unitCount,
       updated_at: new Date().toISOString(),
     }))
 

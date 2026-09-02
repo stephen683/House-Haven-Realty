@@ -151,7 +151,7 @@ describe('GET /api/pipeline/search', () => {
 
   it('translates criteria into the expected filters', async () => {
     isAgentAuthed.mockResolvedValue(false)
-    await call('?q=veritas&zip=37211,37216&propertyType=townhome&costMin=100000&sqftMax=3000&bedroomsMin=3&contractor=cdm%20construction')
+    await call('?q=veritas&zip=37211,37216&propertyType=townhome,condo&costMin=100000&sqftMax=3000&bedroomsMin=3&bathroomsMin=2.5&contractor=cdm%20construction')
 
     const kinds = recorded.filters.map((f) => `${f[0]}:${f[1]}`)
     expect(kinds).toContain('in:zip')
@@ -159,6 +159,8 @@ describe('GET /api/pipeline/search', () => {
     expect(kinds).toContain('gte:construction_cost')
     expect(kinds).toContain('lte:sqft')
     expect(kinds).toContain('gte:bedrooms')
+    expect(kinds).toContain('gte:bathrooms')
+    expect(recorded.filters.find((f) => f[1] === 'property_type')?.[2]).toEqual(['townhome', 'condo'])
     expect(kinds).toContain('eq:contractor_key')
     expect(recorded.filters.find((f) => f[0] === 'or')?.[1]).toContain('veritas')
     // grouping key, not raw casing

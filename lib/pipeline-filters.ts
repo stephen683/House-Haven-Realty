@@ -1,19 +1,34 @@
 // One filter model, two consumers: the MapLibre expression that filters the map
-// and the query string that drives /api/pipeline/search. Extracted from
-// MapFilters so the list and the map can never drift out of sync.
+// and the query string that drives /api/pipeline/search. If they drift, the map
+// shows a different set than the results list.
 
 import type { FilterSpecification } from 'maplibre-gl'
 
+export const PROPERTY_TYPE_OPTIONS = [
+  { value: 'single_family', label: 'Single family' },
+  { value: 'townhome', label: 'Townhome' },
+  { value: 'condo', label: 'Condo' },
+  { value: 'duplex', label: 'Duplex' },
+  { value: 'multi_family', label: 'Multi-family' },
+  { value: 'accessory', label: 'ADU / accessory' },
+] as const
+export type PropertyTypeValue = (typeof PROPERTY_TYPE_OPTIONS)[number]['value']
+
 export interface FilterState {
-  dateRange: 'all' | '7' | '30' | '90'
+  dateRange: 'all' | '7' | '30' | '90' | '180'
   costMin: string
   costMax: string
-  zip: string
-  beds: string
-  propertyType: string
-  q: string
   sqftMin: string
   sqftMax: string
+  /** Multi-select. Empty means all. */
+  zips: string[]
+  /** Multi-select. Empty means all. */
+  propertyTypes: string[]
+  /** Minimum bedrooms, '' for any. */
+  beds: string
+  /** Minimum bathrooms, '' for any. Halves allowed ('2.5'). */
+  baths: string
+  q: string
   contractorKey: string
 }
 
@@ -21,68 +36,63 @@ export const EMPTY_FILTERS: FilterState = {
   dateRange: 'all',
   costMin: '',
   costMax: '',
-  zip: '',
-  beds: '',
-  propertyType: '',
-  q: '',
   sqftMin: '',
   sqftMax: '',
+  zips: [],
+  propertyTypes: [],
+  beds: '',
+  baths: '',
+  q: '',
   contractorKey: '',
 }
 
-const num = (s: string) => (s.trim() === '' ? null : Number(s))
+const num = (s: string) => {
+  if (s.trim() === '') return null
+  const n = Number(s)
+  return Number.isFinite(n) ? n : null
+}
 
 export function filterStateToExpression(f: FilterState): FilterSpecification | null {
-  const conditions: FilterSpecification[] = []
+  const c: unknown[] = []
 
-  if (f.dateRange !== 'all') {
-    conditions.push(['<=', ['get', 'daysAgo'], Number(f.dateRange)] as FilterSpecification)
-  }
+  if (f.dateRange !== 'all') c.push(['<=', ['get', 'daysAgo'], Number(f.dateRange)])
+
   const costMin = num(f.costMin)
   const costMax = num(f.costMax)
-  if (costMin !== null && Number.isFinite(costMin)) {
-    conditions.push(['>=', ['get', 'constructionCost'], costMin] as FilterSpecification)
-  }
-  if (costMax !== null && Number.isFinite(costMax)) {
-    conditions.push(['<=', ['get', 'constructionCost'], costMax] as FilterSpecification)
-  }
+  if (costMin !== null) c.push(['>=', ['coalesce', ['get', 'constructionCost'], -1], costMin])
+  if (costMax !== null) c.push(['<=', ['coalesce', ['get', 'constructionCost'], costMax + 1], costMax])
+
   const sqftMin = num(f.sqftMin)
   const sqftMax = num(f.sqftMax)
-  if (sqftMin !== null && Number.isFinite(sqftMin)) {
-    conditions.push(['>=', ['get', 'sqft'], sqftMin] as FilterSpecification)
-  }
-  if (sqftMax !== null && Number.isFinite(sqftMax)) {
-    conditions.push(['<=', ['get', 'sqft'], sqftMax] as FilterSpecification)
-  }
-  if (f.zip) conditions.push(['==', ['get', 'zip'], f.zip] as FilterSpecification)
-  if (f.beds) {
-    conditions.push(['>=', ['get', 'bedrooms'], Number(f.beds)] as FilterSpecification)
-  }
-  if (f.propertyType) {
-    conditions.push(['==', ['get', 'propertyType'], f.propertyType] as FilterSpecification)
-  }
+  if (sqftMin !== null) c.push(['>=', ['coalesce', ['get', 'sqft'], -1], sqftMin])
+  if (sqftMax !== null) c.push(['<=', ['coalesce', ['get', 'sqft'], sqftMax + 1], sqftMax])
+
+  if (f.zips.length) c.push(['in', ['get', 'zip'], ['literal', f.zips]])
+  if (f.propertyTypes.length) c.push(['in', ['get', 'propertyType'], ['literal', f.propertyTypes]])
+
+  // Nulls must fail a >= test, exactly as SQL `bedrooms >= n` excludes NULL.
+  const beds = num(f.beds)
+  if (beds !== null) c.push(['>=', ['coalesce', ['get', 'bedrooms'], -1], beds])
+  const baths = num(f.baths)
+  if (baths !== null) c.push(['>=', ['coalesce', ['get', 'bathrooms'], -1], baths])
+
   if (f.contractorKey) {
-    conditions.push([
-      '==',
-      ['upcase', ['coalesce', ['get', 'contractor'], '']],
-      f.contractorKey,
-    ] as unknown as FilterSpecification)
+    c.push(['==', ['upcase', ['coalesce', ['get', 'contractor'], '']], f.contractorKey])
   }
 
-  // Mirrors the SQL `address ilike %q% OR contractor ilike %q%` so the map shows
-  // the same set as the results list. `in` with a string haystack is a
-  // substring test in the MapLibre expression spec.
+  // Mirrors SQL `address ilike %q% OR contractor ilike %q%`. `in` with a string
+  // haystack is a substring test in the MapLibre expression spec.
   const q = f.q.trim().toLowerCase()
   if (q) {
-    conditions.push([
+    c.push([
       'any',
       ['in', q, ['downcase', ['coalesce', ['get', 'address'], '']]],
       ['in', q, ['downcase', ['coalesce', ['get', 'contractor'], '']]],
-    ] as unknown as FilterSpecification)
+    ])
   }
 
-  if (conditions.length === 0) return null
-  return ['all', ...conditions] as FilterSpecification
+  if (c.length === 0) return null
+  return ['all', ...c] as unknown as FilterSpecification
 }
 
 export function filterStateToSearchParams(
@@ -98,17 +108,17 @@ export function filterStateToSearchParams(
   const sp = new URLSearchParams()
 
   if (f.q.trim()) sp.set('q', f.q.trim())
-  if (f.zip) sp.set('zip', f.zip)
-  if (f.propertyType) sp.set('propertyType', f.propertyType)
+  if (f.zips.length) sp.set('zip', f.zips.join(','))
+  if (f.propertyTypes.length) sp.set('propertyType', f.propertyTypes.join(','))
   if (f.costMin.trim()) sp.set('costMin', f.costMin.trim())
   if (f.costMax.trim()) sp.set('costMax', f.costMax.trim())
   if (f.sqftMin.trim()) sp.set('sqftMin', f.sqftMin.trim())
   if (f.sqftMax.trim()) sp.set('sqftMax', f.sqftMax.trim())
   if (f.beds) sp.set('bedroomsMin', f.beds)
+  if (f.baths) sp.set('bathroomsMin', f.baths)
   if (f.contractorKey) sp.set('contractor', f.contractorKey)
 
-  // The map thinks in "days ago"; the API thinks in absolute dates. Convert
-  // here so the two surfaces describe the same window.
+  // The map thinks in "days ago"; the API thinks in absolute dates.
   if (f.dateRange !== 'all') {
     const from = new Date(Date.now() - Number(f.dateRange) * 86_400_000)
     sp.set('dateFrom', from.toISOString().slice(0, 10))
@@ -126,14 +136,17 @@ export function filterStateToSearchParams(
 export function activeFilterCount(f: FilterState): number {
   return [
     f.dateRange !== 'all',
-    f.costMin !== '',
-    f.costMax !== '',
-    f.sqftMin !== '',
-    f.sqftMax !== '',
-    f.zip !== '',
+    f.costMin !== '' || f.costMax !== '',
+    f.sqftMin !== '' || f.sqftMax !== '',
+    f.zips.length > 0,
+    f.propertyTypes.length > 0,
     f.beds !== '',
-    f.propertyType !== '',
+    f.baths !== '',
     f.q.trim() !== '',
     f.contractorKey !== '',
   ].filter(Boolean).length
+}
+
+export function toggleInList(list: string[], value: string): string[] {
+  return list.includes(value) ? list.filter((v) => v !== value) : [...list, value]
 }
