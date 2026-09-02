@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient as createServerClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/service'
 
 export const runtime = 'nodejs'
 
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const supabase = await createServerClient()
+    const supabase = createServiceClient()
 
     // Check for existing newsletter signup to avoid duplicates
     const { data: existing } = await supabase

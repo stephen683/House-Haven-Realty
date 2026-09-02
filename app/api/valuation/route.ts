@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient as createServerClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/service'
 
 export const runtime = 'nodejs'
 
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
 
   // Write to unified leads table
   try {
-    const supabase = await createServerClient()
+    const supabase = createServiceClient()
     const { error } = await supabase.from('leads').insert({
       first_name: first,
       last_name: last,

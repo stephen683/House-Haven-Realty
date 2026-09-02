@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { isAgentAuthed } from '@/lib/agent-auth'
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/service'
 
 export const runtime = 'nodejs'
 
@@ -127,7 +127,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const supabase = await createClient()
+    const supabase = createServiceClient()
     const { error } = await supabase.from('contract_submissions').insert(row)
     if (error) console.error('[agents/contract] supabase insert failed', error.message)
   } catch (err) {

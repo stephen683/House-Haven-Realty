@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient as createServerClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/service'
 import { upsertContact, splitName } from '@/lib/hubspot'
 import { sendEmail } from '@/lib/resend'
 
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
 
   let supabaseId: string | null = null
   try {
-    const supabase = await createServerClient()
+    const supabase = createServiceClient()
     const { data, error } = await supabase
       .from('cma_requests')
       .insert({
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
 
   if (hubspotId) {
     try {
-      const supabase = await createServerClient()
+      const supabase = createServiceClient()
       await supabase.from('cma_requests').update({ hubspot_contact_id: hubspotId }).eq('id', supabaseId)
     } catch (err) {
       console.error('[value/request-cma] hubspot id update failed', err)
@@ -150,7 +150,7 @@ Broker commissions are not set by law and are fully negotiable.`
   })
 
   try {
-    const supabase = await createServerClient()
+    const supabase = createServiceClient()
     await supabase.from('cma_requests').update({ notified_at: new Date().toISOString() }).eq('id', supabaseId)
   } catch {
     // non-blocking

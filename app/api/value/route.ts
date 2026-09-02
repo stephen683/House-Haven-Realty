@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient as createServerClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/service'
 import { getValuation, normalizeAddress, type RentCastValuation } from '@/lib/rentcast'
 
 export const runtime = 'nodejs'
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
   let cacheHit = false
 
   try {
-    const supabase = await createServerClient()
+    const supabase = createServiceClient()
     const { data: cached } = await supabase
       .from('valuation_cache')
       .select('estimate_low, estimate_mid, estimate_high, comps, confidence_note, fetched_at')
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
 
   if (!cacheHit && valuation.source === 'rentcast') {
     try {
-      const supabase = await createServerClient()
+      const supabase = createServiceClient()
       await supabase
         .from('valuation_cache')
         .upsert({

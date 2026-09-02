@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient as createServerClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/service'
 import { upsertContact } from '@/lib/hubspot'
 import { sendEmail } from '@/lib/resend'
 
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
 
   let supabaseId: string | null = null
   try {
-    const supabase = await createServerClient()
+    const supabase = createServiceClient()
     const { data, error } = await supabase
       .from('property_notify_requests')
       .insert({
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
 
   if (hubspotId) {
     try {
-      const supabase = await createServerClient()
+      const supabase = createServiceClient()
       await supabase
         .from('property_notify_requests')
         .update({ hubspot_contact_id: hubspotId, synced_to_crm_at: new Date().toISOString() })
