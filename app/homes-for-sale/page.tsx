@@ -8,7 +8,7 @@ import IDXDisclaimer from '@/components/compliance/IDXDisclaimer'
 import SearchFilters from '@/components/listings/SearchFilters'
 
 export const metadata: Metadata = {
-  title: 'Find Your Next Home in Nashville | House Haven Realty',
+  title: 'Find Your Next Home in Nashville',
   description:
     'A boutique brokerage approach to Nashville home search. Tell us what you are looking for and our team will hand-pick active listings for you the same day.',
   alternates: { canonical: '/homes-for-sale' },

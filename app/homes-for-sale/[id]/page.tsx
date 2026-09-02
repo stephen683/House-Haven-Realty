@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: ListingDetailProps): Promise<
   }
   const title = `${fmtPrice(listing.listPrice)} · ${listing.address.street}, ${listing.address.city} TN`
   return {
-    title: `${title} | House Haven Realty`,
+    title,
     description: `${listing.bedrooms ?? '—'} bed, ${listing.bathrooms ?? '—'} bath${listing.squareFeet ? `, ${listing.squareFeet.toLocaleString()} sqft` : ''} in ${listing.address.city}. ${listing.publicRemarks.slice(0, 140)}`,
     alternates: { canonical: `/homes-for-sale/${params.id}` },
   }
