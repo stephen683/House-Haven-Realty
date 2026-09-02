@@ -43,7 +43,7 @@ export async function GET(request: Request) {
 
   const baseUrl = canaryBaseUrl()
   const commitSha = process.env.VERCEL_GIT_COMMIT_SHA ?? null
-  const results = await runAllChecks(baseUrl)
+  const results = await runAllChecks(baseUrl, supabase)
   const now = new Date()
 
   const { data: priorRows } = await supabase

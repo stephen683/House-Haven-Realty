@@ -2,6 +2,7 @@
 // checks, runs them, records results to Supabase, and detects DOWN/RECOVERED
 // state transitions so the cron route can email Stephen exactly once per event.
 
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { STAGE_LADDER, type StageKey } from './permit-stages'
 
 export interface CheckResult {
@@ -128,8 +129,73 @@ async function runCheck(baseUrl: string, def: CheckDef): Promise<CheckResult> {
   }
 }
 
-export async function runAllChecks(baseUrl: string): Promise<CheckResult[]> {
-  return Promise.all(CHECKS.map((def) => runCheck(baseUrl, def)))
+// The HTTP checks all pass off the live ArcGIS feed even when building_permits
+// is empty, so an unpopulated table was invisible to the canary. This check
+// asserts the cached table itself: non-empty, and refreshed recently enough
+// that a silently dead daily sync shows up within a week.
+export const PERMIT_TABLE_ENDPOINT = 'DB public.building_permits'
+export const PERMIT_FRESHNESS_DAYS = 7
+
+export async function runPermitTableCheck(
+  supabase: SupabaseClient,
+): Promise<CheckResult> {
+  const started = Date.now()
+  const fail = (reason: string): CheckResult => ({
+    endpoint: PERMIT_TABLE_ENDPOINT,
+    ok: false,
+    httpStatus: null,
+    responseMs: Date.now() - started,
+    assertion: 'rows>0 && max(date_issued) within ' + PERMIT_FRESHNESS_DAYS + 'd',
+    errorExcerpt: reason.slice(0, 300),
+  })
+
+  try {
+    const { count, error: countError } = await supabase
+      .from('building_permits')
+      .select('permit_number', { count: 'exact', head: true })
+    if (countError) return fail(`count query failed: ${countError.message}`)
+    if (!count) return fail('building_permits has 0 rows — daily sync is not writing')
+
+    const { data, error: freshError } = await supabase
+      .from('building_permits')
+      .select('date_issued')
+      .not('date_issued', 'is', null)
+      .order('date_issued', { ascending: false })
+      .limit(1)
+    if (freshError) return fail(`freshness query failed: ${freshError.message}`)
+
+    const newest = data?.[0]?.date_issued as string | undefined
+    if (!newest) return fail(`${count} rows but no non-null date_issued`)
+
+    const ageDays = (Date.now() - new Date(newest).getTime()) / 86_400_000
+    if (ageDays > PERMIT_FRESHNESS_DAYS)
+      return fail(
+        `newest date_issued ${newest.slice(0, 10)} is ${ageDays.toFixed(1)}d old ` +
+          `(limit ${PERMIT_FRESHNESS_DAYS}d)`,
+      )
+
+    return {
+      endpoint: PERMIT_TABLE_ENDPOINT,
+      ok: true,
+      httpStatus: null,
+      responseMs: Date.now() - started,
+      assertion: 'rows>0 && max(date_issued) within ' + PERMIT_FRESHNESS_DAYS + 'd',
+      errorExcerpt: null,
+    }
+  } catch (err) {
+    return fail(err instanceof Error ? err.message : String(err))
+  }
+}
+
+export async function runAllChecks(
+  baseUrl: string,
+  supabase: SupabaseClient,
+): Promise<CheckResult[]> {
+  const [http, permitTable] = await Promise.all([
+    Promise.all(CHECKS.map((def) => runCheck(baseUrl, def))),
+    runPermitTableCheck(supabase),
+  ])
+  return [...http, permitTable]
 }
 
 export type Transition = 'went_down' | 'recovered' | 'still_down_cooldown' | 'still_down_suppressed' | 'stable_ok' | 'stable_ok_first'
