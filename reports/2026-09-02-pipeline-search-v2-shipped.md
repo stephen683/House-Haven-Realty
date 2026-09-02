@@ -115,3 +115,32 @@ to filters.
 - RLS narrowing on `building_permits` (anon key can still read `parcel` and
   full `address`; route redaction is defence in depth, not a seal)
 - BuilderCard slugify divergence (404s for builders with punctuation)
+
+## Live verification — househavenrealty.com, deploy `dpl_8DzNTFFJV13DMjiM2TtwgytyhhXE`
+
+```
+GET /api/permits/geojson
+  200 · X-Permits-Source: cache · 3,513 features · 32 ZIPs
+  30 condo pins · 27 multi-unit markers · max description 240 chars
+  2.7 MB raw (Brotli on the wire)
+
+GET /pipeline
+  200 · search bar · header "Permits: 3,513" · Filters · Map/List toggle
+  TREC firm name + phone + license line present
+
+GET /api/pipeline/search?propertyType=single_family,townhome
+      &bedroomsMin=4&bathroomsMin=3&zip=37203,37206,37216&sort=construction_cost
+  → 42 results · RUSSELL ST 37206 · 5 bd / 5 ba · 5,270 sqft · $943,535 · LEVERICK HOMES
+
+GET /api/pipeline/search?propertyType=condo&sort=construction_cost
+  → 30 condos · MCGAVOCK ST 204 · $12,970,575 · BRPH
+
+GET /api/pipeline/search?propertyType=condo&bedroomsMin=1
+  → 0 (honest: no condo permit records beds) · recorded rates returned
+
+GET /api/pipeline/search?zip=37216&bathroomsMin=2&propertyType=single_family,townhome,condo
+  → 22 results · one with baths recorded and beds not, shown as "— bd / 3.5 ba"
+```
+
+Public payloads carry street name only — no house number, parcel, or
+coordinates — confirmed on every response above.
