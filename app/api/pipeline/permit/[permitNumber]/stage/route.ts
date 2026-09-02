@@ -8,6 +8,7 @@ import {
 } from '@/lib/permits'
 import { computeStages, type StageView, type StageKey } from '@/lib/permit-stages'
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createServiceClient } from '@supabase/supabase-js'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -77,10 +78,17 @@ export async function GET(
 ) {
   const { permitNumber } = await params
   const supabase = await createClient()
+  // building_permits is closed to the anon key; the parcel lookup is a
+  // server-only read and never leaves this route, so it uses the service role.
+  const service = createServiceClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { persistSession: false } },
+  )
 
   const [cachedRes, knownRes] = await Promise.all([
     supabase.from('permit_stages').select('*').eq('permit_number', permitNumber).maybeSingle(),
-    supabase.from('building_permits').select('permit_number,parcel').eq('permit_number', permitNumber).maybeSingle(),
+    service.from('building_permits').select('permit_number,parcel').eq('permit_number', permitNumber).maybeSingle(),
   ])
   const cached = cachedRes.data
   const knownPermit = knownRes.data

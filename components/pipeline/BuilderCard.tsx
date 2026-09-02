@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { normalizeBuilderName, slugifyBuilder } from '@/lib/builder-slug'
 
 interface BuilderCardProps {
   contractor: string
@@ -11,7 +12,7 @@ interface BuilderCardProps {
 
 interface PriorBuild {
   permit_number: string
-  address: string
+  street: string
   zip: string
   date_issued: string | null
 }
@@ -23,13 +24,6 @@ interface BuilderStats {
   recentCount: number
 }
 
-function slugify(s: string) {
-  return s
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
-
 export default function BuilderCard({ contractor, excludePermitNumber }: BuilderCardProps) {
   const [stats, setStats] = useState<BuilderStats | null>(null)
   const [loading, setLoading] = useState(true)
@@ -39,11 +33,14 @@ export default function BuilderCard({ contractor, excludePermitNumber }: Builder
       setLoading(false)
       return
     }
+    // Browser reads go through the redacted public view — street name, no
+    // house number, no parcel — and group on the same key the search uses,
+    // so "CDM Construction" and "CDM CONSTRUCTION" count as one builder.
     const supabase = createClient()
     supabase
-      .from('building_permits')
-      .select('permit_number, address, zip, date_issued')
-      .eq('contractor', contractor)
+      .from('building_permits_public')
+      .select('permit_number, street, zip, date_issued')
+      .eq('contractor_key', normalizeBuilderName(contractor))
       .neq('permit_number', excludePermitNumber)
       .order('date_issued', { ascending: false })
       .limit(50)
@@ -94,13 +91,13 @@ export default function BuilderCard({ contractor, excludePermitNumber }: Builder
                 <li key={b.permit_number} className="text-[11px] text-househaven-text">
                   <span className="text-househaven-text-muted">{b.zip || '—'}</span>
                   <span className="mx-1.5 text-househaven-text-muted">·</span>
-                  <span>{b.address}</span>
+                  <span>{b.street}</span>
                 </li>
               ))}
             </ul>
           )}
           <Link
-            href={`/pipeline/builders/${slugify(contractor)}`}
+            href={`/pipeline/builders/${slugifyBuilder(normalizeBuilderName(contractor))}`}
             className="mt-2 inline-block text-[11px] font-semibold text-househaven-navy underline underline-offset-2 hover:no-underline"
           >
             View builder profile &rarr;
