@@ -87,8 +87,9 @@ describe('GET /api/cron/sync-permits', () => {
   })
 
   it('aborts the run and surfaces the reason when a chunk upsert fails', async () => {
+    // 1200 rows spans three 500-row chunks; the failure lands in the second.
     fetchRecentPermits.mockResolvedValue(
-      Array.from({ length: 250 }, (_, i) => permit(i)),
+      Array.from({ length: 1200 }, (_, i) => permit(i)),
     )
     upsert
       .mockResolvedValueOnce({ error: null })
@@ -102,17 +103,17 @@ describe('GET /api/cron/sync-permits', () => {
     expect(res.status).toBe(500)
     expect(body.error).toBe('Upsert failed')
     expect(body.details).toContain('duplicate key')
-    expect(body.chunkStart).toBe(100)
+    expect(body.chunkStart).toBe(500)
     // aborted: the third chunk must never be attempted
     expect(upsert).toHaveBeenCalledTimes(2)
     // partial progress is reported, not counted as success
-    expect(body.upserted).toBe(100)
-    expect(body.fetched).toBe(250)
+    expect(body.upserted).toBe(500)
+    expect(body.fetched).toBe(1200)
   })
 
   it('returns 200 with a real count only when every chunk lands', async () => {
     fetchRecentPermits.mockResolvedValue(
-      Array.from({ length: 250 }, (_, i) => permit(i)),
+      Array.from({ length: 1200 }, (_, i) => permit(i)),
     )
     upsert.mockResolvedValue({ error: null })
 
@@ -121,8 +122,19 @@ describe('GET /api/cron/sync-permits', () => {
 
     expect(res.status).toBe(200)
     expect(body.ok).toBe(true)
-    expect(body.fetched).toBe(250)
-    expect(body.upserted).toBe(250)
+    expect(body.fetched).toBe(1200)
+    expect(body.upserted).toBe(1200)
     expect(upsert).toHaveBeenCalledTimes(3)
+  })
+
+  it('asks ArcGIS for a full year, not a single truncated page', async () => {
+    fetchRecentPermits.mockResolvedValue([permit(1)])
+    upsert.mockResolvedValue({ error: null })
+    await callRoute()
+
+    const [args] = fetchRecentPermits.mock.calls[0] as [{ days: number; limit: number }]
+    expect(args.days).toBe(365)
+    // Must exceed the ArcGIS 1000-row page cap or pagination is pointless.
+    expect(args.limit).toBeGreaterThan(1000)
   })
 })

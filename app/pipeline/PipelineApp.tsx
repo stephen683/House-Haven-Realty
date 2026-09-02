@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { FilterSpecification } from 'maplibre-gl'
-import MapSearch from '@/components/pipeline/MapSearch'
+import PipelineSearchBar from '@/components/pipeline/PipelineSearchBar'
 import MapFilters from '@/components/pipeline/MapFilters'
 import PermitSearchPanel from '@/components/pipeline/PermitSearchPanel'
 import AlertSignup from '@/components/pipeline/AlertSignup'
@@ -76,6 +76,7 @@ export default function PipelineApp({
   // derived from this, so the list and the map can never disagree.
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS)
   const [showSearch, setShowSearch] = useState(true)
+  const [coverageLabel, setCoverageLabel] = useState<string | null>(null)
   const [showHelp, setShowHelp] = useState(false)
   const [showHotZips, setShowHotZips] = useState(false)
 
@@ -101,11 +102,11 @@ export default function PipelineApp({
     setFilters(next)
   }, [])
 
-  const handleSearchSelect = useCallback(
-    (_address: string, _coords: { lng: number; lat: number }) => {
+  const handleFlyTo = useCallback(
+    (_address: string, coords: { lng: number; lat: number }) => {
       window.dispatchEvent(
         new CustomEvent('map-fly-to', {
-          detail: { lng: _coords.lng, lat: _coords.lat, zoom: 14 },
+          detail: { lng: coords.lng, lat: coords.lat, zoom: 15 },
         }),
       )
     },
@@ -171,8 +172,15 @@ export default function PipelineApp({
       </header>
 
       <div className="bg-white border-b border-black/5 shrink-0">
+        <div className="max-w-[1600px] mx-auto px-4 lg:px-6 pt-3">
+          <PipelineSearchBar
+            filters={filters}
+            onChange={handleFilterChange}
+            onFlyTo={handleFlyTo}
+            coverageLabel={coverageLabel}
+          />
+        </div>
         <div className="max-w-[1600px] mx-auto px-4 lg:px-6 py-2.5 flex items-center gap-3">
-          <MapSearch onSelect={handleSearchSelect} />
           <MapFilters
             filters={filters}
             onChange={handleFilterChange}
@@ -324,6 +332,7 @@ export default function PipelineApp({
               filters={filters}
               onChange={handleFilterChange}
               availableZips={availableZips}
+              onCoverage={setCoverageLabel}
             />
           </div>
         )}

@@ -43,6 +43,8 @@ interface PermitSearchPanelProps {
   filters: FilterState
   onChange: (next: FilterState) => void
   availableZips: string[]
+  /** Lets the search bar show the same measured window in its footer. */
+  onCoverage?: (label: string | null) => void
 }
 
 const TYPE_LABEL: Record<string, string> = {
@@ -74,6 +76,7 @@ export default function PermitSearchPanel({
   filters,
   onChange,
   availableZips,
+  onCoverage,
 }: PermitSearchPanelProps) {
   const [data, setData] = useState<SearchResponse | null>(null)
   const [loading, setLoading] = useState(false)
@@ -119,6 +122,10 @@ export default function PermitSearchPanel({
       ctrl.abort()
     }
   }, [queryString])
+
+  useEffect(() => {
+    onCoverage?.(data?.coverage.label ?? null)
+  }, [data?.coverage.label, onCoverage])
 
   const toggleSort = useCallback(
     (field: SortField) => {
