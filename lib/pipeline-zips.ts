@@ -1,4 +1,4 @@
-// Top 15 Nashville ZIPs for Nashville Pipeline landing pages
+// Nashville ZIPs with Pipeline landing pages
 
 export interface ZipMeta {
   zip: string
@@ -20,6 +20,7 @@ export const PIPELINE_ZIPS: ZipMeta[] = [
   { zip: '37211', name: 'South Nashville / Nolensville Pk', area: 'South Nashville', lat: 36.079, lng: -86.738 },
   { zip: '37212', name: 'Hillsboro Village / Belmont', area: 'Midtown Nashville', lat: 36.133, lng: -86.801 },
   { zip: '37215', name: 'Green Hills', area: 'South Nashville', lat: 36.104, lng: -86.812 },
+  { zip: '37216', name: 'Inglewood', area: 'East Nashville', lat: 36.219, lng: -86.720 },
   { zip: '37217', name: 'Donelson / Hermitage', area: 'East Davidson County', lat: 36.153, lng: -86.621 },
   { zip: '37218', name: 'Bordeaux / Whites Creek', area: 'North Davidson County', lat: 36.235, lng: -86.844 },
   { zip: '37220', name: 'Oak Hill / Crieve Hall', area: 'South Nashville', lat: 36.072, lng: -86.778 },

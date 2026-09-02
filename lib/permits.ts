@@ -274,47 +274,92 @@ function buildHomeWhereClause(since: Date): string {
   ].join(' ')
 }
 
+// The service caps every response at maxRecordCount (1000) and answers
+// newest-first, so a single request silently truncates: a 180-day window
+// returned 996 of 1,990 permits and nobody could tell from the response.
+// Paginate with resultOffset instead.
+const ARCGIS_PAGE_SIZE = 1000
+
+/**
+ * Date_Issued alone is not a total order — same-day ties can shuffle between
+ * requests, which produces both duplicates and gaps across pages. ObjectId
+ * breaks the tie so paging is stable. Verified against the live service:
+ * offsets 0 and 1000 over a 1,990-row window returned 1,990 distinct permits
+ * with zero overlap.
+ */
+const ARCGIS_ORDER = 'Date_Issued DESC,ObjectId ASC'
+
+async function fetchPermitPages(
+  where: string,
+  maxRecords: number,
+  revalidate: number,
+): Promise<ArcGISPermitAttributes[]> {
+  const collected: ArcGISPermitAttributes[] = []
+
+  for (let offset = 0; offset < maxRecords; offset += ARCGIS_PAGE_SIZE) {
+    const pageSize = Math.min(ARCGIS_PAGE_SIZE, maxRecords - offset)
+    const params = new URLSearchParams({
+      where,
+      outFields: '*',
+      resultRecordCount: String(pageSize),
+      resultOffset: String(offset),
+      orderByFields: ARCGIS_ORDER,
+      returnGeometry: 'false',
+      f: 'json',
+    })
+
+    let data: {
+      features?: { attributes: ArcGISPermitAttributes }[]
+      exceededTransferLimit?: boolean
+      error?: { message?: string }
+    }
+    try {
+      const res = await fetch(`${ARCGIS_PERMITS_URL}?${params}`, {
+        next: { revalidate },
+      })
+      if (!res.ok) {
+        console.error('[permits] ArcGIS API error', res.status, 'offset', offset)
+        break
+      }
+      data = await res.json()
+    } catch (err) {
+      console.error('[permits] ArcGIS fetch failed at offset', offset, err)
+      break
+    }
+
+    if (data.error) {
+      console.error('[permits] ArcGIS returned an error', data.error.message)
+      break
+    }
+
+    const features = data.features
+    if (!Array.isArray(features) || features.length === 0) break
+
+    for (const f of features) collected.push(f.attributes)
+
+    // Short page means the result set is exhausted.
+    if (features.length < pageSize) break
+  }
+
+  return collected
+}
+
 export async function fetchRecentPermits(options: {
   days?: number
+  /** Maximum records to pull in total, across as many pages as it takes. */
   limit?: number
 } = {}): Promise<NormalizedPermit[]> {
   const { days = 180, limit = 1000 } = options
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000)
 
-  const params = new URLSearchParams({
-    where: buildHomeWhereClause(since),
-    outFields: '*',
-    resultRecordCount: String(limit),
-    orderByFields: 'Date_Issued DESC',
-    f: 'json',
-  })
+  const attributes = await fetchPermitPages(
+    buildHomeWhereClause(since),
+    limit,
+    60 * 60 * 6, // 6 hours
+  )
 
-  try {
-    const res = await fetch(`${ARCGIS_PERMITS_URL}?${params}`, {
-      next: { revalidate: 60 * 60 * 6 }, // 6 hours
-    })
-
-    if (!res.ok) {
-      console.error('[permits] ArcGIS API error', res.status)
-      return []
-    }
-
-    const data = await res.json()
-
-    if (!data.features || !Array.isArray(data.features)) {
-      console.error('[permits] ArcGIS returned no features')
-      return []
-    }
-
-    const normalized = data.features
-      .map((f: { attributes: ArcGISPermitAttributes }) => f.attributes)
-      .filter(isHomeBuildingPermit)
-      .map(normalize)
-    return dedupeByBuilding(normalized)
-  } catch (err) {
-    console.error('[permits] ArcGIS fetch failed', err)
-    return []
-  }
+  const normalized = attributes.filter(isHomeBuildingPermit).map(normalize)
+  return dedupeByBuilding(normalized)
 }
 
 // ─── Fetch ALL permits (for saturation score) ───────────
@@ -326,26 +371,13 @@ export async function fetchAllPermits(options: {
   const { days = 365, limit = 2000 } = options
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000)
 
-  const params = new URLSearchParams({
-    where: `Date_Issued > ${toArcGISTimestamp(since)}`,
-    outFields: '*',
-    resultRecordCount: String(limit),
-    orderByFields: 'Date_Issued DESC',
-    f: 'json',
-  })
+  const attributes = await fetchPermitPages(
+    `Date_Issued > ${toArcGISTimestamp(since)}`,
+    limit,
+    60 * 60 * 6,
+  )
 
-  try {
-    const res = await fetch(`${ARCGIS_PERMITS_URL}?${params}`, {
-      next: { revalidate: 60 * 60 * 6 },
-    })
-    if (!res.ok) return []
-    const data = await res.json()
-    if (!data.features) return []
-    return data.features
-      .map((f: { attributes: ArcGISPermitAttributes }) => normalize(f.attributes))
-  } catch {
-    return []
-  }
+  return attributes.map(normalize)
 }
 
 // ─── Metro ePermits REST API (inspection tasks) ─────────

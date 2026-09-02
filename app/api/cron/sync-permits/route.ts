@@ -3,7 +3,12 @@ import { createClient } from '@supabase/supabase-js'
 import { fetchRecentPermits } from '@/lib/permits'
 
 export const runtime = 'nodejs'
-export const maxDuration = 60 // allow up to 60s for large fetches
+
+/** A build runs 6-12 months, so a year is the useful corpus for search. */
+const SYNC_WINDOW_DAYS = 365
+const SYNC_MAX_RECORDS = 6000
+const UPSERT_CHUNK = 500
+export const maxDuration = 300 // 4 ArcGIS pages + ~4k upserts
 
 /**
  * Vercel Cron job — runs daily to sync Nashville building permits
@@ -37,8 +42,10 @@ export async function GET(request: Request) {
   const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
   try {
-    // Fetch last 180 days of permits (large window for backfill)
-    const permits = await fetchRecentPermits({ days: 180, limit: 1000 })
+    // A full year of Davidson County new construction. fetchRecentPermits
+    // pages the ArcGIS 1000-row cap, so this is the real count, not the first
+    // page of it.
+    const permits = await fetchRecentPermits({ days: SYNC_WINDOW_DAYS, limit: SYNC_MAX_RECORDS })
 
     if (permits.length === 0) {
       return NextResponse.json(
@@ -77,11 +84,11 @@ export async function GET(request: Request) {
       updated_at: new Date().toISOString(),
     }))
 
-    // Batch upsert in chunks of 100. A chunk error aborts the run — a partial
+    // Batch upsert in chunks. A chunk error aborts the run — a partial
     // sync reported as success is indistinguishable from a working one.
     let upserted = 0
-    for (let i = 0; i < rows.length; i += 100) {
-      const chunk = rows.slice(i, i + 100)
+    for (let i = 0; i < rows.length; i += UPSERT_CHUNK) {
+      const chunk = rows.slice(i, i + UPSERT_CHUNK)
       const { error } = await supabase
         .from('building_permits')
         .upsert(chunk, { onConflict: 'permit_number' })
