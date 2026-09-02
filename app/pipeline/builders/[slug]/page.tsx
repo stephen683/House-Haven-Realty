@@ -2,18 +2,10 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { fetchAllPermits } from '@/lib/permits'
+import { slugifyBuilder as slugify } from '@/lib/builder-slug'
 import type { NormalizedPermit } from '@/lib/permits'
 
 export const revalidate = 21600
-
-function slugify(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9 ]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .trim()
-}
 
 function formatDate(iso: string | null) {
   if (!iso) return '—'

@@ -7,7 +7,13 @@ import Link from 'next/link'
 import type { FilterSpecification } from 'maplibre-gl'
 import MapSearch from '@/components/pipeline/MapSearch'
 import MapFilters from '@/components/pipeline/MapFilters'
+import PermitSearchPanel from '@/components/pipeline/PermitSearchPanel'
 import AlertSignup from '@/components/pipeline/AlertSignup'
+import {
+  EMPTY_FILTERS,
+  filterStateToExpression,
+  type FilterState,
+} from '@/lib/pipeline-filters'
 import PermitDetailPanel from '@/components/pipeline/PermitDetailPanel'
 import type { PermitFeatureProperties } from '@/components/pipeline/MapView'
 import type { ZipSaturationScore } from '@/lib/saturation-score'
@@ -66,10 +72,17 @@ export default function PipelineApp({
     properties: PermitFeatureProperties
     lngLat: [number, number]
   } | null>(null)
-  const [filterExpression, setFilterExpression] =
-    useState<FilterSpecification | null>(null)
+  // Single source of truth: the map expression and the search query are both
+  // derived from this, so the list and the map can never disagree.
+  const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS)
+  const [showSearch, setShowSearch] = useState(true)
   const [showHelp, setShowHelp] = useState(false)
   const [showHotZips, setShowHotZips] = useState(false)
+
+  const filterExpression = useMemo<FilterSpecification | null>(
+    () => filterStateToExpression(filters),
+    [filters],
+  )
 
   const zipColorMap = useMemo(() => {
     const m: Record<string, string> = {}
@@ -84,12 +97,9 @@ export default function PipelineApp({
     [],
   )
 
-  const handleFilterChange = useCallback(
-    (filter: FilterSpecification | null) => {
-      setFilterExpression(filter)
-    },
-    [],
-  )
+  const handleFilterChange = useCallback((next: FilterState) => {
+    setFilters(next)
+  }, [])
 
   const handleSearchSelect = useCallback(
     (_address: string, _coords: { lng: number; lat: number }) => {
@@ -164,9 +174,18 @@ export default function PipelineApp({
         <div className="max-w-[1600px] mx-auto px-4 lg:px-6 py-2.5 flex items-center gap-3">
           <MapSearch onSelect={handleSearchSelect} />
           <MapFilters
+            filters={filters}
             onChange={handleFilterChange}
             availableZips={availableZips}
           />
+          <button
+            type="button"
+            onClick={() => setShowSearch((v) => !v)}
+            aria-pressed={showSearch}
+            className="hidden lg:inline-flex items-center gap-2 px-3 py-2.5 rounded-xl border border-black/10 bg-white text-sm text-househaven-text hover:border-househaven-navy/30 transition"
+          >
+            {showSearch ? 'Hide' : 'Show'} results list
+          </button>
 
           <div className="hidden lg:flex items-center gap-2 ml-4">
             <span className="text-[10px] uppercase tracking-wider text-househaven-text-muted">
@@ -213,7 +232,7 @@ export default function PipelineApp({
                 </p>
                 <button
                   type="button"
-                  onClick={() => setFilterExpression(null)}
+                  onClick={() => setFilters(EMPTY_FILTERS)}
                   className="mt-4 inline-flex px-4 py-2 rounded-lg bg-black text-white text-xs font-semibold hover:bg-househaven-navy-light transition"
                 >
                   Clear all filters
@@ -264,7 +283,7 @@ export default function PipelineApp({
                       key={s.zip}
                       type="button"
                       onClick={() => {
-                        setFilterExpression(['==', ['get', 'zip'], s.zip] as FilterSpecification)
+                        setFilters((f) => ({ ...f, zip: s.zip }))
                       }}
                       className="w-full flex items-center justify-between text-xs px-1.5 py-1 rounded hover:bg-househaven-surface transition text-left"
                     >
@@ -287,7 +306,7 @@ export default function PipelineApp({
                   {filterExpression && (
                     <button
                       type="button"
-                      onClick={() => setFilterExpression(null)}
+                      onClick={() => setFilters(EMPTY_FILTERS)}
                       className="text-[9px] font-medium text-househaven-navy hover:underline"
                     >
                       Clear filter
@@ -298,6 +317,16 @@ export default function PipelineApp({
             )}
           </div>
         </div>
+
+        {showSearch && !selectedPermit && (
+          <div className="hidden lg:flex min-h-0">
+            <PermitSearchPanel
+              filters={filters}
+              onChange={handleFilterChange}
+              availableZips={availableZips}
+            />
+          </div>
+        )}
 
         {selectedPermit && (
           <>

@@ -1,16 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import type { FilterSpecification } from 'maplibre-gl'
+import { useState } from 'react'
+import {
+  EMPTY_FILTERS,
+  activeFilterCount,
+  type FilterState,
+} from '@/lib/pipeline-filters'
 
-export interface FilterState {
-  dateRange: 'all' | '7' | '30' | '90'
-  costMin: string
-  costMax: string
-  zip: string
-  beds: string
-  propertyType: string
-}
+export type { FilterState }
 
 const DATE_OPTIONS = [
   { value: 'all', label: 'All dates' },
@@ -20,71 +17,20 @@ const DATE_OPTIONS = [
 ] as const
 
 interface MapFiltersProps {
-  onChange: (filter: FilterSpecification | null) => void
+  /** Controlled by PipelineApp so the map and the results list share one state. */
+  filters: FilterState
+  onChange: (next: FilterState) => void
   availableZips: string[]
 }
 
-export default function MapFilters({ onChange, availableZips }: MapFiltersProps) {
-  const [filters, setFilters] = useState<FilterState>({
-    dateRange: 'all',
-    costMin: '',
-    costMax: '',
-    zip: '',
-    beds: '',
-    propertyType: '',
-  })
+export default function MapFilters({ filters, onChange, availableZips }: MapFiltersProps) {
   const [expanded, setExpanded] = useState(false)
 
-  useEffect(() => {
-    const conditions: FilterSpecification[] = []
+  const setFilters = (fn: (f: FilterState) => FilterState) => onChange(fn(filters))
 
-    // Date range
-    if (filters.dateRange !== 'all') {
-      conditions.push(['<=', ['get', 'daysAgo'], Number(filters.dateRange)])
-    }
+  const activeCount = activeFilterCount(filters)
 
-    // Cost range
-    if (filters.costMin) {
-      conditions.push(['>=', ['get', 'constructionCost'], Number(filters.costMin)])
-    }
-    if (filters.costMax) {
-      conditions.push(['<=', ['get', 'constructionCost'], Number(filters.costMax)])
-    }
-
-    // ZIP
-    if (filters.zip) {
-      conditions.push(['==', ['get', 'zip'], filters.zip])
-    }
-
-    // Bedrooms
-    if (filters.beds) {
-      conditions.push(['>=', ['get', 'bedrooms'], Number(filters.beds)])
-    }
-
-    // Property type
-    if (filters.propertyType) {
-      conditions.push(['==', ['get', 'propertyType'], filters.propertyType])
-    }
-
-    if (conditions.length === 0) {
-      onChange(null)
-    } else {
-      onChange(['all', ...conditions] as FilterSpecification)
-    }
-  }, [filters, onChange])
-
-  const activeCount = [
-    filters.dateRange !== 'all',
-    filters.costMin !== '',
-    filters.costMax !== '',
-    filters.zip !== '',
-    filters.beds !== '',
-    filters.propertyType !== '',
-  ].filter(Boolean).length
-
-  const clearAll = () => {
-    setFilters({ dateRange: 'all', costMin: '', costMax: '', zip: '', beds: '', propertyType: '' })
-  }
+  const clearAll = () => onChange({ ...EMPTY_FILTERS })
 
   return (
     <div className="relative">

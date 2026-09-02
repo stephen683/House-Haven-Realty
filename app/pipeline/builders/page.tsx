@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { fetchAllPermits } from '@/lib/permits'
+import { slugifyBuilder as slugify } from '@/lib/builder-slug'
 
 export const metadata: Metadata = {
   title: 'Nashville Builders — Nashville Pipeline',
@@ -22,15 +23,6 @@ interface BuilderProfile {
   recentCount: number
   propertyTypes: string[]
   firstPermitDate: string | null
-}
-
-function slugify(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9 ]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .trim()
 }
 
 export default async function BuildersPage() {
