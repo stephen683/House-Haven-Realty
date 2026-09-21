@@ -11,13 +11,16 @@
 //   node scripts/migrate-team-headshots.mjs           # download + rewrite
 //   node scripts/migrate-team-headshots.mjs --check   # report only, no writes
 //
-// Idempotent: a slug whose local file already validates is skipped. Exits
+// Images are accepted on what the bytes say — format and real dimensions — not on
+// the status code. Idempotent: a slug whose local file already validates is
+// skipped. Exits
 // non-zero if any image fails to download or fails validation, and rewrites
 // nothing unless every image succeeded — a partial migration would ship broken
 // images, which is worse than the hotlink it replaces.
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync } from 'node:fs'
 import { join } from 'node:path'
+import { probeImage, rejectReason } from './lib/image-probe.mjs'
 
 const ROOT = process.cwd()
 const OUT_DIR = join(ROOT, 'public/images/team')
@@ -27,17 +30,6 @@ const NEXT_CONFIG = join(ROOT, 'next.config.mjs')
 const LEGACY_HOST = 'media.agentaprd.com'
 const MIN_BYTES = 2048
 const checkOnly = process.argv.includes('--check')
-
-/** Magic-byte sniff. A CDN that has been cancelled may still answer 200 with an
- *  HTML error page, so trusting the status code alone would save a fake image. */
-function imageExt(buf) {
-  if (buf.length < 12) return null
-  if (buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return 'jpg'
-  if (buf[0] === 0x89 && buf.subarray(1, 4).toString('latin1') === 'PNG') return 'png'
-  if (buf.subarray(0, 4).toString('latin1') === 'RIFF' &&
-      buf.subarray(8, 12).toString('latin1') === 'WEBP') return 'webp'
-  return null
-}
 
 /** slug -> remote url, read from data/team.ts so this never drifts from the roster. */
 function readTeam(src) {
@@ -85,10 +77,11 @@ for (const { slug, url } of remote) {
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     const buf = Buffer.from(await res.arrayBuffer())
     if (buf.length < MIN_BYTES) throw new Error(`only ${buf.length} bytes — not a real image`)
-    const ext = imageExt(buf)
-    if (!ext) throw new Error('response is not a JPEG, PNG or WebP')
+    const bad = rejectReason(buf)
+    if (bad) throw new Error(bad)
+    const { format: ext, width, height } = probeImage(buf)
     writeFileSync(join(OUT_DIR, `${slug}.${ext}`), buf)
-    console.log(`  + ${slug}.${ext} (${(buf.length / 1024).toFixed(0)} KB)`)
+    console.log(`  + ${slug}.${ext}  ${width}x${height}  ${(buf.length / 1024).toFixed(0)} KB`)
     done.push({ slug, ext, url })
   } catch (err) {
     console.error(`  ! ${slug}: ${err.message}`)
