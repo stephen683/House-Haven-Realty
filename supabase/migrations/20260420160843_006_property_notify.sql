@@ -1,6 +1,3 @@
--- Migration 006 — property_notify_requests: per-property "notify me when this
--- lists" leads from the pipeline detail panel. Apply via Supabase MCP.
-
 CREATE TABLE IF NOT EXISTS public.property_notify_requests (
   id                    uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at            timestamptz NOT NULL DEFAULT now(),

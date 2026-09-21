@@ -1,6 +1,3 @@
--- Migration 004 — IDX listings cache for Realtracs MLS via MLS Grid
--- 15-minute TTL per spec §3.1. Apply via Supabase MCP.
-
 CREATE TABLE IF NOT EXISTS public.listings_cache (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   mls_id text UNIQUE NOT NULL,

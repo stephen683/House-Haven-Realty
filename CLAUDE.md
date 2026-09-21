@@ -105,8 +105,10 @@ lib/
 data/
 ├── team.ts (11 agents) · communities.ts (57) · blog.ts (25 posts) · testimonials.ts (7)
 
-supabase/migrations/
-├── 001_initial_schema.sql · 002_leads_and_permits_tables.sql
+supabase/migrations/   (29 files, one per applied migration, <version>_<name>.sql
+                        mirroring supabase_migrations.schema_migrations exactly —
+                        see the README there; check drift with
+                        scripts/check-migration-drift.mjs)
 ```
 
 ## Conventions

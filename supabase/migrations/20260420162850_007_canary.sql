@@ -1,7 +1,3 @@
--- Migration 007 — canary monitoring. Two tables:
---   canary_runs   append-only audit log, one row per check per run
---   canary_state  current status per endpoint, for alert transitions + cooldown
-
 CREATE TABLE IF NOT EXISTS public.canary_runs (
   id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   run_at          timestamptz NOT NULL DEFAULT now(),

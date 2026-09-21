@@ -44,15 +44,16 @@ assumptions — if anything is unclear or contradictory, surface it before actin
   - components/compliance/IDXDisclaimer.tsx — already includes Realtracs copyright,
     "deemed reliable" disclaimer, last-updated timestamp, AND the NAR 2026
     commission-negotiable line. Mounted on /homes-for-sale and listing detail.
-  - supabase/migrations/004_listings_cache.sql — listings_cache table NOT yet
-    applied to the remote project. Apply it as part of this work.
+  - supabase/migrations/20260506162654_004_listings_cache.sql — listings_cache
+    table is ALREADY applied to the remote project (verified in the migration
+    ledger). Nothing to apply; the table exists and is empty.
 
 ## What to do (in this order)
 
-1. **Apply migration 004 to Supabase**
+1. **Confirm migration 004 is applied** (it is — verify, do not re-apply)
    - Use the Supabase MCP (mcp__claude_ai_Supabase__apply_migration) targeting
      project eefqcgetyxdrvchkwhrq. Migration file:
-     supabase/migrations/004_listings_cache.sql.
+     supabase/migrations/20260506162654_004_listings_cache.sql.
    - Verify the table appears in list_tables.
 
 2. **Add MLS_GRID_ORIGINATING_SYSTEM filter to lib/mlsgrid.ts**

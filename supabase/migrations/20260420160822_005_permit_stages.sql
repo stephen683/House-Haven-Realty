@@ -1,6 +1,3 @@
--- Migration 005 — permit_stages: cached ePermits inspection data per permit,
--- plus Stephen-ground-truth overrides. Apply via Supabase MCP.
-
 CREATE TABLE IF NOT EXISTS public.permit_stages (
   permit_number         text PRIMARY KEY,
   case_id               bigint,
@@ -12,8 +9,6 @@ CREATE TABLE IF NOT EXISTS public.permit_stages (
   fetched_at            timestamptz NOT NULL DEFAULT now(),
   source                text NOT NULL DEFAULT 'epermits',
   fetch_error           text,
-  -- Manual override: written via Supabase Studio in v1 (no write UI yet).
-  -- Always wins as effectiveStage in the panel; auto stepper still renders.
   override_stage        text,
   override_note         text,
   override_confidence   text CHECK (override_confidence IN ('drove_by','photo','builder_confirmed')),
@@ -30,8 +25,3 @@ ALTER TABLE public.permit_stages ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public read permit_stages"
   ON public.permit_stages FOR SELECT
   USING (true);
-
-CREATE POLICY "Service role full access permit_stages"
-  ON public.permit_stages FOR ALL
-  USING (true)
-  WITH CHECK (true);

@@ -1,6 +1,3 @@
--- Migration 003 — House Haven Value tool: AVM cache + CMA request log
--- Apply via Supabase MCP. Targets project eefqcgetyxdrvchkwhrq.
-
 -- 30-day TTL cache for RentCast AVM responses keyed on normalized address.
 CREATE TABLE IF NOT EXISTS public.valuation_cache (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,

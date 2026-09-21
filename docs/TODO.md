@@ -28,7 +28,7 @@
 - [!] Stephen submits MLS Grid application (gates real data; ~2-day approval expected)
 - [!] Stephen sets `MLS_GRID_API_KEY` in Vercel
 - [x] `lib/mlsgrid.ts` — typed RESO Web API v2 client with mock fallback (returns 8 sample listings until API key is set)
-- [x] `supabase/migrations/004_listings_cache.sql` — `listings_cache` table (apply via Supabase MCP)
+- [x] `supabase/migrations/20260506162654_004_listings_cache.sql` — `listings_cache` table (apply via Supabase MCP)
 - [x] `app/homes-for-sale/page.tsx` — full search with filters (city/zip/price/beds/type)
 - [x] `app/homes-for-sale/[id]/page.tsx` — full detail with hero + photo grid + listing attribution
 - [x] `components/listings/` — ListingCard, ListingGrid, SearchFilters
@@ -68,7 +68,7 @@ Per ROADMAP §7. UI ships with mock-fallback estimates; real numbers activate th
 - [x] `lib/rentcast.ts` — server-side AVM client with deterministic mock fallback
 - [x] `lib/hubspot.ts` — search/create/update contact, attach note, gracefully no-op without token
 - [x] `lib/resend.ts` — wrapper that dry-runs (logs to console) without API key
-- [x] `supabase/migrations/003_value_tool.sql` — `valuation_cache` (30-day TTL) + `cma_requests` (apply via Supabase MCP)
+- [x] `supabase/migrations/20260506162648_003_value_tool.sql` — `valuation_cache` (30-day TTL) + `cma_requests` (apply via Supabase MCP)
 - [x] `app/value/page.tsx` (server, SEO meta + `LocalBusiness` + `Service` schema) + `app/value/ValueClient.tsx` (interactive)
 - [x] Result card with Low / Mid / High range + 3–5 comps (address-masked)
 - [x] CMA request form: name/email/phone/timeline + TCPA + NAR commission disclosure

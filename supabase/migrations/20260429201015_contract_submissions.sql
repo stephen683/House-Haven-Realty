@@ -1,6 +1,3 @@
--- Migration: Agent contract submissions (private agent portal)
--- Applied: 2026-04-29
-
 CREATE TABLE IF NOT EXISTS public.contract_submissions (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   created_at timestamptz DEFAULT now() NOT NULL,
