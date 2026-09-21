@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import FadeIn from '@/components/ui/FadeIn'
 import TestimonialCarousel from '@/components/sections/TestimonialCarousel'
+import GoogleRating from '@/components/sections/GoogleRating'
 import NewsletterSignup from '@/components/forms/NewsletterSignup'
 import { communities } from '@/data/communities'
 
@@ -253,18 +254,29 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Section 7 — Testimonials */}
-      <section className="bg-white py-20 lg:py-28">
+      {/* Section 7 — Proof: the independent rating beside the clients' own words.
+          One social-proof moment rather than two competing ones. */}
+      <section className="bg-househaven-surface py-20 lg:py-28">
         <div className="max-w-6xl mx-auto px-4 lg:px-6">
-          <div className="mb-10">
+          <div className="mb-10 max-w-2xl">
             <p className="text-xs uppercase tracking-[0.2em] text-househaven-text-muted">
               Clients, in their words
             </p>
-            <h2 className="font-serif text-4xl text-househaven-navy mt-2">
+            <h2 className="font-serif text-4xl lg:text-5xl text-househaven-navy mt-2 leading-tight">
               Why people stay with House Haven.
             </h2>
           </div>
-          <TestimonialCarousel />
+
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            <div className="lg:col-span-4">
+              <GoogleRating />
+            </div>
+            <div className="lg:col-span-8">
+              <div className="border border-black/10 bg-white p-8 lg:p-12 h-full flex items-center">
+                <TestimonialCarousel />
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
