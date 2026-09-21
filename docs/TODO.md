@@ -63,7 +63,10 @@ Per ROADMAP §7. UI ships with mock-fallback estimates; real numbers activate th
 
 - [!] Stephen sets `RENTCAST_API_KEY` in Vercel (Foundation tier $74/mo confirmed)
 - [!] Stephen sets `HUBSPOT_PRIVATE_APP_TOKEN` (portal 242305648). Custom properties needed: `house_haven_source` (single-line text), `selling_timeline` (single-line text)
-- [!] Stephen sets `RESEND_API_KEY` and verifies `alerts@househavenrealty.com` sender domain
+- [x] `RESEND_API_KEY` is set — proved by the canary's `Alert channel (Resend)` check,
+      green since 2026-09-21 15:00 UTC. Sender-domain verification for
+      `alerts@househavenrealty.com` is still worth confirming in the Resend dashboard;
+      the key being present does not prove the from-address is verified.
 - [ ] Stephen sets `GOOGLE_PLACES_API_KEY` (post-launch enhancement; current input is plain text and works fine without autocomplete)
 - [x] `lib/rentcast.ts` — server-side AVM client with deterministic mock fallback
 - [x] `lib/hubspot.ts` — search/create/update contact, attach note, gracefully no-op without token
@@ -183,7 +186,9 @@ Pipeline product redesign beyond the original launch scope — triggered by Step
 **Supabase migrations added:** `005_permit_stages`, `006_property_notify`, `007_canary` — all applied.
 
 **Env vars still pending on Vercel:**
-- [ ] `RESEND_API_KEY` — currently alerts dry-run to logs; set this to activate email
+- [x] `RESEND_API_KEY` — set. This entry claimed alerts were dry-running to logs, and
+      that claim was stale: `lib/canary.ts` now asserts the key on every run and the
+      check is green. Alerts do reach the inbox.
 - [ ] `HUBSPOT_PRIVATE_APP_TOKEN` + custom properties (`house_haven_source`, `selling_timeline`, `pipeline_notify` source)
 - [x] `CANARY_BASE_URL` — no longer needed. The canary defaulted to the pre-launch
       alias `project-bmq0e.vercel.app`, so it was green while monitoring a hostname
