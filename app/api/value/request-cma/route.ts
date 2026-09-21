@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
 import { upsertContact, splitName } from '@/lib/hubspot'
 import { sendEmail } from '@/lib/resend'
+import { checkRateLimit, tooManyRequests, LIMITS } from '@/lib/rate-limit'
+import { screenSubmission } from '@/lib/spam-guard'
 
 export const runtime = 'nodejs'
 
@@ -12,6 +14,10 @@ function isValidEmail(email: string) {
 }
 
 interface RequestBody {
+  /** Honeypot: hidden in the form, so any value means a machine filled it. */
+  company_website?: string
+  /** Epoch ms the form rendered, used to reject inhuman fill times. */
+  formLoadedAt?: number
   name?: string
   email?: string
   phone?: string
@@ -22,6 +28,9 @@ interface RequestBody {
 }
 
 export async function POST(request: NextRequest) {
+  const limited = await checkRateLimit(request, LIMITS.cmaRequest)
+  if (!limited.allowed) return tooManyRequests(LIMITS.cmaRequest)
+
   let body: RequestBody
   try {
     body = await request.json()
@@ -33,6 +42,17 @@ export async function POST(request: NextRequest) {
   const email = body.email?.toString().trim()
   const phone = body.phone?.toString().trim() || null
   const address = body.address?.toString().trim() || null
+
+  const screen = screenSubmission({
+    name, email,
+    honeypot: body.company_website,
+    formLoadedAt: body.formLoadedAt,
+  })
+  if (screen.spam) {
+    console.info('[request-cma] rejected:', screen.rule, '·', screen.detail)
+    return NextResponse.json({ ok: true }, { status: 201 })
+  }
+
   const timeline = VALID_TIMELINES.includes(body.timeline ?? '') ? body.timeline! : null
   const estimateLow = body.estimate?.low ?? null
   const estimateMid = body.estimate?.mid ?? null

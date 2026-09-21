@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
+import { checkRateLimit, tooManyRequests, LIMITS } from '@/lib/rate-limit'
+import { screenSubmission } from '@/lib/spam-guard'
 
 export const runtime = 'nodejs'
 
 interface ValuationPayload {
+  /** Honeypot: hidden in the form, so any value means a machine filled it. */
+  company_website?: string
+  /** Epoch ms the form rendered, used to reject inhuman fill times. */
+  formLoadedAt?: number
   address?: string
   city?: string
   zip?: string
@@ -25,6 +31,9 @@ function splitName(fullName: string): { first: string; last: string } {
 }
 
 export async function POST(request: NextRequest) {
+  const limited = await checkRateLimit(request, LIMITS.valuation)
+  if (!limited.allowed) return tooManyRequests(LIMITS.valuation)
+
   let body: ValuationPayload
   try {
     body = (await request.json()) as ValuationPayload
@@ -36,6 +45,17 @@ export async function POST(request: NextRequest) {
   const city = body.city?.toString().trim() || 'Nashville'
   const zip = body.zip?.toString().trim()
   const name = body.name?.toString().trim()
+
+  const screen = screenSubmission({
+    name, email: body.email?.toString().trim(),
+    honeypot: body.company_website,
+    formLoadedAt: body.formLoadedAt,
+  })
+  if (screen.spam) {
+    console.info('[valuation] rejected:', screen.rule, '·', screen.detail)
+    return NextResponse.json({ ok: true }, { status: 201 })
+  }
+
   const email = body.email?.toString().trim()
   const phone = body.phone?.toString().trim() || null
   const timeline = body.timeline?.toString().trim() || null

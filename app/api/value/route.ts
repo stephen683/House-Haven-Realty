@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
 import { getValuation, normalizeAddress, type RentCastValuation } from '@/lib/rentcast'
+import { checkRateLimit, tooManyRequests, LIMITS } from '@/lib/rate-limit'
 
 export const runtime = 'nodejs'
 
 const CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000
 
 export async function POST(request: NextRequest) {
+  const limited = await checkRateLimit(request, LIMITS.valueLookup)
+  if (!limited.allowed) return tooManyRequests(LIMITS.valueLookup)
+
   let body: { address?: string; lat?: number; lng?: number }
   try {
     body = await request.json()

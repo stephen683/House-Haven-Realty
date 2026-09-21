@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
 import { upsertContact } from '@/lib/hubspot'
 import { sendEmail } from '@/lib/resend'
+import { checkRateLimit, tooManyRequests, LIMITS } from '@/lib/rate-limit'
+import { screenSubmission } from '@/lib/spam-guard'
 
 export const runtime = 'nodejs'
 
@@ -10,6 +12,10 @@ function isValidEmail(email: string) {
 }
 
 interface RequestBody {
+  /** Honeypot: hidden in the form, so any value means a machine filled it. */
+  company_website?: string
+  /** Epoch ms the form rendered, used to reject inhuman fill times. */
+  formLoadedAt?: number
   email?: string
   permitNumber?: string
   address?: string
@@ -18,6 +24,9 @@ interface RequestBody {
 }
 
 export async function POST(request: NextRequest) {
+  const limited = await checkRateLimit(request, LIMITS.notifyProperty)
+  if (!limited.allowed) return tooManyRequests(LIMITS.notifyProperty)
+
   let body: RequestBody
   try {
     body = await request.json()
@@ -29,6 +38,17 @@ export async function POST(request: NextRequest) {
   const permitNumber = body.permitNumber?.toString().trim()
   const address = body.address?.toString().trim() || null
   const zip = body.zip?.toString().trim() || null
+
+  const screen = screenSubmission({
+    email,
+    honeypot: body.company_website,
+    formLoadedAt: body.formLoadedAt,
+  })
+  if (screen.spam) {
+    console.info('[notify-property] rejected:', screen.rule, '·', screen.detail)
+    return NextResponse.json({ ok: true }, { status: 201 })
+  }
+
   const tcpa = body.tcpaConsent === true
 
   if (!email || !isValidEmail(email)) {

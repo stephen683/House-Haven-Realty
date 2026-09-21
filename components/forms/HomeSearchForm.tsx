@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import TCPAConsent from './TCPAConsent'
+import SpamGuardFields from '@/components/forms/SpamGuardFields'
 
 const TIMELINE_OPTIONS = [
   'I want to start now',
@@ -43,6 +44,8 @@ export default function HomeSearchForm() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+        company_website: fd.get('company_website'),
+        formLoadedAt: Number(fd.get('formLoadedAt')) || undefined,
           name,
           email,
           phone,
@@ -80,6 +83,7 @@ export default function HomeSearchForm() {
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
+      <SpamGuardFields />
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <label htmlFor="hs-name" className="block text-xs font-semibold text-househaven-navy mb-1">

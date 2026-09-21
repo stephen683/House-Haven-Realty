@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import SpamGuardFields from '@/components/forms/SpamGuardFields'
 
 interface NotifySignupProps {
   permitNumber: string
@@ -20,6 +21,8 @@ export default function NotifySignup({ permitNumber, address, zip }: NotifySignu
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        company_website: fd.get('company_website'),
+        formLoadedAt: Number(fd.get('formLoadedAt')) || undefined,
         email: fd.get('email'),
         tcpaConsent: fd.get('notify_tcpa') === 'on',
         permitNumber,
@@ -48,6 +51,7 @@ export default function NotifySignup({ permitNumber, address, zip }: NotifySignu
       onSubmit={handleSubmit}
       className="rounded-lg bg-black text-white p-4 space-y-3"
     >
+      <SpamGuardFields />
       <div>
         <p className="font-serif text-base">Get notified when this lists</p>
         <p className="mt-1 text-[11px] text-white/60">

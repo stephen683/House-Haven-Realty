@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
+import { checkRateLimit, tooManyRequests, LIMITS } from '@/lib/rate-limit'
+import { screenSubmission } from '@/lib/spam-guard'
 
 export const runtime = 'nodejs'
 
 interface ContactPayload {
+  /** Honeypot: hidden in the form, so any value means a machine filled it. */
+  company_website?: string
+  /** Epoch ms the form rendered, used to reject inhuman fill times. */
+  formLoadedAt?: number
   name?: string
   email?: string
   phone?: string
@@ -24,6 +30,9 @@ function splitName(fullName: string): { first: string; last: string } {
 }
 
 export async function POST(request: NextRequest) {
+  const limited = await checkRateLimit(request, LIMITS.contact)
+  if (!limited.allowed) return tooManyRequests(LIMITS.contact)
+
   let body: ContactPayload
   try {
     body = (await request.json()) as ContactPayload
@@ -35,6 +44,20 @@ export async function POST(request: NextRequest) {
   const email = body.email?.toString().trim()
   const message = body.message?.toString().trim()
   const phone = body.phone?.toString().trim() || null
+
+  // Spam screening. The site ran unguarded from April to September; 97% of the
+  // 156 submissions that reached this table were automated.
+  const screen = screenSubmission({
+    name, email, message,
+    honeypot: body.company_website,
+    formLoadedAt: body.formLoadedAt,
+  })
+  if (screen.spam) {
+    console.info('[contact] rejected:', screen.rule, '·', screen.detail)
+    // 201 on purpose: a bot that learns which rule caught it adapts.
+    return NextResponse.json({ ok: true }, { status: 201 })
+  }
+
   const source = body.source?.toString().trim() || 'website'
   const interest = body.interest?.toString().trim() || null
   const tcpaConsent = body.tcpaConsent === true
