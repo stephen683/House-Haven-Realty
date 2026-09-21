@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import TCPAConsent from './TCPAConsent'
 import SpamGuardFields from '@/components/forms/SpamGuardFields'
+import { PLACE_SUGGESTIONS } from '@/lib/place-suggestions'
 
 const interests = [
   'Buying a home',
@@ -15,6 +16,8 @@ const interests = [
 export default function ContactForm({ source = 'contact' }: { source?: string }) {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'ok' | 'error'>('idle')
   const [error, setError] = useState<string | null>(null)
+  // Unique per instance: two forms on one page must not share a datalist id.
+  const placesId = useId()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -29,7 +32,12 @@ export default function ContactForm({ source = 'contact' }: { source?: string })
       email: data.get('email'),
       phone: data.get('phone'),
       interest: data.get('interest'),
-      message: data.get('message'),
+      // Prepended rather than sent separately: it belongs in the alert Stephen
+      // reads, and it is the single strongest signal the triage scorer has.
+      message: [
+        data.get('areas') ? `Areas: ${data.get('areas')}` : null,
+        data.get('message'),
+      ].filter(Boolean).join('\n\n'),
       source,
       tcpaConsent: data.get('tcpa_consent') === 'on',
     }
@@ -112,6 +120,28 @@ export default function ContactForm({ source = 'contact' }: { source?: string })
             ))}
           </select>
         </div>
+      </div>
+      <div>
+        <label htmlFor="contact-areas" className="block text-sm font-medium text-househaven-text mb-1">
+          Where are you looking? <span className="font-normal text-househaven-text-muted">(optional)</span>
+        </label>
+        <input
+          id="contact-areas"
+          name="areas"
+          type="text"
+          list={placesId}
+          autoComplete="off"
+          placeholder="The Nations, 12 South, Franklin…"
+          className="w-full rounded-lg border border-black/10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-househaven-navy"
+        />
+        <datalist id={placesId}>
+          {PLACE_SUGGESTIONS.map((p) => (
+            <option key={p} value={p} />
+          ))}
+        </datalist>
+        <p className="mt-1.5 text-xs text-househaven-text-muted">
+          A neighbourhood, a town, or a ZIP. It gets your message to the right agent faster.
+        </p>
       </div>
       <div>
         <label htmlFor="contact-message" className="block text-sm font-medium text-househaven-text mb-1">

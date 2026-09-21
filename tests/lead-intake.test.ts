@@ -130,6 +130,46 @@ describe('recordLead', () => {
   })
 })
 
+describe('the triage band decides what happens to the email, never the save', () => {
+  const REAL = 'Areas: 12 South\nBudget: $1.1M\nBeds: 3+\n\nNotes:\nWalkable, close to the park, we need three bedrooms minimum.'
+  const BAIT = 'Hello, I am seeking a single-family home. Please text me on WhatsApp at 8084209229.'
+  const VAGUE = 'Looking to connect with you as I find the right home over the next few months.'
+
+  it('emails a local enquiry with a clean subject', async () => {
+    const r = await run({ message: REAL, source: 'home_search', budget: '$1.1M' })
+    expect(r.band).toBe('inbox')
+    expect(resend.calls).toHaveLength(1)
+    expect(resend.calls[0].subject).toBe('New lead')
+  })
+
+  it('emails a vague enquiry but flags it for review', async () => {
+    const r = await run({ message: VAGUE })
+    expect(r.band).toBe('review')
+    expect(resend.calls[0].subject).toBe('[review] New lead')
+  })
+
+  it('saves realtor bait without emailing anyone', async () => {
+    const r = await run({ message: BAIT })
+    expect(r.saved).toBe(true)
+    expect(r.band).toBe('file')
+    expect(resend.calls).toHaveLength(0)
+    expect(r.notified).toBe(false)
+  })
+
+  it('records the score and the reason on every row, so filing is auditable', async () => {
+    await run({ message: BAIT })
+    expect(inserted[0].triage_band).toBe('file')
+    expect(typeof inserted[0].lead_score).toBe('number')
+    expect(inserted[0].triage_reasons).toMatch(/realtor bait/)
+  })
+
+  it('puts the triage verdict in the alert so Stephen can see why', async () => {
+    await run({ message: REAL, source: 'home_search', budget: '$1.1M' })
+    expect(resend.calls[0].text).toMatch(/Triage: inbox/)
+    expect(resend.calls[0].text).toMatch(/12 south/)
+  })
+})
+
 describe('every public intake route goes through recordLead', () => {
   // Any route that writes to `leads` on its own re-opens the gap: the two
   // busiest ones posted to Resend with a raw fetch and never read the response.

@@ -11,6 +11,7 @@ type Row = {
   id: string
   notified_at: string | null
   notify_error: string | null
+  triage_band?: string
 }
 
 function stub(rows: Row[], error?: string): SupabaseClient {
@@ -18,6 +19,7 @@ function stub(rows: Row[], error?: string): SupabaseClient {
     select: () => q,
     gte: () => q,
     neq: () => q,
+    not: () => q,
     order: () => q,
     limit: () => Promise.resolve(error ? { data: null, error: { message: error } } : { data: rows, error: null }),
   }

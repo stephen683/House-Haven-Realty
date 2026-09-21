@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useId, useState, useRef } from 'react'
 import TCPAConsent from './TCPAConsent'
 import SpamGuardFields from '@/components/forms/SpamGuardFields'
+import { PLACE_SUGGESTIONS } from '@/lib/place-suggestions'
 
 const TIMELINE_OPTIONS = [
   'I want to start now',
@@ -16,6 +17,8 @@ export default function HomeSearchForm() {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'ok' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const formRef = useRef<HTMLFormElement>(null)
+  // Unique per instance: two forms on one page must not share a datalist id.
+  const placesId = useId()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -147,9 +150,16 @@ export default function HomeSearchForm() {
             id="hs-areas"
             name="areas"
             type="text"
+            list={placesId}
+            autoComplete="off"
             placeholder="East Nashville, Franklin, anywhere in Williamson…"
             className="w-full px-3 py-2.5 rounded-lg border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-househaven-navy/30"
           />
+          <datalist id={placesId}>
+            {PLACE_SUGGESTIONS.map((p) => (
+              <option key={p} value={p} />
+            ))}
+          </datalist>
         </div>
         <div>
           <label htmlFor="hs-price" className="block text-xs font-semibold text-househaven-navy mb-1">

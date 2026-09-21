@@ -439,9 +439,11 @@ export async function runLeadDeliveryCheck(supabase: SupabaseClient): Promise<Ch
   try {
     const { data, error } = await supabase
       .from('leads')
-      .select('id, email, created_at, notified_at, notify_error')
+      .select('id, email, created_at, notified_at, notify_error, triage_band')
       .gte('created_at', since)
       .neq('form_type', 'canary')
+      // Filed submissions are deliberately not emailed; see lead-score.ts.
+      .not('triage_band', 'eq', 'file')
       .order('created_at', { ascending: false })
       .limit(200)
     if (error) return done(`read failed: ${error.message}`)

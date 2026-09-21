@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import HomeSearchForm from '@/components/forms/HomeSearchForm'
 import MortgageCalculator from '@/components/buyers/MortgageCalculator'
 import MovingChecklist from '@/components/buyers/MovingChecklist'
 
@@ -156,13 +157,32 @@ export default function BuyersPage() {
           </p>
         </div>
 
-        <div className="mt-14 text-center">
-          <Link
-            href="/contact"
-            className="inline-flex items-center px-7 py-4 rounded-lg bg-househaven-navy text-white font-semibold hover:bg-househaven-navy-light transition"
-          >
-            Start a conversation
-          </Link>
+      </section>
+
+      {/* Structured intake. Every genuine buyer lead this site has ever
+          produced came through this form; the free-text contact form produced
+          none. So it lives here, on the page buyers actually land on, rather
+          than a click away. */}
+      <section id="start" className="bg-black text-white py-20 lg:py-24 scroll-mt-24">
+        <div className="max-w-3xl mx-auto px-4 lg:px-6">
+          <h2 className="text-3xl lg:text-4xl font-bold tracking-tight">
+            Tell us what you&rsquo;re looking for
+          </h2>
+          <p className="mt-4 text-white/70 leading-relaxed">
+            Where, roughly what budget, and when. An agent reads every one of these and
+            replies the same day with active listings that fit — not a drip campaign.
+            Prefer to talk? Call (615) 624-4766.
+          </p>
+          <div className="mt-8 bg-white text-househaven-text rounded-2xl p-6 lg:p-8">
+            <HomeSearchForm />
+          </div>
+          <p className="mt-6 text-sm text-white/60">
+            Not buying yet, or here about something else?{' '}
+            <Link href="/contact" className="underline underline-offset-4 hover:text-white">
+              Send us a message instead
+            </Link>
+            .
+          </p>
         </div>
       </section>
 
