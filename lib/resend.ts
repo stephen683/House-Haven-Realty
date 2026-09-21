@@ -4,6 +4,19 @@
 
 const RESEND_BASE = 'https://api.resend.com/emails'
 
+/**
+ * Whether a send would actually leave the building.
+ *
+ * sendEmail() deliberately returns ok:true on a dry-run so an unconfigured key
+ * never blocks a lead from being saved — the right call for the form routes.
+ * It is the wrong call for alerting: the canary would detect an outage, "send"
+ * an alert into console.info, and stamp last_alerted_at as though a human had
+ * been paged. Anything whose job is to reach a person must check this first.
+ */
+export function isEmailConfigured(): boolean {
+  return Boolean(process.env.RESEND_API_KEY)
+}
+
 export interface SendEmailInput {
   from: string
   to: string | string[]

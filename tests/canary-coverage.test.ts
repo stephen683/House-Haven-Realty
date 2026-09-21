@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
+  runAlertChannelCheck,
   runLeadsWriteCheck,
   runCorpusAgreementCheck,
   CANARY_LEAD_EMAIL,
@@ -166,5 +167,46 @@ describe('canary coverage', () => {
     ]) {
       expect(src, `canary should assert ${needle}`).toContain(needle)
     }
+  })
+})
+
+// ── alert channel ───────────────────────────────────────────────────────────
+
+describe('canary alert channel check', () => {
+  const original = process.env.RESEND_API_KEY
+  afterEach(() => {
+    if (original === undefined) delete process.env.RESEND_API_KEY
+    else process.env.RESEND_API_KEY = original
+    vi.resetModules()
+  })
+
+  it('fails when alerts would only reach the logs', async () => {
+    delete process.env.RESEND_API_KEY
+    vi.resetModules()
+    const { runAlertChannelCheck: check } = await import('@/lib/canary')
+    const res = check()
+    expect(res.ok).toBe(false)
+    expect(res.errorExcerpt).toContain('never reach anyone')
+  })
+
+  it('passes once a key is configured', async () => {
+    process.env.RESEND_API_KEY = 're_test'
+    vi.resetModules()
+    const { runAlertChannelCheck: check } = await import('@/lib/canary')
+    expect(check().ok).toBe(true)
+  })
+
+  it('is distinguishable from a dry-run send reporting success', async () => {
+    // sendEmail returns ok:true without a key on purpose, so a lead is never
+    // lost to an unconfigured mailer. That is exactly why alerting cannot use
+    // its return value as proof of delivery.
+    delete process.env.RESEND_API_KEY
+    vi.resetModules()
+    const { sendEmail } = await import('@/lib/resend')
+    const sent = await sendEmail({ from: 'a@b.c', to: 'd@e.f', subject: 's', text: 't' })
+    expect(sent.ok).toBe(true)
+    expect(sent.id).toBeNull()
+    const { runAlertChannelCheck: check } = await import('@/lib/canary')
+    expect(check().ok).toBe(false)
   })
 })

@@ -12,6 +12,7 @@
 
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { STAGE_LADDER, type StageKey } from './permit-stages'
+import { isEmailConfigured } from './resend'
 
 export interface CheckResult {
   endpoint: string
@@ -375,6 +376,34 @@ export async function runCorpusAgreementCheck(
   }
 }
 
+/**
+ * The alert channel can actually reach a person.
+ *
+ * Every other check here assumes a failure gets emailed. sendEmail() returns
+ * ok:true without a key, so without this the canary could be detecting outages
+ * and reporting success at delivering the alerts — with last_alerted_at set,
+ * which reads as proof the page went out. This check cannot email when it
+ * fails, by definition; it goes red in canary_state and in the cron response,
+ * which is the point.
+ */
+export const ALERT_CHANNEL_ENDPOINT = 'Alert channel (Resend)'
+
+export function runAlertChannelCheck(): CheckResult {
+  const configured = isEmailConfigured()
+  return {
+    endpoint: ALERT_CHANNEL_ENDPOINT,
+    ok: configured,
+    httpStatus: null,
+    responseMs: 0,
+    assertion: 'RESEND_API_KEY is set, so a DOWN alert would actually be delivered',
+    errorExcerpt: configured
+      ? null
+      : 'RESEND_API_KEY is unset — alerts dry-run to logs. Every other check on ' +
+        'this dashboard is unmonitored in practice: a failure would be detected, ' +
+        'recorded, and never reach anyone.',
+  }
+}
+
 export async function runAllChecks(
   baseUrl: string,
   supabase: SupabaseClient,
@@ -385,7 +414,7 @@ export async function runAllChecks(
     runLeadsWriteCheck(supabase),
     runCorpusAgreementCheck(baseUrl, supabase),
   ])
-  return [...http, permitTable, leadsWrite, corpus]
+  return [...http, permitTable, leadsWrite, corpus, runAlertChannelCheck()]
 }
 
 export type Transition = 'went_down' | 'recovered' | 'still_down_cooldown' | 'still_down_suppressed' | 'stable_ok' | 'stable_ok_first'

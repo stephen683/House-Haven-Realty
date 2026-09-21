@@ -174,7 +174,7 @@ Pipeline product redesign beyond the original launch scope — triggered by Step
 - [x] **ArcGIS date-literal fix** (`36c07ca`) — permit map was returning zero features; ArcGIS rejected raw epoch-millis in WHERE, now uses `TIMESTAMP 'YYYY-MM-DD HH:MM:SS'` literal. 493 live permits restored.
 - [x] **Compass-style detail panel** (`f80b163`) — full redesign: MapLibre mini-map hero + "Tracked by House Haven" chip, neighborhood-street-block (no house number), fiduciary-conflict block, email-only notify form with TCPA, builder card with prior Nashville builds, collapsible FTHB checklist, NAR 2026 commission disclosure. Removed: construction cost (read like a price), permit number, council district, parcel ID, census tract, raw Purpose text.
 - [x] **Real construction-stage timeline** — ePermits REST API (`epermits.nashville.gov/api/permit/1.0/`) returns live inspection records. 7-stage ladder: Permitted → Site prep → Foundation → Framing → Dried-in → Finishing → Near listing. Per-stage click-to-expand shows underlying inspections with results + scheduled dates.
-- [x] **Canary monitoring** (`69431c2` + `611b562`) — `/api/cron/canary` at `*/15 * * * *` hits 6 critical endpoints with shape assertions, writes to Supabase `canary_runs` + `canary_state`, emails on DOWN/RECOVERED transitions with 1hr cooldown. Verified end-to-end — canary caught its own config bug (VERCEL_URL was auth-gated), fired DOWN alerts, recovered on next cycle after fix.
+- [x] **Canary monitoring** (`69431c2` + `611b562`, extended `c8a088f`) — `/api/cron/canary` at `*/15 * * * *`. Now 12 checks, from 7: the Pipeline surface, plus `/`, `/contact` and `/value`, a `leads` write-path probe (insert/read/delete a sentinel row), and a corpus-agreement check comparing the scores endpoint against the cached 365-day corpus. Page checks assert the TREC firm name, phone and Commission line, the verbatim TCPA consent on `/contact` and the NAR disclosure on `/value` — a page that drops a statutory disclosure while returning 200 is now an outage. Originally 6 endpoints with shape assertions, writes to Supabase `canary_runs` + `canary_state`, emails on DOWN/RECOVERED transitions with 1hr cooldown. Verified end-to-end — canary caught its own config bug (VERCEL_URL was auth-gated), fired DOWN alerts, recovered on next cycle after fix.
 - [x] **Condos + multifamily included** (`5016b0e`) — broadened ArcGIS filter to include condo permits (filed as Commercial-Rehab with subtype `Multifamily, Condominium`), duplexes, multifamily-new. Dedupe by building: 186 McGavock unit permits collapse to one pin with `unitCount: 186` chip on panel. Accessory subtypes (pools/sheds/carports) filtered out at source.
 - [x] **Stage illustrations** — 7 branded SVG illustrations in `/public/images/pipeline/stages/` (permitted, site_prep, foundation, framing, dried_in, finishing, near_listing). Shipped as hero banner at top of stage timeline (always visible, no tap required). Swap to JPG photos by dropping files and flipping extension in `lib/stage-images.ts`.
 - [x] **Lot size via parcels join** — new `fetchParcelByAPN()` hits `Parcels_view` ArcGIS layer, surfaces acres + zoning + land use. Panel shows 4th spec cell when acres > 0; zoning always in the footer caption.
@@ -185,7 +185,12 @@ Pipeline product redesign beyond the original launch scope — triggered by Step
 **Env vars still pending on Vercel:**
 - [ ] `RESEND_API_KEY` — currently alerts dry-run to logs; set this to activate email
 - [ ] `HUBSPOT_PRIVATE_APP_TOKEN` + custom properties (`house_haven_source`, `selling_timeline`, `pipeline_notify` source)
-- [ ] `CANARY_BASE_URL=https://househavenrealty.com` at DNS cutover
+- [x] `CANARY_BASE_URL` — no longer needed. The canary defaulted to the pre-launch
+      alias `project-bmq0e.vercel.app`, so it was green while monitoring a hostname
+      no visitor uses; a DNS or certificate failure on the real domain would have
+      been invisible. The default is now `https://www.househavenrealty.com` (the
+      serving domain; the apex 308s to it). Set the env var only to point the
+      canary somewhere else.
 
 ---
 
