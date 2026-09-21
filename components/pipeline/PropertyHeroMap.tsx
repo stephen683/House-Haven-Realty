@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import maplibregl from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
+import { BASEMAP_STYLE_URL } from '@/lib/map-style'
 
 interface PropertyHeroMapProps {
   lng: number
@@ -17,29 +18,7 @@ export default function PropertyHeroMap({ lng, lat, stageLabel }: PropertyHeroMa
     if (!containerRef.current) return
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: {
-        version: 8,
-        sources: {
-          'carto-light': {
-            type: 'raster',
-            tiles: [
-              'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
-              'https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
-              'https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
-            ],
-            tileSize: 256,
-            attribution: '© OpenStreetMap © CARTO',
-          },
-        },
-        layers: [
-          {
-            id: 'carto-light-layer',
-            type: 'raster',
-            source: 'carto-light',
-            paint: { 'raster-saturation': -0.3, 'raster-brightness-min': 0.08 },
-          },
-        ],
-      },
+      style: BASEMAP_STYLE_URL,
       center: [lng, lat],
       zoom: 16,
       interactive: false,

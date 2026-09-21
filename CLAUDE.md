@@ -36,7 +36,7 @@ All tools follow **House Haven [Thing]**: Pipeline, Value, Journey, Match, Commu
 - **Database:** Supabase (Postgres + PostGIS) — project `eefqcgetyxdrvchkwhrq`, us-east-1
 - **Hosting:** Vercel Pro — `prj_jM9nRgVoXkxknmlv7z3e99Lg6Ct9`, team `team_ar5Xgtj6VsBX5MdMCOgxwkGh`, region iad1, framework `nextjs` (set in `vercel.json`)
 - **Styling:** Tailwind v3 (tokens under `househaven` namespace)
-- **Maps:** MapLibre GL JS (PermitPilot architecture; CARTO light tiles, no key)
+- **Maps:** MapLibre GL JS (PermitPilot architecture; OpenFreeMap `positron` style, no key — CARTO was dropped when it began watermarking unauthenticated tiles). Style is centralised in `lib/map-style.ts`; override with `NEXT_PUBLIC_MAP_STYLE_URL`.
 - **Email:** Resend
 - **Analytics:** Vercel Web Analytics + Speed Insights (live); GA4 to wire at launch
 - **Launch additions:** MLS Grid (Realtracs feed), RentCast (AVM), HubSpot API (CRM portal `242305648`)

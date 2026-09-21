@@ -5,10 +5,13 @@ import path from 'node:path'
 const fx = (name: string) =>
   JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', `${name}.json`), 'utf8'))
 
-const PNG_1x1 = Buffer.from(
-  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
-  'base64',
-)
+const EMPTY_MAP_STYLE = {
+  version: 8,
+  sources: {},
+  layers: [
+    { id: 'background', type: 'background', paint: { 'background-color': '#f5f5f5' } },
+  ],
+}
 
 /**
  * Waits for MapLibre to load the permits source and returns how many pins it
@@ -60,8 +63,10 @@ async function mockNetwork(page: Page) {
   await page.route('**/api/permits/geojson**', (route) => route.fulfill({ json: fx('geojson') }))
   await page.route('**/api/pipeline/scores**', (route) => route.fulfill({ json: { scores: [], meta: {} } }))
   await page.route('**/api/pipeline/permit/**', (route) => route.fulfill({ status: 404, json: {} }))
-  await page.route('**basemaps.cartocdn.com/**', (route) =>
-    route.fulfill({ status: 200, contentType: 'image/png', body: PNG_1x1 }),
+  // Keep the basemap hermetic: serve a valid empty style so MapLibre finishes
+  // loading without reaching the tile host for glyphs, sprites or vector tiles.
+  await page.route('**tiles.openfreemap.org/**', (route) =>
+    route.fulfill({ status: 200, json: EMPTY_MAP_STYLE }),
   )
   return searchRequests
 }
