@@ -1,7 +1,7 @@
 -- Per-IP, per-endpoint rate limiting for public form submissions.
 --
--- 156 submissions reached the leads table with no throttle of any kind; 97%
--- were automated. A single bot could also hammer /api/value, which bills a
+-- 156 submissions reached the leads table with no throttle of any kind; three
+-- were real clients. A single bot could also hammer /api/value, which bills a
 -- RentCast call per request.
 --
 -- One row per bucket with a rolling window, incremented atomically in the

@@ -2,9 +2,15 @@
 //
 // The site ran from April to September with no spam defence of any kind — no
 // honeypot, no timing check, no rate limit, no content rules. 156 submissions
-// reached the leads table and 97% were automated. Three genuine buyers were
-// buried in it, one of them a listing-plus-purchase that sat unread for eight
-// weeks.
+// reached the leads table; three were genuine buyers, one of them a
+// listing-plus-purchase that sat unread for eight weeks.
+//
+// The content rules below catch 100 of those 156 when replayed over the real
+// table. They are a backstop, not the defence: the 53 they miss are B2B
+// pitches and offshore "realtor bait" — well-formed prose with a WhatsApp
+// number — which no content heuristic can separate from a real enquiry. The
+// honeypot and the fill timer are what stop those, because both are
+// automated submissions whatever the text says.
 //
 // Every threshold here is calibrated against that corpus rather than guessed,
 // because a false positive costs a real client. Where a rule could not be made

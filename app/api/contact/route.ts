@@ -45,8 +45,8 @@ export async function POST(request: NextRequest) {
   const message = body.message?.toString().trim()
   const phone = body.phone?.toString().trim() || null
 
-  // Spam screening. The site ran unguarded from April to September; 97% of the
-  // 156 submissions that reached this table were automated.
+  // Spam screening. The site ran unguarded from April to September; of the 156
+  // submissions that reached this table, three were real clients.
   const screen = screenSubmission({
     name, email, message,
     honeypot: body.company_website,
