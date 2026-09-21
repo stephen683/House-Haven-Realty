@@ -108,7 +108,7 @@ Two things found and recorded while removing HubSpot: the portal holds 7,060 con
 and refuses new ones, and the client was writing two properties that do not exist in
 it — so the CRM leg could not have worked with any token.
 
-### 4.2 Score, don't just block (est. 2–3 days)
+### 4.2 Score, don't just block ✅ shipped 2026-09-21
 
 Binary spam/not-spam is the wrong shape for realtor-bait. Score every submission 0–100 and
 route by band: **auto-file** the obvious junk, **inbox** the real ones, **hold for review**
@@ -123,17 +123,22 @@ the middle. The signals are already sitting in the data:
 - WhatsApp / international dial codes in a Nashville enquiry.
 - Canonical-email repeat rate (`canonicalEmail()` already exists and is tested).
 
-### 4.3 Design the funnel toward structure (est. 2–3 days)
+### 4.3 Design the funnel toward structure ✅ shipped 2026-09-21
 
-The data is unambiguous: **structured intake produced 100% of the real leads; free text
-produced 100% of the bait.** Act on it.
+Structured intake produced 100% of the real leads; free text produced 100% of the bait.
 
-- Make the structured search form the primary path on `/buyers`, `/contact` and the
-  homepage. Free text becomes the fallback, not the default.
-- Ask one qualifying question that a bait script cannot answer plausibly — neighbourhood
-  or ZIP, bound to real Nashville geography we already have.
-- **Within the locked kill list.** No account creation, no email wall, no chatbot, no
-  exit-intent. Structure is not friction: Lauren Kane filled in five fields voluntarily.
+- `/buyers` now renders the structured form **inline** instead of linking to `/contact`.
+  It is the page Chris lands on and it had no structured intake at all.
+- Both forms ask one geography question, backed by a shared suggestion list.
+  `tests/place-suggestions.test.ts` asserts every suggestion is recognised by the scorer
+  — offering a place the scorer did not know would penalise whoever took the hint.
+- The area field is **optional** and free text still works. Structure is not friction:
+  Lauren Kane filled in five fields voluntarily.
+- Nothing from the kill list: no account, no email wall, no chatbot, no exit-intent.
+
+**Not done — the homepage.** ROADMAP §6.1 locks it at 8 sections and it currently has 7
+plus a hero. Adding structured intake there is a spec question, not an engineering one.
+Your call.
 
 ### 4.4 Make the inbox an actual queue (est. 2 days)
 
@@ -210,9 +215,9 @@ actually failed here, which is always the quiet stuff:
 | ✅ Today | Phase 0 — spam protection | done, deployed |
 | ✅ Today | 4.1 close the pipeline (email path + delivery canary) | done, deployed |
 | **This week** | **MLS Grid application** | **Stephen, ~1 hour** |
-| Week 2 | 4.2 scoring, 4.3 structured funnel | nothing |
-| Week 2 | Label or pull the mock listings | nothing |
-| Week 3 | 4.4 agent queue | nothing |
+| ✅ Today | 4.2 scoring · 4.3 structured funnel | done, deployed |
+| **Next** | Label or pull the mock listings | nothing |
+| **Next** | 4.4 agent queue — 156 leads still all marked `new` | nothing |
 | On key arrival | Phase 2 — real IDX | MLS Grid |
 | Week 4 | Phase 3 — conversion analytics, voice cleanup | nothing |
 | Ongoing | Phase 4 — canary, retention, CI | Actions workflow |
