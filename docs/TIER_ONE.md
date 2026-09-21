@@ -18,7 +18,7 @@ Measured today against production, not inferred from docs.
 | Tests | 173 passing, 19 files |
 | Form submissions since 2026-04-18 | **156** |
 | Of those, real clients | **3** |
-| Leads ever routed to HubSpot | **0 of 156** |
+| Leads with a confirmed notification | **0 of 156** |
 | Leads still marked `status: 'new'` | **156 of 156** |
 | `listings_cache` rows | **0** — `/homes-for-sale` is serving 8 mock listings |
 | `valuation_cache` rows | **0** — `/value` has never recorded a successful RentCast call |
@@ -85,19 +85,28 @@ the one that makes money.
 > This is the single largest dollar loss on the site, and no amount of new features
 > touches it.
 
-### 4.1 Close the pipeline (est. 1–2 days)
+### 4.1 Close the pipeline ✅ shipped 2026-09-21
 
-The plumbing exists and is disconnected. `lib/hubspot.ts` is a complete, working client.
-`leads` already has `hubspot_contact_id` and `synced_to_crm_at` columns. They have never
-been populated, because only 2 of the 9 routes ever call it.
+**Email is the lead path.** There is no CRM on the site: leads are emailed to Stephen
+and worked in Meet Corinne. The HubSpot integration was removed rather than left
+dormant — an integration nobody uses fails quietly, which is the failure mode this
+whole phase exists to kill.
 
-- Wire `upsertContact` into **every** intake route, not two.
-- Backfill the 3 real leads into HubSpot by hand today. Do not wait for the code.
-- Make delivery verifiable: `/api/contact` fires an inline `fetch` at Resend and
-  **ignores the response**. Route it through `lib/resend.ts`, check `ok`, and record
-  the outcome on the lead row. Right now a notification outage is invisible.
-- Add a canary check that a lead written in the last 24h has a non-null
-  `synced_to_crm_at`. Silence is the failure mode we keep shipping.
+- `lib/lead-intake.ts` is now the single path for every public form: save, notify,
+  record the outcome. Only the save can fail the request.
+- `/api/contact` and `/api/valuation` were posting to Resend with a raw `fetch` and
+  **never reading the response**; `/api/newsletter` notified nobody at all. All three
+  now go through `lib/resend.ts` with the result checked and written to `notified_at`
+  or `notify_error`.
+- The **agent contract route** was worse and is fixed the same way: it inserted a deal
+  under contract, logged any error, and returned 201 regardless. It now refuses on a
+  failed save and warns the agent when the desk was not emailed.
+- Canary check **Lead delivery (notify)**: every lead from the last 24h produced a
+  confirmed notification. Silence was the failure mode we kept shipping.
+
+Two things found and recorded while removing HubSpot: the portal holds 7,060 contacts
+and refuses new ones, and the client was writing two properties that do not exist in
+it — so the CRM leg could not have worked with any token.
 
 ### 4.2 Score, don't just block (est. 2–3 days)
 
@@ -199,7 +208,7 @@ actually failed here, which is always the quiet stuff:
 | When | What | Blocked on |
 |---|---|---|
 | ✅ Today | Phase 0 — spam protection | done, deployed |
-| **This week** | 4.1 close the pipeline + backfill the 3 real leads | nothing |
+| ✅ Today | 4.1 close the pipeline (email path + delivery canary) | done, deployed |
 | **This week** | **MLS Grid application** | **Stephen, ~1 hour** |
 | Week 2 | 4.2 scoring, 4.3 structured funnel | nothing |
 | Week 2 | Label or pull the mock listings | nothing |
@@ -213,12 +222,12 @@ actually failed here, which is always the quiet stuff:
 1. **Submit the MLS Grid application.** Highest-leverage hour on this list. Everything in
    Phase 2 is finished code waiting on a key.
 2. **Call Lauren Kane.** 55 days. She is buying *and* selling.
-3. **Confirm `HUBSPOT_PRIVATE_APP_TOKEN` is set in Vercel** — I cannot read env vars
-   (403, read-scoped token). If it is unset, 4.1 ships and still routes nothing.
-4. **Decide on the mock listings:** label as samples, or take the route down until the feed
+3. **Decide on the mock listings:** label as samples, or take the route down until the feed
    is live. My recommendation is take it down — a 404 costs less than fake inventory on a
    licensed brokerage's domain.
-5. **Run `node scripts/migrate-team-headshots.mjs`** — still outstanding from earlier today.
+4. **Run `node scripts/migrate-team-headshots.mjs`** — still outstanding from earlier today.
+5. **Tell me when Meet Corinne should receive leads directly.** Today they land in your
+   inbox only. `lib/lead-intake.ts` is the one place a Corinne webhook would go.
 
 ## 10. What this plan deliberately does not do
 
