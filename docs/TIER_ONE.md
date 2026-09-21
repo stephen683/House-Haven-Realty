@@ -140,12 +140,26 @@ Structured intake produced 100% of the real leads; free text produced 100% of th
 plus a hero. Adding structured intake there is a spec question, not an engineering one.
 Your call.
 
-### 4.4 Make the inbox an actual queue (est. 2 days)
+### 4.4 Make the inbox an actual queue ✅ shipped 2026-09-21
 
-156 leads all marked `new` means nobody is working the list — the status field is
-decoration. An internal `/agents` view already exists behind a password. Give it: unworked
-leads first, score visible, one click to claim, one click to mark contacted. Ten agents,
-one queue.
+`/agents/leads` is now the portal's landing page. Every enquiry, highest score first,
+newest second. Claim · Mark contacted · Reopen. Views for unworked, claimed, contacted,
+and **what triage filed** — filed leads are visible rather than hidden, because a queue
+you cannot audit is a queue nobody trusts.
+
+The portal password is shared, so there is no session identity. An agent picks their name
+once (remembered per-device) and the server validates it against `data/team.ts`.
+
+Pre-triage leads show with a null score rather than being hidden. They were never scored;
+pretending otherwise would bury them again.
+
+**Correction to something I told you earlier.** I described the structured form as the
+one bots don't use. That was wrong: 27 of the 30 historical `home_search` submissions
+were bots filling every field with consonant soup. The spam guard catches almost all of
+them upstream on the email address, but one slipped through on a single Gmail dot and
+would have scored 71 on the structured-form bonus alone. The bonus now has to be earned —
+keyboard mash in Areas or Budget files the submission. What stands is the useful half:
+**every real lead came through the structured form.**
 
 ---
 
@@ -217,10 +231,13 @@ actually failed here, which is always the quiet stuff:
 | **This week** | **MLS Grid application** | **Stephen, ~1 hour** |
 | ✅ Today | 4.2 scoring · 4.3 structured funnel | done, deployed |
 | **Next** | Label or pull the mock listings | nothing |
-| **Next** | 4.4 agent queue — 156 leads still all marked `new` | nothing |
+| ✅ Today | 4.4 agent queue | done, deployed |
 | On key arrival | Phase 2 — real IDX | MLS Grid |
 | Week 4 | Phase 3 — conversion analytics, voice cleanup | nothing |
 | Ongoing | Phase 4 — canary, retention, CI | Actions workflow |
+
+**Phase 1 is complete.** Spam blocked, delivery verified, submissions triaged, funnel
+pointed at the form that works, and a queue the team can actually work.
 
 ## 9. What I need from you
 
