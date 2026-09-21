@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import SpamGuardFields from '@/components/forms/SpamGuardFields'
 
 interface AlertSignupProps {
   availableZips: string[]
@@ -20,6 +21,8 @@ export default function AlertSignup({ availableZips }: AlertSignupProps) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        company_website: fd.get('company_website'),
+        formLoadedAt: Number(fd.get('formLoadedAt')) || undefined,
         email: fd.get('email'),
         tcpaConsent: fd.get('alert_tcpa') === 'on',
         source: 'pipeline_alert',
@@ -72,6 +75,7 @@ export default function AlertSignup({ availableZips }: AlertSignupProps) {
         </div>
       ) : (
         <form ref={formRef} onSubmit={handleSubmit} className="space-y-3">
+      <SpamGuardFields />
           <div>
             <label htmlFor="alert-email" className="block text-xs text-househaven-text-muted mb-1">
               Email

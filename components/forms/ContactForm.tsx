@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import TCPAConsent from './TCPAConsent'
+import SpamGuardFields from '@/components/forms/SpamGuardFields'
 
 const interests = [
   'Buying a home',
@@ -22,6 +23,8 @@ export default function ContactForm({ source = 'contact' }: { source?: string })
     const form = e.currentTarget
     const data = new FormData(form)
     const payload = {
+      company_website: data.get('company_website'),
+      formLoadedAt: Number(data.get('formLoadedAt')) || undefined,
       name: data.get('name'),
       email: data.get('email'),
       phone: data.get('phone'),
@@ -47,6 +50,7 @@ export default function ContactForm({ source = 'contact' }: { source?: string })
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      <SpamGuardFields />
       <div className="grid sm:grid-cols-2 gap-5">
         <div>
           <label htmlFor="contact-name" className="block text-sm font-medium text-househaven-text mb-1">

@@ -7,10 +7,14 @@ import {
   getAgentPassword,
   makeSessionToken,
 } from '@/lib/agent-auth'
+import { checkRateLimit, tooManyRequests, LIMITS } from '@/lib/rate-limit'
 
 export const runtime = 'nodejs'
 
 export async function POST(req: NextRequest) {
+  const limited = await checkRateLimit(req, LIMITS.agentAuth)
+  if (!limited.allowed) return tooManyRequests(LIMITS.agentAuth)
+
   let body: { password?: string }
   try {
     body = await req.json()

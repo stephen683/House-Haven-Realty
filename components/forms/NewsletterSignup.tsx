@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import TCPAConsent from './TCPAConsent'
+import SpamGuardFields from '@/components/forms/SpamGuardFields'
 
 interface NewsletterSignupProps {
   variant?: 'dark' | 'light'
@@ -27,6 +28,8 @@ export default function NewsletterSignup({
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        company_website: formData.get('company_website'),
+        formLoadedAt: Number(formData.get('formLoadedAt')) || undefined,
         email: formData.get('email'),
         tcpaConsent,
       }),
@@ -52,6 +55,7 @@ export default function NewsletterSignup({
       onSubmit={handleSubmit}
       className={`${compact ? 'max-w-sm' : 'max-w-lg mx-auto'} space-y-3`}
     >
+      <SpamGuardFields />
       <div className="flex flex-col sm:flex-row gap-3">
         <label className="sr-only" htmlFor="newsletter-email">
           Email address

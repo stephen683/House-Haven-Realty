@@ -61,7 +61,15 @@ vi.mock('server-only', () => ({}))
 vi.mock('@supabase/supabase-js', () => ({
   createClient: (...args: unknown[]) => {
     createClientSpy(...args)
-    return { from: () => chain(), rpc: () => chain() }
+    return {
+      from: () => chain(),
+      // rate_limit_take returns true = allowed. These tests assert service-role
+      // authentication, not throttling; the limiter has its own suite.
+      rpc: (fn: string) =>
+        fn === 'rate_limit_take'
+          ? Promise.resolve({ data: true, error: null })
+          : chain(),
+    }
   },
 }))
 vi.mock('@/lib/hubspot', () => ({

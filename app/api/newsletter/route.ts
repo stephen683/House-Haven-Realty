@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
+import { checkRateLimit, tooManyRequests, LIMITS } from '@/lib/rate-limit'
+import { screenSubmission } from '@/lib/spam-guard'
 
 export const runtime = 'nodejs'
 
@@ -8,7 +10,10 @@ function isValidEmail(email: string) {
 }
 
 export async function POST(request: NextRequest) {
-  let body: { email?: string; tcpaConsent?: boolean; source?: string; targetZip?: string }
+  const limited = await checkRateLimit(request, LIMITS.newsletter)
+  if (!limited.allowed) return tooManyRequests(LIMITS.newsletter)
+
+  let body: { company_website?: string; formLoadedAt?: number; email?: string; tcpaConsent?: boolean; source?: string; targetZip?: string }
   try {
     body = await request.json()
   } catch {
@@ -19,6 +24,17 @@ export async function POST(request: NextRequest) {
   const tcpaConsent = body.tcpaConsent === true
   const source = body.source?.toString().trim() || 'website'
   const targetZip = body.targetZip?.toString().trim() || null
+
+  const screen = screenSubmission({
+    email,
+    honeypot: body.company_website,
+    formLoadedAt: body.formLoadedAt,
+  })
+  if (screen.spam) {
+    console.info('[newsletter] rejected:', screen.rule, '·', screen.detail)
+    return NextResponse.json({ ok: true }, { status: 201 })
+  }
+
 
   if (!email || !isValidEmail(email)) {
     return NextResponse.json({ error: 'Valid email is required.' }, { status: 400 })

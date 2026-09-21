@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { isAgentAuthed } from '@/lib/agent-auth'
 import { createServiceClient } from '@/lib/supabase/service'
+import { checkRateLimit, tooManyRequests, LIMITS } from '@/lib/rate-limit'
 
 export const runtime = 'nodejs'
 
@@ -59,6 +60,9 @@ function fmtCommission(type: string | null, value: number | null) {
 }
 
 export async function POST(req: NextRequest) {
+  const limited = await checkRateLimit(req, LIMITS.agentContract)
+  if (!limited.allowed) return tooManyRequests(LIMITS.agentContract)
+
   if (!(await isAgentAuthed())) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }

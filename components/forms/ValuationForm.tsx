@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import TCPAConsent from './TCPAConsent'
+import SpamGuardFields from '@/components/forms/SpamGuardFields'
 
 const timelines = [
   { value: 'ASAP', label: 'ASAP — listing now' },
@@ -21,6 +22,8 @@ export default function ValuationForm() {
     setError(null)
     const fd = new FormData(e.currentTarget)
     const payload = {
+      company_website: fd.get('company_website'),
+      formLoadedAt: Number(fd.get('formLoadedAt')) || undefined,
       address: fd.get('address'),
       city: fd.get('city'),
       zip: fd.get('zip'),
@@ -47,6 +50,7 @@ export default function ValuationForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      <SpamGuardFields />
       <div>
         <label htmlFor="val-address" className="block text-sm font-medium text-househaven-text mb-1">
           Property address
