@@ -16,6 +16,7 @@ const ROUTES = [
   'app/api/value/request-cma/route.ts',
   'app/api/value/route.ts',
   'app/api/pipeline/permit/[permitNumber]/stage/route.ts',
+  'app/api/agents/leads/route.ts',
 ]
 
 describe('no route uses the anon server client', () => {

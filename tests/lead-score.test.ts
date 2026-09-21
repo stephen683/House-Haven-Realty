@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { scoreLead, classify, findPlaces } from '@/lib/lead-score'
+import { scoreLead, classify, findPlaces, looksLikeGibberish } from '@/lib/lead-score'
 import corpus from './fixtures/triage-corpus.json'
 
 interface Case {
@@ -96,5 +96,31 @@ describe('scoring never penalises a relocating buyer', () => {
     // All three real clients had one: 734 Michigan, 303 Colorado, 203 Connecticut.
     const withArea = scoreLead({ message: 'Areas: 12 South\nBudget: $1.1M', source: 'home_search', budget: '$1.1M' })
     expect(withArea.band).toBe('inbox')
+  })
+})
+
+describe('the structured form bonus has to be earned', () => {
+  // 27 of the 30 historical home_search submissions were bots filling every
+  // field with consonant soup. Using the form is not evidence of a person.
+  const MASH = 'Areas: VYSoobpnlxmFyXBnkvcKLhEP\nBudget: GjENazVqZDRreuSsnZnaT\nBeds: 3+\nTimeline: Just learning the market\n\nNotes:\nLisPcBbTQgEoCakSmqda'
+
+  it('files a bot that filled the structured form with mash', () => {
+    const r = scoreLead({ message: MASH, source: 'home_search', budget: 'GjENazVqZDRreuSsnZnaT' })
+    expect(r.band).toBe('file')
+    expect(r.reasons.join(' ')).toMatch(/keyboard mash/)
+  })
+
+  it('is the verbatim row that slipped the spam guard on a single Gmail dot', () => {
+    const r = scoreLead({
+      message: 'Areas: WwsqAUXpUvARgtWgtSlsAfl\nBudget: XawtnPFcBSkyNdXOIDhVjq\nBeds: 2+\nTimeline: I want to start now\n\nNotes:\nxrAxLPPxZToLpbUlJzC',
+      source: 'home_search',
+    })
+    expect(r.band).toBe('file')
+  })
+
+  it('never calls a real Nashville place name mash', () => {
+    for (const place of ['Murfreesboro', 'Goodlettsville', 'Hendersonville', 'Thompsons Station', 'West nashville', 'Wedgewood-Houston', '12 S', 'Spring Hill']) {
+      expect(looksLikeGibberish(place), place).toBe(false)
+    }
   })
 })

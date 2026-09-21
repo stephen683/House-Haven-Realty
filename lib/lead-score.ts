@@ -198,6 +198,37 @@ export function classify(message: string): 'solicitation' | 'bait' | null {
 
 const STRUCTURED_SOURCES = new Set(['home_search', 'pipeline_alert', 'nashbuilds_alert'])
 
+/**
+ * Keyboard mash in a field that should hold a place name.
+ *
+ * Using the structured form is not by itself evidence of a person: 27 of the
+ * 30 historical `home_search` submissions were bots filling every field with
+ * consonant soup ("VYSoobpnlxmFyXBnkvcKLhEP"). The spam guard catches almost
+ * all of them upstream on the email address, but one got through on a single
+ * Gmail dot — and it would have scored 71 and reached the inbox on the
+ * structured-form bonus alone. The bonus has to be earned, not assumed.
+ *
+ * Length and the single-token requirement keep every real place out of scope:
+ * the longest one-word names the site knows are Murfreesboro (0.42),
+ * Goodlettsville and Hendersonville (0.36), all far above the threshold.
+ */
+const GIBBERISH_MIN_LEN = 12
+const GIBBERISH_MAX_VOWEL_RATIO = 0.3
+
+export function looksLikeGibberish(value: string): boolean {
+  const v = value.trim()
+  if (v.length < GIBBERISH_MIN_LEN) return false
+  if (!/^[A-Za-z]+$/.test(v)) return false
+  const vowels = (v.match(/[aeiou]/gi) ?? []).length
+  return vowels / v.length < GIBBERISH_MAX_VOWEL_RATIO
+}
+
+/** The value of a `Label: value` line in the structured form's message. */
+function structuredField(message: string, label: string): string {
+  const re = new RegExp(`^\\s*${label}:\\s*(.+)$`, 'im')
+  return message.match(re)?.[1]?.trim() ?? ''
+}
+
 export function scoreLead(input: LeadScoreInput): LeadScore {
   const message = (input.message ?? '').trim()
   const reasons: string[] = []
@@ -211,6 +242,20 @@ export function scoreLead(input: LeadScoreInput): LeadScore {
   } else if (places.ambiguous.length > 0) {
     score += 12
     reasons.push(`mentions ${places.ambiguous[0]} (also a city elsewhere)`)
+  }
+
+  const areas = structuredField(message, 'Areas')
+  const gibberish =
+    looksLikeGibberish(areas) ||
+    looksLikeGibberish(structuredField(message, 'Budget')) ||
+    looksLikeGibberish(input.budget ?? '')
+
+  if (gibberish) {
+    // Machine-filled. Never reward the form bonus, and never reach the inbox.
+    score = 5
+    reasons.length = 0
+    reasons.push('structured fields contain keyboard mash')
+    return { score, band: 'file', reasons, places: [] }
   }
 
   if (STRUCTURED_SOURCES.has(input.source ?? '')) {

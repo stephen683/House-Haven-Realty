@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function AgentsPage() {
-  if (await isAgentAuthed()) redirect('/agents/contract')
+  if (await isAgentAuthed()) redirect('/agents/leads')
 
   return (
     <main className="min-h-[70vh] flex items-center justify-center px-6 py-16 bg-white">
