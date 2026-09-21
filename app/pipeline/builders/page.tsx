@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { fetchAllPermits } from '@/lib/permits'
+import { loadPermitCorpus } from '@/lib/permit-repo'
 import { slugifyBuilder as slugify } from '@/lib/builder-slug'
 
 export const metadata: Metadata = {
@@ -26,7 +26,7 @@ interface BuilderProfile {
 }
 
 export default async function BuildersPage() {
-  const permits = await fetchAllPermits({ days: 365, limit: 2000 })
+  const permits = await loadPermitCorpus({ days: 365 })
 
   // Aggregate by builder
   const builderMap = new Map<string, typeof permits>()

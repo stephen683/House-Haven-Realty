@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { fetchAllPermits } from '@/lib/permits'
+import { loadPermitCorpus } from '@/lib/permit-repo'
 import { slugifyBuilder as slugify } from '@/lib/builder-slug'
 import type { NormalizedPermit } from '@/lib/permits'
 
@@ -21,7 +21,7 @@ interface BuilderPageProps {
 }
 
 export async function generateMetadata({ params }: BuilderPageProps): Promise<Metadata> {
-  const permits = await fetchAllPermits({ days: 365, limit: 2000 })
+  const permits = await loadPermitCorpus({ days: 365 })
   const builderPermits = findBuilderPermits(permits, params.slug)
   const name = builderPermits[0]?.contractor || params.slug
 
@@ -40,7 +40,7 @@ function findBuilderPermits(permits: NormalizedPermit[], slug: string): Normaliz
 }
 
 export default async function BuilderProfilePage({ params }: BuilderPageProps) {
-  const permits = await fetchAllPermits({ days: 365, limit: 2000 })
+  const permits = await loadPermitCorpus({ days: 365 })
   const builderPermits = findBuilderPermits(permits, params.slug)
 
   if (builderPermits.length === 0) notFound()

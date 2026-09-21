@@ -362,24 +362,6 @@ export async function fetchRecentPermits(options: {
   return dedupeByBuilding(normalized)
 }
 
-// ─── Fetch ALL permits (for saturation score) ───────────
-
-export async function fetchAllPermits(options: {
-  days?: number
-  limit?: number
-} = {}): Promise<NormalizedPermit[]> {
-  const { days = 365, limit = 2000 } = options
-  const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000)
-
-  const attributes = await fetchPermitPages(
-    `Date_Issued > ${toArcGISTimestamp(since)}`,
-    limit,
-    60 * 60 * 6,
-  )
-
-  return attributes.map(normalize)
-}
-
 // ─── Metro ePermits REST API (inspection tasks) ─────────
 
 import type { EPermitsCase, EPermitsCaseTask } from './permit-stages'

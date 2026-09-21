@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server'
-import { fetchAllPermits } from '@/lib/permits'
+import { loadPermitCorpus } from '@/lib/permit-repo'
 import { computeSaturationScores } from '@/lib/saturation-score'
 
 export const runtime = 'nodejs'
 export const revalidate = 21600 // 6 hours
 
 export async function GET() {
-  const permits = await fetchAllPermits({ days: 365, limit: 2000 })
+  const permits = await loadPermitCorpus({ days: 365 })
   const scores = computeSaturationScores(permits)
 
   return NextResponse.json({

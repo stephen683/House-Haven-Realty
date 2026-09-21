@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
-import { fetchRecentPermits, fetchAllPermits } from '@/lib/permits'
-import { loadCachedPermits } from '@/lib/permit-repo'
+import { loadPermitCorpus } from '@/lib/permit-repo'
 import { computeSaturationScores } from '@/lib/saturation-score'
 import PipelineApp from './PipelineApp'
 
@@ -52,15 +51,11 @@ const datasetSchema = {
 }
 
 export default async function PipelinePage() {
-  // Header stats and the ZIP list come from the same cache the map and search
-  // read, so the three surfaces agree. Live ArcGIS is only a fallback.
-  const [cached, allPermits] = await Promise.all([
-    loadCachedPermits(),
-    fetchAllPermits({ days: 365, limit: 2000 }),
-  ])
-  const permits = cached.length > 0 ? cached : await fetchRecentPermits({ days: 365, limit: 6000 })
+  // Header stats, the ZIP list and the saturation scores all read the one
+  // corpus the map and search read, so every surface agrees.
+  const permits = await loadPermitCorpus()
 
-  const scores = computeSaturationScores(allPermits)
+  const scores = computeSaturationScores(permits)
 
   const totalCost = permits.reduce((s, p) => s + (p.constructionCost || 0), 0)
   const avgCost = permits.length ? totalCost / permits.length : 0

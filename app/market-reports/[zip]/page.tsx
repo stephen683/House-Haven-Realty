@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { fetchAllPermits } from '@/lib/permits'
+import { loadPermitCorpus } from '@/lib/permit-repo'
 import { computeSaturationScores } from '@/lib/saturation-score'
 import { PIPELINE_ZIPS, ZIP_META_MAP } from '@/lib/pipeline-zips'
 
@@ -35,7 +35,7 @@ export default async function MarketReportZipPage({ params }: MarketReportPagePr
   const meta = ZIP_META_MAP[params.zip]
   if (!meta) notFound()
 
-  const allPermits = await fetchAllPermits({ days: 365, limit: 2000 })
+  const allPermits = await loadPermitCorpus({ days: 365 })
   const scores = computeSaturationScores(allPermits)
   const zipScore = scores.find((s) => s.zip === params.zip)
   const zipPermits = allPermits.filter((p) => p.zip === params.zip)

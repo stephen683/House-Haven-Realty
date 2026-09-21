@@ -7,6 +7,7 @@
 // components and must not depend on request cookies.
 
 import { createClient } from '@supabase/supabase-js'
+import { fetchRecentPermits } from './permits'
 import type { NormalizedPermit } from './permits'
 
 const COLUMNS =
@@ -93,20 +94,27 @@ const PAGE = 1000
  * Returns [] (and logs) when the cache is unreachable or empty so callers can
  * fall back to the live feed.
  */
-export async function loadCachedPermits(options: { limit?: number } = {}): Promise<NormalizedPermit[]> {
+export async function loadCachedPermits(
+  options: { limit?: number; days?: number } = {},
+): Promise<NormalizedPermit[]> {
   const supabase = client()
   if (!supabase) return []
   const limit = options.limit ?? 10_000
+  const since =
+    options.days === undefined
+      ? null
+      : new Date(Date.now() - options.days * 86_400_000).toISOString()
   const rows: Row[] = []
 
   for (let from = 0; from < limit; from += PAGE) {
     const to = Math.min(from + PAGE, limit) - 1
-    const { data, error } = await supabase
+    let query = supabase
       .from('building_permits')
       .select(COLUMNS)
       .order('date_issued', { ascending: false, nullsFirst: false })
       .order('permit_number', { ascending: true })
-      .range(from, to)
+    if (since) query = query.gte('date_issued', since)
+    const { data, error } = await query.range(from, to)
 
     if (error) {
       console.error('[permit-repo] read failed:', error.message)
@@ -134,4 +142,29 @@ export function trimForMap(text: string | null | undefined, max = MAP_DESCRIPTIO
   const cut = t.slice(0, max)
   const lastSpace = cut.lastIndexOf(' ')
   return (lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut).trimEnd() + '…'
+}
+
+/**
+ * The corpus every Pipeline surface reasons over: saturation scores, builder
+ * counts, ZIP stats. Cached residential permits, deduped by building — the same
+ * rows the map draws, so colours, counts and pins describe one dataset.
+ *
+ * Was `fetchAllPermits({ days: 365, limit: 2000 })` at seven call sites: a live
+ * ArcGIS pull hard-capped at 2,000 rows with no residential filter and no
+ * dedupe. Scores were therefore computed over a truncated, commercial-inclusive
+ * sample while the map drew 3,500+ deduped homes — which ranked downtown 37203
+ * the hottest new-construction ZIP on the strength of commercial rehab permits
+ * the map never showed.
+ *
+ * Falls back to the live feed only when the cache is empty; the canary alarms
+ * on that state separately.
+ */
+export async function loadPermitCorpus(
+  options: { days?: number } = {},
+): Promise<NormalizedPermit[]> {
+  const days = options.days ?? 365
+  const cached = await loadCachedPermits({ days })
+  if (cached.length > 0) return cached
+  console.error('[permit-repo] corpus cache empty — falling back to live ArcGIS')
+  return fetchRecentPermits({ days, limit: 6000 })
 }
