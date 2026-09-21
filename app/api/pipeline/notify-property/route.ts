@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
-import { isHubSpotConfigured, upsertContact } from '@/lib/hubspot'
 import { sendEmail } from '@/lib/resend'
 import { checkRateLimit, tooManyRequests, LIMITS } from '@/lib/rate-limit'
 import { screenSubmission } from '@/lib/spam-guard'
@@ -86,37 +85,6 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const noteHtml = `
-    <p><strong>Property notify-me signup</strong></p>
-    <ul>
-      <li>Permit: ${permitNumber}</li>
-      <li>Address: ${address ?? 'withheld on page'}</li>
-      <li>ZIP: ${zip ?? 'unknown'}</li>
-    </ul>
-  `.trim()
-
-  const hubspotId = await upsertContact({
-    email,
-    source: 'pipeline_notify',
-    noteHtml,
-  })
-
-  if (!hubspotId && !isHubSpotConfigured()) {
-    console.error('[notify-property] HUBSPOT_PRIVATE_APP_TOKEN unset — signup saved but not in the CRM')
-  }
-
-  if (hubspotId) {
-    try {
-      const supabase = createServiceClient()
-      await supabase
-        .from('property_notify_requests')
-        .update({ hubspot_contact_id: hubspotId, synced_to_crm_at: new Date().toISOString() })
-        .eq('id', supabaseId)
-    } catch (err) {
-      console.error('[notify-property] hubspot id update failed', err)
-    }
-  }
-
   const stephenAlert = `New pipeline notify signup.
 
 Email: ${email}
@@ -124,7 +92,7 @@ Permit: ${permitNumber}
 Address: ${address ?? 'withheld on panel'}
 ZIP: ${zip ?? 'unknown'}
 
-When this home lists, the signup is already in HubSpot — send them the listing the day it goes live.`
+When this home lists, send them the listing the day it goes live. Reply to this email to reach them.`
 
   const alerted = await sendEmail({
     from: 'House Haven Alerts <alerts@househavenrealty.com>',

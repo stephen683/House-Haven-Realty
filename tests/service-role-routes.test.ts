@@ -83,11 +83,6 @@ vi.mock('@supabase/supabase-js', () => ({
     }
   },
 }))
-vi.mock('@/lib/hubspot', () => ({
-  isHubSpotConfigured: () => true,
-  upsertContact: async () => 'hs-1',
-  splitName: (n: string) => ({ firstName: n.split(' ')[0], lastName: n.split(' ').slice(1).join(' ') }),
-}))
 vi.mock('@/lib/resend', () => ({
   isEmailConfigured: () => true,
   sendEmail: async () => ({ ok: true, id: 'e-1' }),

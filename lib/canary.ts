@@ -13,7 +13,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { STAGE_LADDER, type StageKey } from './permit-stages'
 import { isEmailConfigured } from './resend'
-import { isHubSpotConfigured } from './hubspot'
 
 export interface CheckResult {
   endpoint: string
@@ -406,27 +405,29 @@ export function runAlertChannelCheck(): CheckResult {
 }
 
 /**
- * Every lead from the last day reached the CRM and a human.
+ * Every lead from the last day actually reached a human.
  *
  * This is the check that would have caught the real failure here. 156 leads
  * accumulated between April and September: every insert succeeded, every route
- * returned 201, and not one reached HubSpot or produced a verified
- * notification — because only two of nine routes called the CRM and the two
- * busiest posted to Resend without reading the response. Nothing in the stack
- * was erroring. Among them sat a buy-and-sell client who went eight weeks
- * without a reply.
+ * returned 201, and not one produced a verified notification — because the two
+ * busiest routes posted to Resend without reading the response and a third
+ * notified nobody at all. Nothing in the stack was erroring. Among them sat a
+ * buy-and-sell client who went eight weeks without a reply.
+ *
+ * Notification is the whole invariant: the brokerage runs on Stephen seeing
+ * the lead, and email is the only delivery mechanism this site has.
  *
  * Scoped to 24 hours so the historical backlog does not hold it red forever,
  * and silent when there is nothing to check: no leads is not a failure.
  */
-export const CRM_SYNC_ENDPOINT = 'Lead delivery (CRM + notify)'
-export const CRM_SYNC_WINDOW_HOURS = 24
+export const LEAD_DELIVERY_ENDPOINT = 'Lead delivery (notify)'
+export const LEAD_DELIVERY_WINDOW_HOURS = 24
 
-export async function runCrmSyncCheck(supabase: SupabaseClient): Promise<CheckResult> {
+export async function runLeadDeliveryCheck(supabase: SupabaseClient): Promise<CheckResult> {
   const started = Date.now()
-  const assertion = `every lead from the last ${CRM_SYNC_WINDOW_HOURS}h has synced_to_crm_at and notified_at`
+  const assertion = `every lead from the last ${LEAD_DELIVERY_WINDOW_HOURS}h reached a human`
   const done = (reason: string | null): CheckResult => ({
-    endpoint: CRM_SYNC_ENDPOINT,
+    endpoint: LEAD_DELIVERY_ENDPOINT,
     ok: reason === null,
     httpStatus: null,
     responseMs: Date.now() - started,
@@ -434,18 +435,11 @@ export async function runCrmSyncCheck(supabase: SupabaseClient): Promise<CheckRe
     errorExcerpt: reason ? reason.slice(0, 300) : null,
   })
 
-  if (!isHubSpotConfigured()) {
-    return done(
-      'HUBSPOT_PRIVATE_APP_TOKEN is unset — every lead is saved to Supabase and ' +
-      'reaches no CRM. Leads are not lost, but nothing routes or follows up.',
-    )
-  }
-
-  const since = new Date(Date.now() - CRM_SYNC_WINDOW_HOURS * 3_600_000).toISOString()
+  const since = new Date(Date.now() - LEAD_DELIVERY_WINDOW_HOURS * 3_600_000).toISOString()
   try {
     const { data, error } = await supabase
       .from('leads')
-      .select('id, email, created_at, synced_to_crm_at, notified_at, notify_error')
+      .select('id, email, created_at, notified_at, notify_error')
       .gte('created_at', since)
       .neq('form_type', 'canary')
       .order('created_at', { ascending: false })
@@ -454,21 +448,19 @@ export async function runCrmSyncCheck(supabase: SupabaseClient): Promise<CheckRe
 
     const rows = (data ?? []) as Array<{
       id: string
-      synced_to_crm_at: string | null
       notified_at: string | null
       notify_error: string | null
     }>
     if (rows.length === 0) return done(null)
 
-    const unsynced = rows.filter((r) => !r.synced_to_crm_at).length
-    const unnotified = rows.filter((r) => !r.notified_at).length
-    if (unsynced === 0 && unnotified === 0) return done(null)
+    const unnotified = rows.filter((r) => !r.notified_at)
+    if (unnotified.length === 0) return done(null)
 
-    const firstError = rows.find((r) => r.notify_error)?.notify_error
+    const firstError = unnotified.find((r) => r.notify_error)?.notify_error
     return done(
-      `${rows.length} lead(s) in the last ${CRM_SYNC_WINDOW_HOURS}h: ` +
-      `${unsynced} never reached HubSpot, ${unnotified} never produced a confirmed ` +
-      `notification${firstError ? ` (e.g. "${firstError}")` : ''}.`,
+      `${unnotified.length} of ${rows.length} lead(s) in the last ${LEAD_DELIVERY_WINDOW_HOURS}h ` +
+      `were saved but never produced a confirmed notification` +
+      `${firstError ? `: "${firstError}"` : '.'}`,
     )
   } catch (err) {
     return done(err instanceof Error ? err.message : String(err))
@@ -479,14 +471,14 @@ export async function runAllChecks(
   baseUrl: string,
   supabase: SupabaseClient,
 ): Promise<CheckResult[]> {
-  const [http, permitTable, leadsWrite, corpus, crmSync] = await Promise.all([
+  const [http, permitTable, leadsWrite, corpus, leadDelivery] = await Promise.all([
     Promise.all(CHECKS.map((def) => runCheck(baseUrl, def))),
     runPermitTableCheck(supabase),
     runLeadsWriteCheck(supabase),
     runCorpusAgreementCheck(baseUrl, supabase),
-    runCrmSyncCheck(supabase),
+    runLeadDeliveryCheck(supabase),
   ])
-  return [...http, permitTable, leadsWrite, corpus, crmSync, runAlertChannelCheck()]
+  return [...http, permitTable, leadsWrite, corpus, leadDelivery, runAlertChannelCheck()]
 }
 
 export type Transition = 'went_down' | 'recovered' | 'still_down_cooldown' | 'still_down_suppressed' | 'stable_ok' | 'stable_ok_first'

@@ -39,7 +39,8 @@ All tools follow **House Haven [Thing]**: Pipeline, Value, Journey, Match, Commu
 - **Maps:** MapLibre GL JS (PermitPilot architecture; OpenFreeMap `positron` style, no key — CARTO was dropped when it began watermarking unauthenticated tiles). Style is centralised in `lib/map-style.ts`; override with `NEXT_PUBLIC_MAP_STYLE_URL`.
 - **Email:** Resend
 - **Analytics:** Vercel Web Analytics + Speed Insights (live); GA4 to wire at launch
-- **Launch additions:** MLS Grid (Realtracs feed), RentCast (AVM), HubSpot API (CRM portal `242305648`)
+- **Launch additions:** MLS Grid (Realtracs feed), RentCast (AVM)
+- **CRM:** none on the site. Leads are emailed to Stephen and worked in **Meet Corinne** (Stephen's own program). The HubSpot integration was removed 2026-09-21 — do not reintroduce a CRM write without asking.
 
 ## Dev commands
 ```bash
@@ -67,7 +68,6 @@ Compliance components live in `components/compliance/` — never delete or bypas
 - **Broker/Owner:** Stephen Delahoussaye (stephen@househavenrealty.com)
 - **Phone:** (615) 624-4766
 - **Address:** 5016 Centennial Blvd Suite 200, Nashville, TN 37209 (confirmed)
-- **HubSpot portal:** 242305648
 - **Instagram:** https://www.instagram.com/househavenrealty/
 
 ## Brand (LOCKED — official brand kit always wins)

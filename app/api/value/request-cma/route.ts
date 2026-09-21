@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
-import { isHubSpotConfigured, upsertContact, splitName } from '@/lib/hubspot'
 import { isEmailConfigured, sendEmail } from '@/lib/resend'
 import { checkRateLimit, tooManyRequests, LIMITS } from '@/lib/rate-limit'
 import { screenSubmission } from '@/lib/spam-guard'
 
 export const runtime = 'nodejs'
+
+function splitName(full: string): { firstName: string; lastName: string } {
+  const parts = full.trim().split(/\s+/)
+  if (parts.length === 1) return { firstName: parts[0] ?? '', lastName: '' }
+  return { firstName: parts[0], lastName: parts.slice(1).join(' ') }
+}
 
 const VALID_TIMELINES = ['ASAP', '1-3 months', '3-6 months', '6-12 months', 'Just curious']
 
@@ -102,39 +107,6 @@ export async function POST(request: NextRequest) {
   const formattedRange = estimateLow && estimateHigh
     ? `$${Math.round(estimateLow).toLocaleString()} – $${Math.round(estimateHigh).toLocaleString()}`
     : 'n/a'
-  const noteHtml = `
-    <p><strong>House Haven Value request</strong></p>
-    <ul>
-      <li>Address: ${address ?? 'not provided'}</li>
-      <li>Our estimate: ${formattedMid} (range: ${formattedRange})</li>
-      <li>Timeline: ${timeline ?? 'not provided'}</li>
-    </ul>
-  `.trim()
-
-  const hubspotId = await upsertContact({
-    email,
-    firstName,
-    lastName,
-    phone: phone || undefined,
-    source: 'value_tool',
-    timeline,
-    noteHtml,
-  })
-
-  if (hubspotId) {
-    try {
-      const supabase = createServiceClient()
-      await supabase
-        .from('cma_requests')
-        .update({ hubspot_contact_id: hubspotId, synced_to_crm_at: new Date().toISOString() })
-        .eq('id', supabaseId)
-    } catch (err) {
-      console.error('[value/request-cma] hubspot id update failed', err)
-    }
-  } else if (!isHubSpotConfigured()) {
-    console.error('[value/request-cma] HUBSPOT_PRIVATE_APP_TOKEN unset — CMA request saved but not in the CRM')
-  }
-
   const stephenAlert = `${name} just requested a CMA.
 
 Address: ${address ?? 'not provided'}
@@ -145,7 +117,7 @@ Contact:
 Email: ${email}
 Phone: ${phone ?? 'not provided'}
 
-→ Reply from the HubSpot record, or call directly. Fastest responder wins.`
+→ Reply to this email to reach them directly, or call. Fastest responder wins.`
 
   const alerted = await sendEmail({
     from: 'House Haven Alerts <alerts@househavenrealty.com>',

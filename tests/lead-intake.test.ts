@@ -4,8 +4,10 @@ import path from 'node:path'
 
 // The failure this path exists to prevent: a lead is saved, every log stays
 // clean, a 201 goes back to the browser, and no human ever learns about it.
-// 156 leads reached production that way. These assert the four steps happen in
-// order and that each one records whether it worked.
+// 156 leads reached production that way.
+//
+// Email is the only delivery mechanism — House Haven runs leads through Meet
+// Corinne, not a CRM this site writes to — so "notified" is the whole contract.
 
 const inserted: Record<string, unknown>[] = []
 const updates: Record<string, unknown>[] = []
@@ -40,14 +42,8 @@ vi.mock('@supabase/supabase-js', () => ({
   createClient: () => ({ from: (t: string) => builder(t) }),
 }))
 
-const hubspot = { configured: true, returns: 'hs-1' as string | null, calls: [] as unknown[] }
 const resend = { configured: true, ok: true, calls: [] as Record<string, unknown>[] }
 
-vi.mock('@/lib/hubspot', () => ({
-  isHubSpotConfigured: () => hubspot.configured,
-  upsertContact: async (input: unknown) => { hubspot.calls.push(input); return hubspot.returns },
-  splitName: (n: string) => ({ firstName: n.split(' ')[0], lastName: '' }),
-}))
 vi.mock('@/lib/resend', () => ({
   isEmailConfigured: () => resend.configured,
   sendEmail: async (input: Record<string, unknown>) => {
@@ -59,7 +55,7 @@ vi.mock('@/lib/resend', () => ({
 const base = {
   formType: 'contact', source: 'website', email: 'lauren@example.com',
   firstName: 'Lauren', lastName: 'Kane', tcpaConsent: true,
-  alertSubject: 'New lead', alertBody: 'body', hubspotSource: 'website_contact',
+  alertSubject: 'New lead', alertBody: 'body',
 }
 
 async function run(overrides: Record<string, unknown> = {}) {
@@ -70,32 +66,33 @@ async function run(overrides: Record<string, unknown> = {}) {
 beforeEach(() => {
   vi.resetModules()
   inserted.length = 0; updates.length = 0; insertFails = false
-  hubspot.configured = true; hubspot.returns = 'hs-1'; hubspot.calls.length = 0
   resend.configured = true; resend.ok = true; resend.calls.length = 0
   process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://x.supabase.co'
   process.env.SUPABASE_SERVICE_ROLE_KEY = 'k'
 })
 
 describe('recordLead', () => {
-  it('saves, syncs to the CRM and notifies a human', async () => {
+  it('saves the lead and notifies a human', async () => {
     const r = await run()
     expect(r.saved).toBe(true)
     expect(r.leadId).toBe('lead-1')
-    expect(r.hubspotId).toBe('hs-1')
     expect(r.notified).toBe(true)
     expect(r.warnings).toEqual([])
     expect(inserted[0].email).toBe('lauren@example.com')
     expect(resend.calls).toHaveLength(1)
   })
 
-  it('stamps synced_to_crm_at and notified_at on success', async () => {
+  it('stamps notified_at on success', async () => {
     await run()
-    const synced = updates.find((u) => 'synced_to_crm_at' in u)
     const notified = updates.find((u) => 'notified_at' in u)
-    expect(synced?.hubspot_contact_id).toBe('hs-1')
-    expect(typeof synced?.synced_to_crm_at).toBe('string')
     expect(typeof notified?.notified_at).toBe('string')
     expect(notified?.notify_error).toBeNull()
+  })
+
+  it('replies to the lead, so Stephen can answer from his inbox', async () => {
+    await run()
+    expect(resend.calls[0].replyTo).toBe('lauren@example.com')
+    expect(resend.calls[0].to).toBe('stephen@househavenrealty.com')
   })
 
   it('records the reason when nobody could be notified', async () => {
@@ -116,24 +113,7 @@ describe('recordLead', () => {
     expect(r.warnings.join(' ')).toMatch(/nobody was notified/)
   })
 
-  it('still saves and notifies when the CRM is unconfigured', async () => {
-    hubspot.configured = false
-    const r = await run()
-    expect(r.saved).toBe(true)
-    expect(r.notified).toBe(true)
-    expect(r.hubspotId).toBeNull()
-    expect(hubspot.calls).toHaveLength(0)
-    expect(updates.some((u) => 'synced_to_crm_at' in u)).toBe(false)
-    expect(r.warnings.join(' ')).toMatch(/HUBSPOT_PRIVATE_APP_TOKEN unset/)
-  })
 
-  it('warns but does not fail when the CRM returns no contact id', async () => {
-    hubspot.returns = null
-    const r = await run()
-    expect(r.saved).toBe(true)
-    expect(r.notified).toBe(true)
-    expect(r.warnings.join(' ')).toMatch(/no contact id/)
-  })
 
   it('fails the request only when the lead itself could not be saved', async () => {
     insertFails = true
@@ -141,13 +121,12 @@ describe('recordLead', () => {
     expect(r.saved).toBe(false)
     expect(r.leadId).toBeNull()
     // Nothing downstream should run on a lead that does not exist.
-    expect(hubspot.calls).toHaveLength(0)
     expect(resend.calls).toHaveLength(0)
   })
 
-  it('passes the timeline through to the CRM so selling leads are triageable', async () => {
+  it('stores the timeline on the lead so selling leads are triageable', async () => {
     await run({ timeline: '6-12 months', formType: 'valuation' })
-    expect((hubspot.calls[0] as Record<string, unknown>).timeline).toBe('6-12 months')
+    expect(inserted[0].timeline).toBe('6-12 months')
   })
 })
 
@@ -164,6 +143,7 @@ describe('every public intake route goes through recordLead', () => {
       const src = fs.readFileSync(path.join(process.cwd(), r), 'utf8')
       expect(src).toContain('@/lib/lead-intake')
       expect(src).not.toContain('api.resend.com')
+      expect(src).not.toContain('hubspot')
       expect(src).not.toMatch(/from\('leads'\)\s*\.insert/)
     })
   }

@@ -1,28 +1,31 @@
 import 'server-only'
 import { createServiceClient } from './supabase/service'
-import { isHubSpotConfigured, upsertContact } from './hubspot'
 import { isEmailConfigured, sendEmail } from './resend'
 
 /**
- * The one path every public form takes from submission to Stephen's phone.
+ * The one path every public form takes from submission to Stephen's inbox.
  *
  * Before this existed each route improvised. /api/contact and /api/valuation
- * posted to Resend with a raw fetch and never read the response; /api/newsletter
- * notified nobody at all; only two of the nine routes called HubSpot. The result
- * was 156 leads in the table, none in the CRM, none ever marked anything but
- * 'new' — including a double-sided deal that sat unread for eight weeks.
+ * posted to Resend with a raw fetch and never read the response;
+ * /api/newsletter notified nobody at all. The result was 156 leads in the
+ * table and not one confirmed notification — including a double-sided deal
+ * that sat unread for eight weeks.
  *
- * Four things happen here, in this order, and each records whether it worked:
+ * Three things happen here, in this order:
  *
  *   1. Save to `leads`. A failure here fails the request, because a lead we
  *      cannot store is a lead we have lost.
- *   2. Upsert into HubSpot and stamp `synced_to_crm_at`.
- *   3. Email Stephen, checking the send actually succeeded.
- *   4. Stamp `notified_at`, or `notify_error` if it did not.
+ *   2. Email Stephen, checking the send actually succeeded.
+ *   3. Stamp `notified_at`, or `notify_error` if it did not.
  *
- * Steps 2–4 never fail the request. The lead is already saved; a CRM or mailer
- * outage must not tell a real client their enquiry was rejected. The canary
- * watches those columns instead, which is what makes a silent outage visible.
+ * Steps 2–3 never fail the request. The lead is already saved; a mailer outage
+ * must not tell a real client their enquiry was rejected. The canary reads
+ * those columns instead, which is what makes a silent outage visible.
+ *
+ * Email is deliberately the only delivery mechanism. The CRM leg was removed
+ * 2026-09-21: House Haven runs leads through Meet Corinne, not a CRM this site
+ * writes to, and an integration nobody uses is an integration that fails
+ * quietly. If a Corinne intake ever wants a webhook, add it here — one place.
  */
 
 export const ALERT_FROM = 'House Haven Alerts <alerts@househavenrealty.com>'
@@ -45,16 +48,11 @@ export interface LeadIntake {
   /** Subject and body of the alert to Stephen. */
   alertSubject: string
   alertBody: string
-  /** `house_haven_source` on the HubSpot contact. */
-  hubspotSource: string
-  /** Optional HubSpot note, as HTML. */
-  noteHtml?: string
 }
 
 export interface IntakeResult {
   saved: boolean
   leadId: string | null
-  hubspotId: string | null
   notified: boolean
   /** Why a non-fatal step did not complete, for the route log. */
   warnings: string[]
@@ -92,31 +90,10 @@ export async function recordLead(intake: LeadIntake): Promise<IntakeResult> {
     leadId = data.id as string
   } catch (err) {
     console.error(`[intake:${intake.formType}] lead insert failed`, err)
-    return { saved: false, leadId: null, hubspotId: null, notified: false, warnings }
+    return { saved: false, leadId: null, notified: false, warnings }
   }
 
-  // 2. CRM.
-  let hubspotId: string | null = null
-  if (isHubSpotConfigured()) {
-    hubspotId = await upsertContact({
-      email: intake.email,
-      firstName: intake.firstName,
-      lastName: intake.lastName,
-      phone: intake.phone || undefined,
-      source: intake.hubspotSource,
-      timeline: intake.timeline ?? null,
-      noteHtml: intake.noteHtml,
-    })
-    if (hubspotId) {
-      await stamp(leadId, { hubspot_contact_id: hubspotId, synced_to_crm_at: now() })
-    } else {
-      warnings.push('hubspot upsert returned no contact id')
-    }
-  } else {
-    warnings.push('HUBSPOT_PRIVATE_APP_TOKEN unset — lead saved but not in the CRM')
-  }
-
-  // 3 & 4. Notify, and record whether it actually went.
+  // 2 & 3. Notify, and record whether it actually went.
   let notified = false
   if (isEmailConfigured()) {
     const sent = await sendEmail({
@@ -142,7 +119,7 @@ export async function recordLead(intake: LeadIntake): Promise<IntakeResult> {
   if (warnings.length) {
     console.error(`[intake:${intake.formType}] lead ${leadId} —`, warnings.join('; '))
   }
-  return { saved: true, leadId, hubspotId, notified, warnings }
+  return { saved: true, leadId, notified, warnings }
 }
 
 /** Best-effort column update. Never throws: the lead is already saved. */

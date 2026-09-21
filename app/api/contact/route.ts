@@ -85,10 +85,6 @@ export async function POST(request: NextRequest) {
     message,
     tcpaConsent,
     pageUrl: request.headers.get('referer'),
-    hubspotSource: 'website_contact',
-    noteHtml: `<p><strong>Website contact form</strong></p><p>Source: ${source}</p>${
-      interest ? `<p>Interested in: ${interest}</p>` : ''
-    }<p>${message}</p>`,
     alertSubject: `New website lead — ${source}`,
     alertBody: [
       'New lead from the House Haven Realty website.',

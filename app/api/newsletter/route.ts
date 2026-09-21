@@ -69,10 +69,6 @@ export async function POST(request: NextRequest) {
     tcpaConsent,
     pageUrl: request.headers.get('referer'),
     formData: targetZip ? { target_zip: targetZip } : {},
-    hubspotSource: isPipelineAlert ? 'pipeline_alert' : 'newsletter',
-    noteHtml: `<p><strong>${label} signup</strong></p>${
-      targetZip ? `<p>Watching ZIP: ${targetZip}</p>` : ''
-    }`,
     // This route notified nobody for five months. A brokerage that gets a
     // handful of real signups a month wants to see every one of them.
     alertSubject: `${label} signup — ${email}`,

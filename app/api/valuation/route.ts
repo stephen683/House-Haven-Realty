@@ -87,8 +87,6 @@ export async function POST(request: NextRequest) {
     tcpaConsent,
     pageUrl: request.headers.get('referer'),
     formData: { address, city, state: 'TN', zip },
-    hubspotSource: 'home_valuation',
-    noteHtml: `<p><strong>Home valuation request</strong></p><ul><li>Address: ${fullAddress}</li><li>Timeline: ${timeline ?? 'not provided'}</li></ul>`,
     alertSubject: `Home valuation request — ${address}`,
     alertBody: [
       'New CMA request from the House Haven Realty website.',
