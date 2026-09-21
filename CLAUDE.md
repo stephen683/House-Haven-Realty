@@ -1,7 +1,7 @@
 # House Haven Realty — Claude Code Configuration
 
 ## What this project is
-Custom Next.js 14 website for House Haven Realty (househavenrealty.com), replacing a $300+/month Blok template with a high-performance lead-generating brokerage site. Currently 152 routes deploying green on Vercel; pre-launch on `project-bmq0e.vercel.app` until DNS cutover.
+Custom Next.js 14 website for House Haven Realty (househavenrealty.com), replacing a $300+/month Blok template with a high-performance lead-generating brokerage site. Currently 152 routes deploying green on Vercel. **The site is LIVE on `househavenrealty.com`** — apex and `www` are verified in Vercel and aliased to production (since April 2026). `project-bmq0e.vercel.app` still resolves as a secondary alias. Treat every defect as a live-site defect, not a pre-launch one.
 
 **Spec (locked, source of truth):** `docs/ROADMAP.md` (Master Build Spec v2)
 **Live tracker:** `docs/TODO.md`

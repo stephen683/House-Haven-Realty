@@ -1,7 +1,8 @@
 # House Haven Realty — Launch Tracker
 
 **Source of truth:** `docs/ROADMAP.md` (Master Build Spec v2)
-**Goal:** Ship the 4 launch blockers, then domain cutover. Every other feature waits.
+**Goal:** Ship the 4 launch blockers. **Domain cutover already happened — the site is live on `househavenrealty.com`.** Every other feature waits.
+**Strategy:** `docs/TIER_ONE.md` — sequenced plan for the upgrade to a tier-one brokerage site.
 **Status legend:** `[ ]` pending · `[~]` in progress · `[x]` done · `[!]` blocked (needs Stephen / credentials / external approval)
 
 ---
