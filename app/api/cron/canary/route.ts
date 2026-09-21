@@ -13,11 +13,18 @@ import {
 export const runtime = 'nodejs'
 export const maxDuration = 60
 
-// Default to the stable pre-launch public alias. After DNS cutover, set
-// CANARY_BASE_URL=https://househavenrealty.com in Vercel. Never default to
-// VERCEL_URL — per-deployment URLs are auth-gated on this project and will
-// always return 401 from an unauthenticated canary fetch.
-const CANARY_DEFAULT_BASE = 'https://project-bmq0e.vercel.app'
+// The domain customers actually use. This defaulted to the pre-launch alias
+// project-bmq0e.vercel.app, which still resolves and still serves production —
+// so the canary stayed green while monitoring a hostname no visitor uses. A
+// DNS lapse, an expired certificate or a domain misconfiguration on
+// househavenrealty.com would have been invisible: every check passing against
+// the alias while the real site was unreachable.
+//
+// www is the serving domain; the apex 308s to it. Pointing here means the
+// canary exercises the same DNS, certificate and redirect path a visitor does.
+// Never default to VERCEL_URL — per-deployment URLs are auth-gated on this
+// project and always return 401 to an unauthenticated canary fetch.
+const CANARY_DEFAULT_BASE = 'https://www.househavenrealty.com'
 
 function canaryBaseUrl(): string {
   return (
