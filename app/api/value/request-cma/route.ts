@@ -75,7 +75,10 @@ export async function POST(request: NextRequest) {
   }
 
   const { firstName, lastName } = splitName(name)
-  const formattedMid = estimateMid ? `$${Math.round(estimateMid).toLocaleString()}` : 'unknown'
+  // A null estimate means the automated valuation could not run, not that the
+  // home is worth nothing. Both emails have to read correctly in that case.
+  const hasEstimate = estimateMid !== null
+  const formattedMid = hasEstimate ? `$${Math.round(estimateMid!).toLocaleString()}` : 'none — automated valuation unavailable'
   const formattedRange = estimateLow && estimateHigh
     ? `$${Math.round(estimateLow).toLocaleString()} – $${Math.round(estimateHigh).toLocaleString()}`
     : 'n/a'
@@ -131,7 +134,7 @@ Phone: ${phone ?? 'not provided'}
 
 Got your request. I'll personally prepare a full Comparative Market Analysis for your home${address ? ` at ${address}` : ''} and send it over within 24 hours.
 
-A CMA is the same analysis I'd prepare for a listing appointment. It looks at recent sales in your specific neighborhood, adjusts for your home's characteristics, and gives you a realistic sale-price range based on today's market. The automated estimate you saw online is a starting point — this is the real number.
+A CMA is the same analysis I'd prepare for a listing appointment. It looks at recent sales in your specific neighborhood, adjusts for your home's characteristics, and gives you a realistic sale-price range based on today's market.${hasEstimate ? ' The automated estimate you saw online is a starting point — this is the real number.' : ''}
 
 No obligation, no pressure. I built this so you have good information whether or not you ever work with us.
 

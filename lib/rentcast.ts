@@ -1,6 +1,13 @@
 // RentCast AVM client. Server-side only — never import from a Client Component.
-// When RENTCAST_API_KEY is unset, returns deterministic mock data so the UI ships
-// before billing is set up. Real API kicks in the moment the key is added.
+//
+// Returns source: 'unavailable' when there is no key, or when RentCast errors.
+// It previously synthesised a number from the characters of the address
+// (425000 + charCodeSum % 350000) and served it under the headline "What is
+// your Nashville home worth?". Sellers cannot tell a fabricated valuation from
+// a real one, and a wrong number on a $700K house is not a rounding error —
+// it anchors what someone thinks their home is worth. Absence of an estimate
+// is a real state and the UI says so, the same way lib/mlsgrid.ts reports an
+// unavailable feed rather than inventing listings.
 
 export interface RentCastComp {
   address: string
@@ -20,7 +27,7 @@ export interface RentCastValuation {
   high: number | null
   comps: RentCastComp[]
   confidenceNote: string
-  source: 'rentcast' | 'mock'
+  source: 'rentcast' | 'unavailable'
 }
 
 function maskAddress(full: string): string {
@@ -34,35 +41,23 @@ function maskAddress(full: string): string {
   return [`${blockNumber} ${streetName}`.trim(), ...parts.slice(1)].filter(Boolean).join(', ')
 }
 
-function mockValuation(address: string): RentCastValuation {
-  const seed = Array.from(address).reduce((s, c) => s + c.charCodeAt(0), 0)
-  const mid = 425000 + (seed % 350000)
-  const low = Math.round(mid * 0.92)
-  const high = Math.round(mid * 1.08)
-  const comps: RentCastComp[] = Array.from({ length: 4 }).map((_, i) => ({
-    address: `${100 * (i + 1)} block of Sample St, Nashville, TN`,
-    price: Math.round(mid * (0.94 + i * 0.025)),
-    daysOnMarket: 18 + i * 4,
-    bedrooms: 3 + (i % 2),
-    bathrooms: 2 + (i % 2 === 0 ? 0 : 0.5),
-    squareFootage: 1700 + i * 220,
-    yearBuilt: 1998 + i * 4,
-    distance: 0.2 + i * 0.15,
-    soldDate: new Date(Date.now() - (30 + i * 18) * 86400000).toISOString().slice(0, 10),
-  }))
-  return {
-    mid,
-    low,
-    high,
-    comps,
-    confidenceNote: 'Sample data — RentCast API not yet connected. Real estimates appear once the API key is added.',
-    source: 'mock',
-  }
+const UNAVAILABLE: RentCastValuation = {
+  mid: null,
+  low: null,
+  high: null,
+  comps: [],
+  confidenceNote: '',
+  source: 'unavailable',
+}
+
+/** Whether an instant estimate can be produced at all. Server-side only. */
+export function isValuationConfigured(): boolean {
+  return Boolean(process.env.RENTCAST_API_KEY)
 }
 
 export async function getValuation(address: string): Promise<RentCastValuation> {
   const apiKey = process.env.RENTCAST_API_KEY
-  if (!apiKey) return mockValuation(address)
+  if (!apiKey) return UNAVAILABLE
 
   try {
     const url = new URL('https://api.rentcast.io/v1/avm/value')
@@ -75,7 +70,7 @@ export async function getValuation(address: string): Promise<RentCastValuation> 
     })
     if (!res.ok) {
       console.error('[rentcast] non-OK response', res.status, await res.text().catch(() => ''))
-      return mockValuation(address)
+      return UNAVAILABLE
     }
     const data = await res.json() as {
       price?: number
@@ -117,7 +112,7 @@ export async function getValuation(address: string): Promise<RentCastValuation> 
     }
   } catch (err) {
     console.error('[rentcast] fetch failed', err)
-    return mockValuation(address)
+    return UNAVAILABLE
   }
 }
 

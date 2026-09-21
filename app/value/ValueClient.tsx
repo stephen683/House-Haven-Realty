@@ -8,7 +8,7 @@ interface EstimateResult {
   estimate: { low: number | null; mid: number | null; high: number | null }
   comps: RentCastComp[]
   confidenceNote: string
-  source: 'rentcast' | 'mock'
+  source: 'rentcast' | 'unavailable'
   cached: boolean
 }
 
@@ -34,7 +34,7 @@ function fmtDate(iso: string | null): string {
   }
 }
 
-export default function ValueClient() {
+export default function ValueClient({ instantEstimate }: { instantEstimate: boolean }) {
   const [address, setAddress] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<EstimateResult | null>(null)
@@ -72,6 +72,25 @@ export default function ValueClient() {
     }
   }
 
+  if (!instantEstimate) {
+    return (
+      <div className="space-y-6">
+        <div className="rounded-xl border border-black/10 bg-househaven-surface p-6 lg:p-8">
+          <h2 className="font-serif text-2xl text-househaven-navy">
+            We do not have an instant estimate for you today.
+          </h2>
+          <p className="mt-3 text-sm text-househaven-text-muted leading-relaxed">
+            Our automated valuation is not running right now, and we would rather tell you
+            that than show you a number we cannot stand behind. What we can do is better
+            anyway: Stephen will prepare a full Comparative Market Analysis on your home
+            and send it within 24 hours. Free, no obligation.
+          </p>
+        </div>
+        <CMARequestForm address="" estimate={{ low: null, mid: null, high: null }} collectAddress />
+      </div>
+    )
+  }
+
   return (
     <div>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -98,7 +117,8 @@ export default function ValueClient() {
           </button>
         </div>
         <p className="text-xs text-househaven-text-muted">
-          We do not store your address unless you ask for the full CMA below.
+          We cache the estimate for this address for 30 days so a repeat lookup is instant.
+          It is not attached to you unless you request the full CMA below.
         </p>
         {error && <p className="text-sm text-red-600">{error}</p>}
       </form>
@@ -114,8 +134,23 @@ export default function ValueClient() {
 
       {result && (
         <div ref={resultRef} className="mt-10 space-y-8">
-          <ResultCard result={result} />
-          <CompsList comps={result.comps} />
+          {result.source === 'rentcast' ? (
+            <>
+              <ResultCard result={result} />
+              <CompsList comps={result.comps} />
+            </>
+          ) : (
+            <div className="rounded-xl border border-black/10 bg-househaven-surface p-6 lg:p-8">
+              <h2 className="font-serif text-2xl text-househaven-navy">
+                We could not produce an estimate for that address.
+              </h2>
+              <p className="mt-3 text-sm text-househaven-text-muted leading-relaxed">
+                Rather than show you a number we cannot stand behind, here is the better
+                version: Stephen will prepare a full Comparative Market Analysis by hand and
+                send it within 24 hours.
+              </p>
+            </div>
+          )}
           <CMARequestForm
             address={address.trim()}
             estimate={result.estimate}
@@ -153,12 +188,6 @@ function ResultCard({ result }: { result: EstimateResult }) {
         appraisal. Every home is different — finishes, condition, and upgrades all affect the
         real number.
       </p>
-
-      {result.source === 'mock' && (
-        <p className="mt-3 text-xs text-amber-700 bg-amber-50 rounded px-3 py-2">
-          Showing sample data. Live valuations activate once the RentCast API key is added.
-        </p>
-      )}
     </div>
   )
 }
@@ -199,9 +228,11 @@ function CompsList({ comps }: { comps: RentCastComp[] }) {
 interface CMARequestFormProps {
   address: string
   estimate: { low: number | null; mid: number | null; high: number | null }
+  /** No estimate step ran, so the form has to ask for the address itself. */
+  collectAddress?: boolean
 }
 
-function CMARequestForm({ address, estimate }: CMARequestFormProps) {
+function CMARequestForm({ address, estimate, collectAddress = false }: CMARequestFormProps) {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'ok' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const formRef = useRef<HTMLFormElement>(null)
@@ -219,7 +250,7 @@ function CMARequestForm({ address, estimate }: CMARequestFormProps) {
           name: fd.get('name'),
           email: fd.get('email'),
           phone: fd.get('phone'),
-          address,
+          address: collectAddress ? String(fd.get('address') ?? '').trim() : address,
           timeline: fd.get('timeline'),
           estimate,
           tcpaConsent: fd.get('tcpa_consent') === 'on',
@@ -253,15 +284,32 @@ function CMARequestForm({ address, estimate }: CMARequestFormProps) {
 
   return (
     <div className="rounded-xl border border-black/5 bg-white p-6 lg:p-8 shadow-sm">
-      <h2 className="font-serif text-2xl text-househaven-navy">Want the real number?</h2>
+      <h2 className="font-serif text-2xl text-househaven-navy">
+        {collectAddress ? 'Get your CMA from Stephen' : 'Want the real number?'}
+      </h2>
       <p className="mt-3 text-sm text-househaven-text-muted leading-relaxed">
-        Every home is different. An automated estimate cannot account for your finishes, your
-        upgrades, the story of your home. Stephen will prepare a free Comparative Market
-        Analysis — the same one we&rsquo;d prepare for a listing appointment — so you know
-        exactly where you stand. No obligation. No pressure.
+        {collectAddress
+          ? 'Tell us where the home is and how to reach you. Stephen prepares every Comparative Market Analysis personally — the same one we\u2019d prepare for a listing appointment — using actual comparable sales in your neighbourhood. No obligation. No pressure.'
+          : 'Every home is different. An automated estimate cannot account for your finishes, your upgrades, the story of your home. Stephen will prepare a free Comparative Market Analysis — the same one we\u2019d prepare for a listing appointment — so you know exactly where you stand. No obligation. No pressure.'}
       </p>
 
       <form ref={formRef} onSubmit={handleSubmit} className="mt-6 space-y-4">
+        {collectAddress && (
+          <div>
+            <label htmlFor="cma-address" className="block text-xs font-semibold text-househaven-navy mb-1">
+              Home address
+            </label>
+            <input
+              id="cma-address"
+              name="address"
+              type="text"
+              required
+              autoComplete="street-address"
+              placeholder="123 Main St, Nashville TN 37209"
+              className="w-full px-3 py-2.5 rounded-lg border border-black/10 text-sm focus:outline-none focus:ring-2 focus:ring-househaven-navy/30"
+            />
+          </div>
+        )}
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <label htmlFor="cma-name" className="block text-xs font-semibold text-househaven-navy mb-1">

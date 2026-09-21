@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import ValueClient from './ValueClient'
+import { isValuationConfigured } from '@/lib/rentcast'
 import CommissionDisclosure from '@/components/compliance/CommissionDisclosure'
 
 export const metadata: Metadata = {
@@ -40,6 +41,15 @@ const serviceSchema = {
 }
 
 export default function ValuePage() {
+  // Decided on the server so the promise in the hero matches what the page can
+  // actually do, rather than the visitor finding out after typing an address.
+  //
+  // This page is statically generated, so the check runs at build time: setting
+  // RENTCAST_API_KEY on Vercel takes effect on the next deploy, not instantly.
+  // Erring that way is deliberate — the page under-promises until a build has
+  // confirmed the key, and /api/value re-checks per request regardless.
+  const instantEstimate = isValuationConfigured()
+
   return (
     <main className="bg-white">
       <script
@@ -56,23 +66,24 @@ export default function ValuePage() {
             What is your Nashville home worth?
           </h1>
           <p className="mt-6 text-lg text-white/70">
-            An honest estimate in 60 seconds. No signup. No email wall. No pressure.
+            {instantEstimate
+              ? 'An honest estimate in 60 seconds. No signup. No email wall. No pressure.'
+              : 'A real number from a real broker. Stephen prepares every analysis personally — no signup, no pressure.'}
           </p>
         </div>
       </section>
 
       <section className="max-w-3xl mx-auto px-4 lg:px-6 py-16 lg:py-20">
-        <ValueClient />
+        <ValueClient instantEstimate={instantEstimate} />
       </section>
 
       <section className="max-w-3xl mx-auto px-4 lg:px-6 pb-20">
         <div className="rounded-lg bg-househaven-surface p-6 text-sm text-househaven-text-muted leading-relaxed">
           <p className="font-semibold text-househaven-navy">Why this is different.</p>
           <p className="mt-2">
-            Most online valuation tools want your email before they tell you anything. We
-            built this the other way around: see your estimate first, and only ask us for the
-            full Comparative Market Analysis if you want one. Stephen prepares every CMA
-            personally — the same analysis we&rsquo;d prepare for a listing appointment.
+            {instantEstimate
+              ? 'Most online valuation tools want your email before they tell you anything. We built this the other way around: see your estimate first, and only ask us for the full Comparative Market Analysis if you want one. Stephen prepares every CMA personally — the same analysis we\u2019d prepare for a listing appointment.'
+              : 'Plenty of sites will guess at your home\u2019s value from public records alone. We would rather give you the real analysis than a guess dressed up as an answer. Stephen prepares every Comparative Market Analysis personally — the same one we\u2019d prepare for a listing appointment — using actual comparable sales in your neighbourhood.'}
           </p>
         </div>
 
