@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
+import { recordLead } from '@/lib/lead-intake'
 import { checkRateLimit, tooManyRequests, LIMITS } from '@/lib/rate-limit'
 import { screenSubmission } from '@/lib/spam-guard'
 
@@ -35,48 +36,57 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true }, { status: 201 })
   }
 
-
   if (!email || !isValidEmail(email)) {
     return NextResponse.json({ error: 'Valid email is required.' }, { status: 400 })
   }
 
+  const isPipelineAlert = source === 'pipeline_alert' || source === 'nashbuilds_alert'
+  const formType = isPipelineAlert ? 'pipeline_alert' : 'newsletter'
+
   try {
     const supabase = createServiceClient()
-
-    // Check for existing newsletter signup to avoid duplicates
     const { data: existing } = await supabase
       .from('leads')
       .select('id')
       .eq('email', email)
-      .eq('form_type', 'newsletter')
+      .eq('form_type', formType)
       .limit(1)
-
     if (existing && existing.length > 0) {
       return NextResponse.json({ ok: true, message: 'Already subscribed' }, { status: 200 })
     }
-
-    const isPipelineAlert = source === 'pipeline_alert' || source === 'nashbuilds_alert'
-    const { error } = await supabase.from('leads').insert({
-      first_name: '',
-      last_name: '',
-      email,
-      form_type: isPipelineAlert ? 'pipeline_alert' : 'newsletter',
-      source,
-      interest: isPipelineAlert ? 'new_construction' : 'newsletter',
-      tcpa_consent: tcpaConsent,
-      tcpa_consent_at: tcpaConsent ? new Date().toISOString() : null,
-      page_url: request.headers.get('referer') || null,
-      form_data: targetZip ? { target_zip: targetZip } : {},
-    })
-
-    if (error) {
-      console.error('[newsletter] supabase insert failed', error.message)
-      return NextResponse.json({ error: 'Failed to subscribe' }, { status: 500 })
-    }
   } catch (err) {
-    console.error('[newsletter] supabase client failed', err)
-    return NextResponse.json({ error: 'Server error' }, { status: 500 })
+    // A failed duplicate check is not a reason to refuse a subscriber; the
+    // worst case is a second row, which is cheaper than a lost signup.
+    console.error('[newsletter] duplicate check failed', err)
   }
 
+  const label = isPipelineAlert ? 'Nashville Pipeline alert' : 'Newsletter'
+  const result = await recordLead({
+    formType,
+    source,
+    email,
+    interest: isPipelineAlert ? 'new_construction' : 'newsletter',
+    tcpaConsent,
+    pageUrl: request.headers.get('referer'),
+    formData: targetZip ? { target_zip: targetZip } : {},
+    hubspotSource: isPipelineAlert ? 'pipeline_alert' : 'newsletter',
+    noteHtml: `<p><strong>${label} signup</strong></p>${
+      targetZip ? `<p>Watching ZIP: ${targetZip}</p>` : ''
+    }`,
+    // This route notified nobody for five months. A brokerage that gets a
+    // handful of real signups a month wants to see every one of them.
+    alertSubject: `${label} signup — ${email}`,
+    alertBody: [
+      `New ${label.toLowerCase()} signup.`,
+      '',
+      `Email: ${email}`,
+      targetZip ? `Watching ZIP: ${targetZip}` : null,
+      `Source: ${source}`,
+    ].filter(Boolean).join('\n'),
+  })
+
+  if (!result.saved) {
+    return NextResponse.json({ error: 'Failed to subscribe' }, { status: 500 })
+  }
   return NextResponse.json({ ok: true }, { status: 201 })
 }

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
-import { upsertContact, splitName } from '@/lib/hubspot'
-import { sendEmail } from '@/lib/resend'
+import { isHubSpotConfigured, upsertContact, splitName } from '@/lib/hubspot'
+import { isEmailConfigured, sendEmail } from '@/lib/resend'
 import { checkRateLimit, tooManyRequests, LIMITS } from '@/lib/rate-limit'
 import { screenSubmission } from '@/lib/spam-guard'
 
@@ -124,10 +124,15 @@ export async function POST(request: NextRequest) {
   if (hubspotId) {
     try {
       const supabase = createServiceClient()
-      await supabase.from('cma_requests').update({ hubspot_contact_id: hubspotId }).eq('id', supabaseId)
+      await supabase
+        .from('cma_requests')
+        .update({ hubspot_contact_id: hubspotId, synced_to_crm_at: new Date().toISOString() })
+        .eq('id', supabaseId)
     } catch (err) {
       console.error('[value/request-cma] hubspot id update failed', err)
     }
+  } else if (!isHubSpotConfigured()) {
+    console.error('[value/request-cma] HUBSPOT_PRIVATE_APP_TOKEN unset — CMA request saved but not in the CRM')
   }
 
   const stephenAlert = `${name} just requested a CMA.
@@ -142,7 +147,7 @@ Phone: ${phone ?? 'not provided'}
 
 → Reply from the HubSpot record, or call directly. Fastest responder wins.`
 
-  await sendEmail({
+  const alerted = await sendEmail({
     from: 'House Haven Alerts <alerts@househavenrealty.com>',
     to: 'stephen@househavenrealty.com',
     replyTo: email,
@@ -165,18 +170,28 @@ House Haven Realty
 
 Broker commissions are not set by law and are fully negotiable.`
 
-  await sendEmail({
+  const confirmed = await sendEmail({
     from: 'Stephen Delahoussaye <stephen@househavenrealty.com>',
     to: email,
     subject: 'Your CMA from House Haven',
     text: leadConfirmation,
   })
+  if (!confirmed.ok) {
+    console.error(`[value/request-cma] confirmation to ${email} was not accepted by Resend`)
+  }
 
-  try {
-    const supabase = createServiceClient()
-    await supabase.from('cma_requests').update({ notified_at: new Date().toISOString() }).eq('id', supabaseId)
-  } catch {
-    // non-blocking
+  // notified_at means a human was actually told, so it is stamped from the
+  // alert's result rather than from having reached this line. sendEmail returns
+  // ok:true on a dry-run when no key is set, so this is also gated on the key.
+  if (alerted.ok && isEmailConfigured()) {
+    try {
+      const supabase = createServiceClient()
+      await supabase.from('cma_requests').update({ notified_at: new Date().toISOString() }).eq('id', supabaseId)
+    } catch {
+      // non-blocking
+    }
+  } else {
+    console.error(`[value/request-cma] CMA ${supabaseId} saved but Stephen was not notified`)
   }
 
   return NextResponse.json({ ok: true }, { status: 201 })

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { isAgentAuthed } from '@/lib/agent-auth'
 import { createServiceClient } from '@/lib/supabase/service'
 import { checkRateLimit, tooManyRequests, LIMITS } from '@/lib/rate-limit'
+import { isEmailConfigured, sendEmail } from '@/lib/resend'
 
 export const runtime = 'nodejs'
 
@@ -130,16 +131,28 @@ export async function POST(req: NextRequest) {
     notes: s(body.notes),
   }
 
+  // A contract carries binding, closing, inspection and financing deadlines. A
+  // submission that silently fails to save is a missed deadline nobody knows
+  // about, so unlike a marketing form this one refuses rather than pretends.
+  let submissionId: string | null = null
   try {
     const supabase = createServiceClient()
-    const { error } = await supabase.from('contract_submissions').insert(row)
-    if (error) console.error('[agents/contract] supabase insert failed', error.message)
+    const { data, error } = await supabase
+      .from('contract_submissions')
+      .insert(row)
+      .select('id')
+      .single()
+    if (error) throw error
+    submissionId = data.id as string
   } catch (err) {
-    console.error('[agents/contract] supabase client failed', err)
+    console.error('[agents/contract] supabase insert failed', err)
+    return NextResponse.json(
+      { error: 'Could not save this contract. Do not re-file — call (615) 624-4766.' },
+      { status: 500 },
+    )
   }
 
-  const resendKey = process.env.RESEND_API_KEY
-  if (resendKey) {
+  {
     const lines = [
       `Submitted by: ${row.agent_name} <${row.agent_email}>`,
       ``,
@@ -169,28 +182,43 @@ export async function POST(req: NextRequest) {
       .filter((l) => l !== null)
       .join('\n')
 
-    try {
-      await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${resendKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+    const sent = isEmailConfigured()
+      ? await sendEmail({
           from: 'House Haven Web <notifications@househavenrealty.com>',
           to: [
             'stephen@househavenrealty.com',
             'maria@househavenrealty.com',
             'camil@househavenrealty.com',
           ],
-          cc: [row.agent_email],
-          reply_to: row.agent_email,
+          cc: row.agent_email ? [row.agent_email] : undefined,
+          replyTo: row.agent_email ?? undefined,
           subject: `New contract — ${row.property_address} — ${fmtMoney(row.contract_price)}`,
           text: lines,
-        }),
-      })
+        })
+      : { ok: false, id: null }
+
+    try {
+      const supabase = createServiceClient()
+      await supabase
+        .from('contract_submissions')
+        .update(
+          sent.ok
+            ? { notified_at: new Date().toISOString(), notify_error: null }
+            : { notify_error: isEmailConfigured() ? 'resend rejected the send' : 'RESEND_API_KEY unset' },
+        )
+        .eq('id', submissionId)
     } catch (err) {
-      console.error('[agents/contract] resend notify failed', err)
+      console.error('[agents/contract] notify stamp failed', err)
+    }
+
+    if (!sent.ok) {
+      // The row is saved, so the contract is not lost — but transaction
+      // management never saw it. The agent has to know to follow up by phone.
+      console.error(`[agents/contract] contract ${submissionId} saved but the desk was not emailed`)
+      return NextResponse.json(
+        { ok: true, warning: 'Contract saved, but the notification email failed. Call (615) 624-4766 to confirm.' },
+        { status: 201 },
+      )
     }
   }
 

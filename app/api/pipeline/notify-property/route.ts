@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
-import { upsertContact } from '@/lib/hubspot'
+import { isHubSpotConfigured, upsertContact } from '@/lib/hubspot'
 import { sendEmail } from '@/lib/resend'
 import { checkRateLimit, tooManyRequests, LIMITS } from '@/lib/rate-limit'
 import { screenSubmission } from '@/lib/spam-guard'
@@ -101,6 +101,10 @@ export async function POST(request: NextRequest) {
     noteHtml,
   })
 
+  if (!hubspotId && !isHubSpotConfigured()) {
+    console.error('[notify-property] HUBSPOT_PRIVATE_APP_TOKEN unset — signup saved but not in the CRM')
+  }
+
   if (hubspotId) {
     try {
       const supabase = createServiceClient()
@@ -122,13 +126,16 @@ ZIP: ${zip ?? 'unknown'}
 
 When this home lists, the signup is already in HubSpot — send them the listing the day it goes live.`
 
-  await sendEmail({
+  const alerted = await sendEmail({
     from: 'House Haven Alerts <alerts@househavenrealty.com>',
     to: 'stephen@househavenrealty.com',
     replyTo: email,
     subject: `Pipeline notify — ${address ?? permitNumber}`,
     text: stephenAlert,
   })
+  if (!alerted.ok) {
+    console.error(`[notify-property] signup ${supabaseId} saved but Stephen was not notified`)
+  }
 
   const leadConfirmation = `You're on the list.
 
@@ -143,12 +150,15 @@ House Haven Realty
 
 Broker commissions are not set by law and are fully negotiable.`
 
-  await sendEmail({
+  const confirmed = await sendEmail({
     from: 'Stephen Delahoussaye <stephen@househavenrealty.com>',
     to: email,
     subject: 'We\u2019ll watch this one for you',
     text: leadConfirmation,
   })
+  if (!confirmed.ok) {
+    console.error(`[notify-property] confirmation to ${email} was not accepted by Resend`)
+  }
 
   // notified_at stays null until the home actually lists on MLS — that's the
   // event this table is tracking, not the signup confirmation.

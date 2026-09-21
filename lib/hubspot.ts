@@ -61,6 +61,17 @@ async function attachNote(token: string, contactId: string, html: string): Promi
   ).catch(() => undefined)
 }
 
+/**
+ * Whether a lead would actually reach the CRM.
+ *
+ * upsertContact() returns null both when the token is missing and when the API
+ * call fails, so callers cannot tell a misconfiguration from an outage. Anything
+ * that reports on the health of the lead path has to check this separately.
+ */
+export function isHubSpotConfigured(): boolean {
+  return Boolean(process.env.HUBSPOT_PRIVATE_APP_TOKEN)
+}
+
 export async function upsertContact(input: HubSpotContactInput): Promise<string | null> {
   const token = process.env.HUBSPOT_PRIVATE_APP_TOKEN
   if (!token) return null

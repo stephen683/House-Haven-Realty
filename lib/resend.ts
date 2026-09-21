@@ -23,6 +23,7 @@ export interface SendEmailInput {
   subject: string
   text: string
   replyTo?: string
+  cc?: string | string[]
 }
 
 export async function sendEmail(input: SendEmailInput): Promise<{ ok: boolean; id: string | null }> {
@@ -41,6 +42,7 @@ export async function sendEmail(input: SendEmailInput): Promise<{ ok: boolean; i
       body: JSON.stringify({
         from: input.from,
         to: Array.isArray(input.to) ? input.to : [input.to],
+        cc: input.cc === undefined ? undefined : Array.isArray(input.cc) ? input.cc : [input.cc],
         subject: input.subject,
         text: input.text,
         reply_to: input.replyTo,

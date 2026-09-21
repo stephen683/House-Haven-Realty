@@ -23,11 +23,22 @@ describe('no route uses the anon server client', () => {
     expect(fs.existsSync(path.join(process.cwd(), 'lib/supabase/server.ts'))).toBe(false)
   })
 
+  it('lib/lead-intake.ts reaches Supabase as the service role', () => {
+    const src = fs.readFileSync(path.join(process.cwd(), 'lib/lead-intake.ts'), 'utf8')
+    expect(src).toContain("./supabase/service")
+    expect(src).not.toContain('supabase/server')
+    expect(src).not.toContain('supabase/client')
+  })
+
   for (const r of ROUTES) {
-    it(`${r} imports the service client only`, () => {
+    it(`${r} reaches Supabase as the service role`, () => {
       const src = fs.readFileSync(path.join(process.cwd(), r), 'utf8')
       expect(src).not.toContain('@/lib/supabase/server')
-      expect(src).toContain('@/lib/supabase/service')
+      // Either directly, or by delegating to the shared intake path — which the
+      // test above pins to the service client.
+      const direct = src.includes('@/lib/supabase/service')
+      const delegated = src.includes('@/lib/lead-intake')
+      expect(direct || delegated).toBe(true)
     })
   }
 
@@ -73,10 +84,14 @@ vi.mock('@supabase/supabase-js', () => ({
   },
 }))
 vi.mock('@/lib/hubspot', () => ({
+  isHubSpotConfigured: () => true,
   upsertContact: async () => 'hs-1',
   splitName: (n: string) => ({ firstName: n.split(' ')[0], lastName: n.split(' ').slice(1).join(' ') }),
 }))
-vi.mock('@/lib/resend', () => ({ sendEmail: async () => ({ ok: true, id: 'e-1' }) }))
+vi.mock('@/lib/resend', () => ({
+  isEmailConfigured: () => true,
+  sendEmail: async () => ({ ok: true, id: 'e-1' }),
+}))
 vi.mock('@/lib/rentcast', () => ({
   getValuation: async () => ({ mid: 500000, low: 450000, high: 550000, comps: [], confidenceNote: '', source: 'rentcast' }),
   normalizeAddress: (a: string) => a.toLowerCase(),

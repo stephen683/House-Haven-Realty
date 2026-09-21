@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServiceClient } from '@/lib/supabase/service'
+import { recordLead } from '@/lib/lead-intake'
 import { checkRateLimit, tooManyRequests, LIMITS } from '@/lib/rate-limit'
 import { screenSubmission } from '@/lib/spam-guard'
 
@@ -74,64 +74,41 @@ export async function POST(request: NextRequest) {
 
   const { first, last } = splitName(name)
 
-  // Write to unified leads table
-  try {
-    const supabase = createServiceClient()
-    const { error } = await supabase.from('leads').insert({
-      first_name: first,
-      last_name: last,
-      email,
-      phone,
-      form_type: 'contact',
-      source,
-      interest,
+  const result = await recordLead({
+    formType: 'contact',
+    source,
+    email,
+    firstName: first,
+    lastName: last,
+    phone,
+    interest,
+    message,
+    tcpaConsent,
+    pageUrl: request.headers.get('referer'),
+    hubspotSource: 'website_contact',
+    noteHtml: `<p><strong>Website contact form</strong></p><p>Source: ${source}</p>${
+      interest ? `<p>Interested in: ${interest}</p>` : ''
+    }<p>${message}</p>`,
+    alertSubject: `New website lead — ${source}`,
+    alertBody: [
+      'New lead from the House Haven Realty website.',
+      '',
+      `Source: ${source}`,
+      `Name: ${name}`,
+      `Email: ${email}`,
+      phone ? `Phone: ${phone}` : null,
+      interest ? `Interested in: ${interest}` : null,
+      '',
+      'Message:',
       message,
-      tcpa_consent: tcpaConsent,
-      tcpa_consent_at: tcpaConsent ? new Date().toISOString() : null,
-      page_url: request.headers.get('referer') || null,
-    })
-    if (error) {
-      console.error('[contact] supabase insert failed', error.message)
-    }
-  } catch (err) {
-    console.error('[contact] supabase client failed', err)
-  }
+    ].filter(Boolean).join('\n'),
+  })
 
-  // Notify Stephen via Resend if configured
-  const resendKey = process.env.RESEND_API_KEY
-  if (resendKey) {
-    try {
-      await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${resendKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          from: 'House Haven Web <notifications@househavenrealty.com>',
-          to: ['Stephen@househavenrealty.com'],
-          reply_to: email,
-          subject: `New website lead — ${source}`,
-          text: [
-            `New lead from the House Haven Realty website.`,
-            ``,
-            `Source: ${source}`,
-            `Name: ${name}`,
-            `Email: ${email}`,
-            phone ? `Phone: ${phone}` : null,
-            interest ? `Interested in: ${interest}` : null,
-            ``,
-            `Message:`,
-            message,
-          ]
-            .filter(Boolean)
-            .join('\n'),
-        }),
-      })
-    } catch (err) {
-      console.error('[contact] resend notify failed', err)
-    }
+  if (!result.saved) {
+    return NextResponse.json(
+      { error: 'Could not save your message. Please call (615) 624-4766.' },
+      { status: 500 },
+    )
   }
-
   return NextResponse.json({ ok: true }, { status: 201 })
 }

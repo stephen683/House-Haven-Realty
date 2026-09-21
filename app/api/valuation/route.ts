@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServiceClient } from '@/lib/supabase/service'
+import { recordLead } from '@/lib/lead-intake'
 import { checkRateLimit, tooManyRequests, LIMITS } from '@/lib/rate-limit'
 import { screenSubmission } from '@/lib/spam-guard'
 
@@ -74,60 +74,38 @@ export async function POST(request: NextRequest) {
   const { first, last } = splitName(name)
   const fullAddress = `${address}, ${city}, TN ${zip}`
 
-  // Write to unified leads table
-  try {
-    const supabase = createServiceClient()
-    const { error } = await supabase.from('leads').insert({
-      first_name: first,
-      last_name: last,
-      email,
-      phone,
-      form_type: 'valuation',
-      source: 'website',
-      interest: 'selling',
-      timeline,
-      property_address: fullAddress,
-      tcpa_consent: tcpaConsent,
-      tcpa_consent_at: tcpaConsent ? new Date().toISOString() : null,
-      page_url: request.headers.get('referer') || null,
-      form_data: { address, city, state: 'TN', zip },
-    })
-    if (error) console.error('[valuation] supabase insert failed', error.message)
-  } catch (err) {
-    console.error('[valuation] supabase client failed', err)
-  }
+  const result = await recordLead({
+    formType: 'valuation',
+    source: 'website',
+    email,
+    firstName: first,
+    lastName: last,
+    phone,
+    interest: 'selling',
+    timeline,
+    propertyAddress: fullAddress,
+    tcpaConsent,
+    pageUrl: request.headers.get('referer'),
+    formData: { address, city, state: 'TN', zip },
+    hubspotSource: 'home_valuation',
+    noteHtml: `<p><strong>Home valuation request</strong></p><ul><li>Address: ${fullAddress}</li><li>Timeline: ${timeline ?? 'not provided'}</li></ul>`,
+    alertSubject: `Home valuation request — ${address}`,
+    alertBody: [
+      'New CMA request from the House Haven Realty website.',
+      '',
+      `Name: ${name}`,
+      `Email: ${email}`,
+      phone ? `Phone: ${phone}` : null,
+      `Address: ${fullAddress}`,
+      timeline ? `Timeline: ${timeline}` : null,
+    ].filter(Boolean).join('\n'),
+  })
 
-  // Notify Stephen via Resend if configured
-  const resendKey = process.env.RESEND_API_KEY
-  if (resendKey) {
-    try {
-      await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${resendKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          from: 'House Haven Web <notifications@househavenrealty.com>',
-          to: ['Stephen@househavenrealty.com'],
-          reply_to: email,
-          subject: `Home valuation request — ${address}`,
-          text: [
-            `New CMA request from the House Haven Realty website.`,
-            ``,
-            `Name: ${name}`,
-            `Email: ${email}`,
-            phone ? `Phone: ${phone}` : null,
-            `Address: ${fullAddress}`,
-            timeline ? `Timeline: ${timeline}` : null,
-          ]
-            .filter(Boolean)
-            .join('\n'),
-        }),
-      })
-    } catch (err) {
-      console.error('[valuation] resend notify failed', err)
-    }
+  if (!result.saved) {
+    return NextResponse.json(
+      { error: 'Could not save your request. Please call (615) 624-4766.' },
+      { status: 500 },
+    )
   }
 
   return NextResponse.json({ ok: true }, { status: 201 })
