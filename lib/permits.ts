@@ -187,6 +187,58 @@ function buildingKey(p: NormalizedPermit): string {
   return `${stripped}||${p.contractor}`
 }
 
+/**
+ * Collapse permits that share a permit number.
+ *
+ * `building_permits` has `permit_number` as its conflict key, and Postgres
+ * refuses an ON CONFLICT DO UPDATE batch that touches the same row twice:
+ * "ON CONFLICT DO UPDATE command cannot affect row a second time". One permit
+ * covering several buildings produces exactly that — dedupeByBuilding groups
+ * on address+contractor, so those rows legitimately survive as separate
+ * buildings while sharing one number.
+ *
+ * That broke the daily sync on 2026-10-02: chunk 0 failed, the route returned
+ * 500 having written nothing, and it repeated for six days. The permit map
+ * silently stopped updating while every page still served 200.
+ *
+ * Merging is conservative. The representative is the most complete record,
+ * unit counts add up because they describe distinct buildings, and
+ * construction cost takes the max rather than the sum — a permit's cost is
+ * usually reported in full on every row, so summing inflates it.
+ */
+export function dedupeByPermitNumber(permits: NormalizedPermit[]): NormalizedPermit[] {
+  const groups = new Map<string, NormalizedPermit[]>()
+  for (const p of permits) {
+    const key = p.permitNumber
+    if (!key) continue
+    const arr = groups.get(key) ?? []
+    arr.push(p)
+    groups.set(key, arr)
+  }
+
+  const completeness = (p: NormalizedPermit): number =>
+    [p.address, p.lat, p.lng, p.dateIssued, p.description, p.contractor, p.zip, p.sqft]
+      .filter((v) => v !== null && v !== undefined && v !== '').length
+
+  const out: NormalizedPermit[] = []
+  Array.from(groups.values()).forEach((arr: NormalizedPermit[]) => {
+    if (arr.length === 1) {
+      out.push(arr[0])
+      return
+    }
+    const rep = arr.reduce((best, p) => (completeness(p) > completeness(best) ? p : best), arr[0])
+    out.push({
+      ...rep,
+      unitCount: arr.reduce((sum, p) => sum + Math.max(1, p.unitCount ?? 1), 0),
+      constructionCost: arr.reduce<number | null>(
+        (max, p) => (p.constructionCost !== null && (max === null || p.constructionCost > max) ? p.constructionCost : max),
+        null,
+      ),
+    })
+  })
+  return out
+}
+
 function dedupeByBuilding(permits: NormalizedPermit[]): NormalizedPermit[] {
   const groups = new Map<string, NormalizedPermit[]>()
   for (const p of permits) {

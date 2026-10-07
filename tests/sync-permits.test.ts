@@ -10,7 +10,11 @@ import type { NormalizedPermit } from '@/lib/permits'
 const fetchRecentPermits = vi.fn()
 const upsert = vi.fn()
 
-vi.mock('@/lib/permits', () => ({
+vi.mock('@/lib/permits', async (importOriginal) => ({
+  // Only the network call is stubbed. dedupeByPermitNumber is the real one —
+  // it is the guard that stopped the 2026-10-02 outage, so a test that stubbed
+  // it away would pass while the route shipped broken.
+  ...(await importOriginal<typeof import('@/lib/permits')>()),
   fetchRecentPermits: (...args: unknown[]) => fetchRecentPermits(...args),
 }))
 

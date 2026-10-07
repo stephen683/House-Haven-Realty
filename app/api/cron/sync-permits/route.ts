@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { fetchRecentPermits } from '@/lib/permits'
+import { dedupeByPermitNumber, fetchRecentPermits } from '@/lib/permits'
 
 export const runtime = 'nodejs'
 
@@ -60,8 +60,14 @@ export async function GET(request: Request) {
       )
     }
 
+    // One permit can cover several buildings, and dedupeByBuilding keeps those
+    // as separate rows. permit_number is the conflict key, and Postgres refuses
+    // a batch that touches the same row twice, so the batch has to be unique on
+    // it. Skipping this broke the sync for six days on 2026-10-02.
+    const unique = dedupeByPermitNumber(permits)
+
     // Upsert into building_permits table
-    const rows = permits.map((p) => ({
+    const rows = unique.map((p) => ({
       permit_number: p.permitNumber,
       permit_type: p.type,
       subtype: p.subtype,
@@ -128,6 +134,7 @@ export async function GET(request: Request) {
     return NextResponse.json({
       ok: true,
       fetched: permits.length,
+      deduped: permits.length - unique.length,
       upserted,
       timestamp: new Date().toISOString(),
     })

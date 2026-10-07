@@ -1,6 +1,9 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
+  classifyTransition,
+  repeatIntervalMs,
+  shouldAlert,
   runAlertChannelCheck,
   runLeadsWriteCheck,
   runCorpusAgreementCheck,
@@ -208,5 +211,62 @@ describe('canary alert channel check', () => {
     expect(sent.id).toBeNull()
     const { runAlertChannelCheck: check } = await import('@/lib/canary')
     expect(check().ok).toBe(false)
+  })
+})
+
+// ── alert cadence ───────────────────────────────────────────────────────────
+
+describe('repeat alerts back off instead of paging hourly', () => {
+  // A six-day permit-sync outage produced ~140 identical "STILL DOWN" emails
+  // at the old flat one-hour repeat. After the first few, repetition only
+  // teaches the reader to stop opening canary mail.
+  it('pages hourly while a failure is new', () => {
+    expect(repeatIntervalMs(30 * 60_000)).toBe(60 * 60_000)
+  })
+
+  it('stretches as the outage ages', () => {
+    const h = 60 * 60_000
+    expect(repeatIntervalMs(6 * h)).toBe(4 * h)
+    expect(repeatIntervalMs(24 * h)).toBe(12 * h)
+    expect(repeatIntervalMs(6 * 24 * h)).toBe(24 * h)
+  })
+
+  it('never exceeds once a day, so a known outage stays visible', () => {
+    expect(repeatIntervalMs(365 * 24 * 60 * 60_000)).toBe(24 * 60 * 60_000)
+  })
+
+  it('is monotonic — a longer outage never pages more often', () => {
+    const h = 60 * 60_000
+    const points = [0, 1, 2, 5, 11, 12, 13, 47, 48, 100, 1000].map((n) => repeatIntervalMs(n * h))
+    for (let i = 1; i < points.length; i++) expect(points[i]).toBeGreaterThanOrEqual(points[i - 1])
+  })
+
+  it('suppresses a repeat inside the interval and sends one outside it', () => {
+    const h = 60 * 60_000
+    const down = (hoursAgo: number, alertedHoursAgo: number) => ({
+      endpoint: 'x',
+      current_ok: false,
+      status_since: new Date(Date.now() - hoursAgo * h).toISOString(),
+      last_alerted_at: new Date(Date.now() - alertedHoursAgo * h).toISOString(),
+    })
+    const failing = { endpoint: 'x', ok: false, httpStatus: null, responseMs: 1, assertion: 'a', errorExcerpt: 'e' }
+
+    // Six days down, alerted an hour ago: the old code would email again.
+    expect(classifyTransition(failing, down(144, 1))).toBe('still_down_suppressed')
+    // Six days down, alerted 25 hours ago: still worth one a day.
+    expect(classifyTransition(failing, down(144, 25))).toBe('still_down_cooldown')
+  })
+
+  it('always sends recovery immediately, whatever the interval had reached', () => {
+    const h = 60 * 60_000
+    const ok = { endpoint: 'x', ok: true, httpStatus: 200, responseMs: 1, assertion: 'a', errorExcerpt: null }
+    const t = classifyTransition(ok, {
+      endpoint: 'x',
+      current_ok: false,
+      status_since: new Date(Date.now() - 144 * h).toISOString(),
+      last_alerted_at: new Date(Date.now() - 1 * 60_000).toISOString(),
+    })
+    expect(t).toBe('recovered')
+    expect(shouldAlert(t)).toBe(true)
   })
 })

@@ -198,7 +198,18 @@ async function runCheck(baseUrl: string, def: CheckDef): Promise<CheckResult> {
 // asserts the cached table itself: non-empty, and refreshed recently enough
 // that a silently dead daily sync shows up within a week.
 export const PERMIT_TABLE_ENDPOINT = 'DB public.building_permits'
-export const PERMIT_FRESHNESS_DAYS = 7
+export const PERMIT_FRESHNESS_DAYS = 10
+/**
+ * How long the daily sync may go without writing before that is a failure.
+ *
+ * This is the actionable signal, and it was missing. The check only watched
+ * max(date_issued), so when the sync broke on 2026-10-02 the alarm read
+ * "newest date_issued is 8.4d old" — true, but it describes Metro's
+ * publishing, not the fact that our cron had returned 500 every morning for
+ * six days. max(updated_at) moves on every successful run, so it separates
+ * "we are broken" from "Metro is quiet". 36h spans one missed daily run.
+ */
+export const SYNC_STALE_HOURS = 36
 
 export async function runPermitTableCheck(
   supabase: SupabaseClient,
@@ -209,7 +220,7 @@ export async function runPermitTableCheck(
     ok: false,
     httpStatus: null,
     responseMs: Date.now() - started,
-    assertion: 'rows>0 && max(date_issued) within ' + PERMIT_FRESHNESS_DAYS + 'd',
+    assertion: `rows>0 && synced within ${SYNC_STALE_HOURS}h && issued within ${PERMIT_FRESHNESS_DAYS}d`,
     errorExcerpt: reason.slice(0, 300),
   })
 
@@ -231,11 +242,34 @@ export async function runPermitTableCheck(
     const newest = data?.[0]?.date_issued as string | undefined
     if (!newest) return fail(`${count} rows but no non-null date_issued`)
 
+    // Did our sync run? This is the one we can act on.
+    const { data: wrote, error: wroteError } = await supabase
+      .from('building_permits')
+      .select('updated_at')
+      .not('updated_at', 'is', null)
+      .order('updated_at', { ascending: false })
+      .limit(1)
+    if (wroteError) return fail(`sync-freshness query failed: ${wroteError.message}`)
+
+    const lastWrite = wrote?.[0]?.updated_at as string | undefined
+    if (lastWrite) {
+      const writeAgeH = (Date.now() - new Date(lastWrite).getTime()) / 3_600_000
+      if (writeAgeH > SYNC_STALE_HOURS) {
+        return fail(
+          `daily sync has not written since ${lastWrite.slice(0, 16).replace('T', ' ')} UTC ` +
+            `(${(writeAgeH / 24).toFixed(1)}d ago, limit ${SYNC_STALE_HOURS}h). ` +
+            `Check /api/cron/sync-permits in the Vercel logs — the data itself is intact.`,
+        )
+      }
+    }
+
+    // Did Metro publish? Slower-moving and not ours to fix, so it is checked
+    // second and on a longer fuse — multi-day gaps are normal in this feed.
     const ageDays = (Date.now() - new Date(newest).getTime()) / 86_400_000
     if (ageDays > PERMIT_FRESHNESS_DAYS)
       return fail(
-        `newest date_issued ${newest.slice(0, 10)} is ${ageDays.toFixed(1)}d old ` +
-          `(limit ${PERMIT_FRESHNESS_DAYS}d)`,
+        `sync is running, but Metro has published nothing since ${newest.slice(0, 10)} ` +
+          `(${ageDays.toFixed(1)}d, limit ${PERMIT_FRESHNESS_DAYS}d)`,
       )
 
     return {
@@ -243,7 +277,7 @@ export async function runPermitTableCheck(
       ok: true,
       httpStatus: null,
       responseMs: Date.now() - started,
-      assertion: 'rows>0 && max(date_issued) within ' + PERMIT_FRESHNESS_DAYS + 'd',
+      assertion: `rows>0 && synced within ${SYNC_STALE_HOURS}h && issued within ${PERMIT_FRESHNESS_DAYS}d`,
       errorExcerpt: null,
     }
   } catch (err) {
@@ -492,7 +526,26 @@ export interface PriorState {
   last_alerted_at: string | null
 }
 
-const REPEAT_ALERT_COOLDOWN_MS = 60 * 60 * 1000 // 1 hour
+const HOUR_MS = 60 * 60 * 1000
+
+/**
+ * How long to wait before re-alerting on a condition that is still down.
+ *
+ * This used to be a flat hour, which turned a six-day permit-sync outage into
+ * a hundred and forty identical "STILL DOWN" emails. After the first few,
+ * repetition adds nothing: the reader already knows, and the only thing an
+ * hourly repeat changes is whether they keep reading canary mail at all.
+ *
+ * So the interval grows with the age of the outage. A new failure still pages
+ * promptly; a known one settles to once a day — visible, not noise. Recovery
+ * is always sent immediately, whatever the interval had reached.
+ */
+export function repeatIntervalMs(outageMs: number): number {
+  if (outageMs < 2 * HOUR_MS) return HOUR_MS
+  if (outageMs < 12 * HOUR_MS) return 4 * HOUR_MS
+  if (outageMs < 48 * HOUR_MS) return 12 * HOUR_MS
+  return 24 * HOUR_MS
+}
 
 export function classifyTransition(
   result: CheckResult,
@@ -506,7 +559,8 @@ export function classifyTransition(
   if (!prior.current_ok && result.ok) return 'recovered'
   if (result.ok) return 'stable_ok'
   const lastAlert = prior.last_alerted_at ? new Date(prior.last_alerted_at).getTime() : 0
-  if (now - lastAlert >= REPEAT_ALERT_COOLDOWN_MS) return 'still_down_cooldown'
+  const downSince = prior.status_since ? new Date(prior.status_since).getTime() : now
+  if (now - lastAlert >= repeatIntervalMs(now - downSince)) return 'still_down_cooldown'
   return 'still_down_suppressed'
 }
 
