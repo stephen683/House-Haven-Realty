@@ -163,29 +163,38 @@ keyboard mash in Areas or Budget files the submission. What stands is the useful
 
 ---
 
-## 5. Phase 2 — Be the listings authority 🔴 blocked on Stephen
+## 5. Phase 2 — ~~Be the listings authority~~ ❌ KILLED 2026-10-07
 
-**`/homes-for-sale` is serving 8 mock listings on the live public domain.** `listings_cache`
-is empty. This is the largest credibility and SEO gap on the site and it has been live for
-months. A brokerage site whose listings are fake is not tier one at any level of polish.
+**There will be no MLS feed.** House Haven is not taking Realtracs via MLS Grid or any
+other vendor. This phase is closed, not deferred.
 
-The code is done and shipped — RESO client, search, detail pages, full NAR IDX compliance,
-schema. **It is blocked on one thing: the MLS Grid API key.** No engineering unblocks it.
+**Correction to what this document said before.** I wrote that `/homes-for-sale` was
+"serving 8 mock listings on the live public domain" and recommended pulling them. That
+was wrong — it came from a stale `docs/TODO.md` line, and the mock fallback had already
+been removed. `searchListings()` returned empty without a key and the page only rendered
+the grid when the feed was live. No fake listings were ever public.
 
-- **Stephen: submit the MLS Grid application.** Realtracs 615-385-0777 / info@mlsgrid.com.
-  ~$250/mo, ~2-day approval. This is the highest-leverage hour on the entire list.
-- Until the key exists, the mock listings must be **labelled as samples or the route taken
-  down.** Publishing eight fabricated listings as real inventory on a live brokerage domain
-  is the same class of problem as the fabricated valuations we removed from `/value` — and
-  that one we fixed in an afternoon.
-- On key arrival: smoke test, 15-min ISR, verify the compliance surface against live data.
+**What was actually wrong was worse, and it was live.** All 57 community pages rendered
+the IDX disclaimer unconditionally — asserting a Realtracs copyright, claiming to display
+their MLS data, and showing a `new Date()` freshness timestamp — while displaying no
+listings at all. That is now removed, along with `lib/mlsgrid.ts`,
+`components/listings/`, and the `/homes-for-sale/[id]` route that could only 404.
 
-Same shape at `/value`: the RentCast key is set, but `valuation_cache` has **zero** rows,
-so no successful call has ever been recorded. Either nobody has used it or it is failing
-silently. **Test it with a real Nashville address before trusting it.** One of the June
-leads is still holding a fabricated estimate from before the fix.
+The NAR commission disclosure was unaffected: it has its own component on the
+seller-facing pages, and a test now pins that.
 
----
+**The strategic read.** This costs less than it looks like. `/homes-for-sale` is the
+highest-converting page on the site and has produced every genuine buyer lead it has ever
+had — with no listings displayed, ever. The concierge model is not a fallback from the
+feed; it is what already works. ROADMAP §1 says brokerage first, not a platform.
+
+What the site gives up is the SEO surface a feed would have earned on long-tail listing
+queries. The replacement for that is Phase 3: 57 community pages and 25 posts are the
+inventory-independent version of the same play.
+
+`/value` is the remaining data-dependent surface. The RentCast key is set but
+`valuation_cache` has **zero** rows, so no successful call has ever been recorded.
+**Test it with a real Nashville address.**
 
 ## 6. Phase 3 — Be found (est. 1 week, after Phase 1)
 
@@ -228,11 +237,10 @@ actually failed here, which is always the quiet stuff:
 |---|---|---|
 | ✅ Today | Phase 0 — spam protection | done, deployed |
 | ✅ Today | 4.1 close the pipeline (email path + delivery canary) | done, deployed |
-| **This week** | **MLS Grid application** | **Stephen, ~1 hour** |
+
 | ✅ Today | 4.2 scoring · 4.3 structured funnel | done, deployed |
-| **Next** | Label or pull the mock listings | nothing |
 | ✅ Today | 4.4 agent queue | done, deployed |
-| On key arrival | Phase 2 — real IDX | MLS Grid |
+| ✅ 7 Oct | IDX removed · false Realtracs attribution fixed | done, deployed |
 | Week 4 | Phase 3 — conversion analytics, voice cleanup | nothing |
 | Ongoing | Phase 4 — canary, retention, CI | Actions workflow |
 
@@ -241,12 +249,13 @@ pointed at the form that works, and a queue the team can actually work.
 
 ## 9. What I need from you
 
-1. **Submit the MLS Grid application.** Highest-leverage hour on this list. Everything in
-   Phase 2 is finished code waiting on a key.
-2. **Call Lauren Kane.** 55 days. She is buying *and* selling.
-3. **Decide on the mock listings:** label as samples, or take the route down until the feed
-   is live. My recommendation is take it down — a 404 costs less than fake inventory on a
-   licensed brokerage's domain.
+1. **Call Lauren Kane.** She is buying *and* selling, and has now been waiting since
+   28 July.
+2. **Test `/value` with a real Nashville address.** The key is set; nothing has ever
+   cached a successful response.
+3. **Decide on `components/compliance/IDXDisclaimer.tsx`.** It is retained but rendered
+   nowhere. Keeping an unused MLS disclaimer on file is a principal-broker call, not mine.
+   `MLS_GRID_API_KEY` can also come out of Vercel — nothing reads it.
 4. **Run `node scripts/migrate-team-headshots.mjs`** — still outstanding from earlier today.
 5. **Tell me when Meet Corinne should receive leads directly.** Today they land in your
    inbox only. `lib/lead-intake.ts` is the one place a Corinne webhook would go.
