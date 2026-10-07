@@ -2,10 +2,30 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import HomeSearchForm from '@/components/forms/HomeSearchForm'
 import { communities } from '@/data/communities'
-import { searchListings } from '@/lib/mlsgrid'
-import ListingGrid from '@/components/listings/ListingGrid'
-import IDXDisclaimer from '@/components/compliance/IDXDisclaimer'
-import SearchFilters from '@/components/listings/SearchFilters'
+import { PLACE_SUGGESTIONS } from '@/lib/place-suggestions'
+
+/**
+ * Only a place the site actually knows prefills the form. An unrecognised
+ * value is dropped rather than echoed, so the URL cannot be used to put
+ * arbitrary text in front of a visitor.
+ */
+const KNOWN_AREAS = new Set<string>([
+  ...PLACE_SUGGESTIONS.map((p) => p.toLowerCase()),
+  ...communities.map((c) => c.name.toLowerCase()),
+])
+
+/**
+ * There is no listing feed, and there will not be one.
+ *
+ * This page used to branch on an MLS Grid key that never arrived: a listings
+ * grid and a Realtracs IDX disclaimer when the feed was live, a concierge
+ * layout when it was not. House Haven is not taking a Realtracs feed, so the
+ * branch is gone and the concierge layout is the page.
+ *
+ * That is not a downgrade. This is the highest-converting page on the site —
+ * every genuine buyer lead it has ever produced came through the form below,
+ * with no listings displayed at any point.
+ */
 
 export const metadata: Metadata = {
   title: 'Find Your Next Home in Nashville',
@@ -14,31 +34,17 @@ export const metadata: Metadata = {
   alternates: { canonical: '/homes-for-sale' },
 }
 
-export const revalidate = 900
-
-interface HomesForSalePageProps {
-  searchParams: {
-    city?: string
-    zip?: string
-    minPrice?: string
-    maxPrice?: string
-    beds?: string
-    propertyType?: string
-  }
-}
-
-export default async function HomesForSalePage({ searchParams }: HomesForSalePageProps) {
-  const { listings, source } = await searchListings({
-    city: searchParams.city,
-    zip: searchParams.zip,
-    minPrice: searchParams.minPrice ? Number(searchParams.minPrice) : undefined,
-    maxPrice: searchParams.maxPrice ? Number(searchParams.maxPrice) : undefined,
-    beds: searchParams.beds ? Number(searchParams.beds) : undefined,
-    propertyType: searchParams.propertyType,
-    limit: 24,
-  })
-
-  const liveFeed = source === 'mlsgrid'
+export default async function HomesForSalePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ area?: string; city?: string }>
+}) {
+  const params = await searchParams
+  // `city` is the parameter the community pages have always linked with, and
+  // it was silently ignored once the feed branch went away. Both are accepted
+  // and only prefill a text field, so an arbitrary value is inert.
+  const requested = (params.area ?? params.city ?? '').toString().slice(0, 80)
+  const defaultArea = KNOWN_AREAS.has(requested.toLowerCase()) ? requested : ''
   const featuredCommunities = communities.filter((c) => c.tier === 1).slice(0, 8)
 
   return (
@@ -51,53 +57,38 @@ export default async function HomesForSalePage({ searchParams }: HomesForSalePag
           <h1 className="font-serif text-5xl lg:text-6xl text-white mt-3 leading-[1.05]">
             Find your next home in Nashville.
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-white/70">
-            {liveFeed
-              ? 'Live Realtracs MLS listings across Nashville and Middle Tennessee. Filter, save, and connect with our team for showings.'
-              : 'We work with every active listing across Middle Tennessee. Tell us what you are looking for and our team will pull matches by hand and send them the same day.'}
+          <p className="mt-6 text-lg text-white/70 max-w-2xl leading-relaxed">
+            We work with every active listing across Middle Tennessee. Tell us what you are
+            looking for and our team will pull matches by hand and send them the same day.
           </p>
         </div>
       </section>
 
-      {liveFeed ? (
-        <section className="max-w-7xl mx-auto px-4 lg:px-6 py-10 lg:py-12">
-          <SearchFilters />
+      <section className="max-w-3xl mx-auto px-4 lg:px-6 py-16 lg:py-20">
+        <div className="rounded-xl border border-black/5 bg-white p-6 lg:p-10 shadow-sm">
+          <h2 className="font-serif text-3xl text-househaven-navy">
+            Tell us what you are looking for.
+          </h2>
+          <p className="mt-3 text-sm text-househaven-text-muted leading-relaxed">
+            We read every request personally. Expect a same-day reply from a House Haven
+            agent with a curated set of active listings — and notes on what we think will
+            fit. Rather talk? Call (615) 624-4766.
+          </p>
           <div className="mt-8">
-            <ListingGrid listings={listings} />
+            <HomeSearchForm defaultArea={defaultArea} />
           </div>
-          <div className="mt-10">
-            <IDXDisclaimer />
-          </div>
-        </section>
-      ) : (
-        <>
-          <section className="max-w-3xl mx-auto px-4 lg:px-6 py-16 lg:py-20">
-            <div className="rounded-xl border border-black/5 bg-white p-6 lg:p-10 shadow-sm">
-              <h2 className="font-serif text-3xl text-househaven-navy">
-                Tell us what you are looking for.
-              </h2>
-              <p className="mt-3 text-sm text-househaven-text-muted leading-relaxed">
-                We read every request personally. Expect a same-day reply from a House Haven
-                agent with a curated set of active listings — and notes on what we think will
-                fit.
-              </p>
-              <div className="mt-8">
-                <HomeSearchForm />
-              </div>
-            </div>
+        </div>
 
-            <div className="mt-8 rounded-lg bg-househaven-surface p-6 text-sm text-househaven-text-muted leading-relaxed">
-              <p className="font-semibold text-househaven-navy">Why we work this way.</p>
-              <p className="mt-2">
-                Every Nashville buyer already has five search apps. The bottleneck is not
-                more listings — it is knowing which ones actually fit. So we listen first,
-                then send you the homes that match. New construction, resale, or pre-market
-                — we work with all of it.
-              </p>
-            </div>
-          </section>
-        </>
-      )}
+        <div className="mt-8 rounded-lg bg-househaven-surface p-6 text-sm text-househaven-text-muted leading-relaxed">
+          <p className="font-semibold text-househaven-navy">Why we work this way.</p>
+          <p className="mt-2">
+            Every Nashville buyer already has five search apps. The bottleneck is not more
+            listings — it is knowing which ones actually fit. So we listen first, then send
+            you the homes that match. New construction, resale, or pre-market — we work
+            with all of it.
+          </p>
+        </div>
+      </section>
 
       <section className="bg-househaven-surface py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 lg:px-6">

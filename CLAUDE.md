@@ -7,15 +7,21 @@ Custom Next.js 14 website for House Haven Realty (househavenrealty.com), replaci
 **Live tracker:** `docs/TODO.md`
 **Read both at the start of every session before making changes.**
 
-## Current priority: launch-ready
-Ship the 4 launch blockers, then domain cutover. **Nothing else.** Every other tool/page is a Post-Launch Layer.
+## Current priority
+The site is live. Blockers 2–4 below are the remaining spec work; everything else is a
+Post-Launch Layer.
 
-1. Realtracs IDX via MLS Grid (`/homes-for-sale` + `/homes-for-sale/[mlsId]`)
+1. ~~Realtracs IDX via MLS Grid~~ — **KILLED 2026-10-07.** House Haven is not taking a
+   Realtracs feed. There is no listing feed and no plan for one. `/homes-for-sale` is a
+   concierge intake page and is the highest-converting page on the site. The IDX
+   apparatus (`lib/mlsgrid.ts`, `components/listings/`, `/homes-for-sale/[id]`) was
+   removed. **Do not display MLS data or any Realtracs attribution** — there is no feed
+   agreement to support it.
 2. Homepage rebuilt brokerage-first (8 sections per ROADMAP §6.1)
 3. House Haven Value (`/value` — RentCast AVM, no signup wall)
 4. Nashville Pipeline rebrand (current `/new-builds` → `/pipeline`, preserve all data)
 
-If a request would expand scope before launch, push back and point at the spec.
+If a request would expand scope, push back and point at the spec.
 
 ## Strategic frame (from ROADMAP §1)
 
@@ -39,7 +45,7 @@ All tools follow **House Haven [Thing]**: Pipeline, Value, Journey, Match, Commu
 - **Maps:** MapLibre GL JS (PermitPilot architecture; OpenFreeMap `positron` style, no key — CARTO was dropped when it began watermarking unauthenticated tiles). Style is centralised in `lib/map-style.ts`; override with `NEXT_PUBLIC_MAP_STYLE_URL`.
 - **Email:** Resend
 - **Analytics:** Vercel Web Analytics + Speed Insights (live); GA4 to wire at launch
-- **Launch additions:** MLS Grid (Realtracs feed), RentCast (AVM)
+- **Launch additions:** RentCast (AVM). No MLS/IDX feed — see Current priority.
 - **CRM:** none on the site. Leads are emailed to Stephen and worked in **Meet Corinne** (Stephen's own program). The HubSpot integration was removed 2026-09-21 — do not reintroduce a CRM write without asking.
 
 ## Dev commands
@@ -55,7 +61,7 @@ npm run type-check
 Site does NOT launch if any of these are missing.
 
 - **TREC Rule 1260-02-.12:** Firm name "House Haven Realty" + firm phone "(615) 624-4766" conspicuously on every page (server-rendered footer). Firm name in letters ≥ size of any licensee/team name. "Licensed by the Tennessee Real Estate Commission" in footer.
-- **NAR IDX (post-2026 settlement):** Realtracs copyright on every page with MLS data; "deemed reliable but not guaranteed" disclaimer; last-updated timestamp; listing brokerage attribution; **no buyer-agent compensation displayed** (terminates feed access if violated); seller opt-out respected.
+- **NAR IDX (post-2026 settlement):** *Not currently applicable — the site carries no MLS data.* `components/compliance/IDXDisclaimer.tsx` is retained but rendered nowhere; it previously rendered on all 57 community pages with no listings present, asserting a Realtracs copyright and a live "data last updated" timestamp that were both false. **Never render an MLS attribution without a feed behind it.** If a feed is ever signed, this section applies in full: Realtracs copyright on every page with MLS data, "deemed reliable but not guaranteed", last-updated timestamp, listing brokerage attribution, **no buyer-agent compensation displayed**, seller opt-out respected.
 - **NAR 2026 disclosure (canonical wording, effective Aug 17 2024):** Where seller-facing content discusses representation (Sellers page, Value page, listing-detail seller-info), display verbatim: **"Broker commissions are not set by law and are fully negotiable."** Same wording sitewide — do not paraphrase.
 - **Fair Housing:** EHO logo in footer; community pages describe amenities/commute/schools never demographics; no "good neighborhood," "safe area," or "family-friendly" without specific definition.
 - **TCPA:** Every form uses the exact §5.4 consent language (see ROADMAP).
@@ -87,7 +93,7 @@ app/
 ├── home-valuation · market-reports/[zip] · new-construction
 ├── new-builds (TO RENAME → pipeline) ── NashBuildsApp.tsx · [zip] · builders/[slug] · layout · opengraph
 ├── communities · communities/[slug]
-├── homes-for-sale · homes-for-sale/[id]   (shells; full IDX in Blocker 1)
+├── homes-for-sale                          (concierge intake; no feed, no [id] route)
 ├── team · team/[slug]
 ├── blog · blog/[slug]
 └── api/ ── contact · cron · geocode · nashbuilds · newsletter · permits · suggest · valuation

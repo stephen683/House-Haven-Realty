@@ -6,8 +6,7 @@
 // your Nashville home worth?". Sellers cannot tell a fabricated valuation from
 // a real one, and a wrong number on a $700K house is not a rounding error —
 // it anchors what someone thinks their home is worth. Absence of an estimate
-// is a real state and the UI says so, the same way lib/mlsgrid.ts reports an
-// unavailable feed rather than inventing listings.
+// is a real state and the UI says so, rather than inventing a plausible number.
 
 export interface RentCastComp {
   address: string

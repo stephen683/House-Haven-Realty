@@ -9,7 +9,6 @@
 
 ## ⚠️ OPEN DECISIONS (gate launch)
 
-- [!] **MLS Grid Realtracs pricing** — Real cost confirmed at MLS Grid application. Stephen to call Realtracs 615-385-0777 or email info@mlsgrid.com when submitting. Verified third-party listing shows ~$250/mo.
 - [!] **RentCast plan tier** — Cheapest tier with AVM + comps is Foundation $74/mo (1,000 calls). Stephen approves Foundation, or upgrades to Growth ($199/mo, 5,000 calls)?
 
 ## ✅ DECISIONS RESOLVED (2026-04-17)
@@ -24,21 +23,24 @@
 
 ## 🚦 LAUNCH BLOCKERS (the only 4 things that ship before cutover)
 
-### Blocker 1 — Realtracs IDX via MLS Grid ✅ CODE SHIPPED, AWAITS API KEY
+### Blocker 1 — Realtracs IDX ❌ KILLED 2026-10-07
 
-- [!] Stephen submits MLS Grid application (gates real data; ~2-day approval expected)
-- [!] Stephen sets `MLS_GRID_API_KEY` in Vercel
-- [x] `lib/mlsgrid.ts` — typed RESO Web API v2 client with mock fallback (returns 8 sample listings until API key is set)
-- [x] `supabase/migrations/20260506162654_004_listings_cache.sql` — `listings_cache` table (apply via Supabase MCP)
-- [x] `app/homes-for-sale/page.tsx` — full search with filters (city/zip/price/beds/type)
-- [x] `app/homes-for-sale/[id]/page.tsx` — full detail with hero + photo grid + listing attribution
-- [x] `components/listings/` — ListingCard, ListingGrid, SearchFilters
-- [x] NAR IDX compliance: Realtracs copyright, "deemed reliable" disclaimer, last-updated timestamp, listing brokerage attribution on every detail card, no buyer-agent compensation displayed
-- [x] **NAR 2026 commission-negotiable disclosure** in `IDXDisclaimer` and on listing detail
-- [x] Featured Listings strip on homepage pulls 8 cards live
-- [x] `RealEstateListing` + `BreadcrumbList` schema on detail pages
-- [ ] On API key arrival: smoke test live data, set `next.config.mjs` 15-min ISR if needed
-- [ ] Search-by-listing-status filtering (post-launch enhancement; current search defaults to Active)
+House Haven is not taking a Realtracs feed. There is no listing feed and no plan for one.
+
+- [x] IDX apparatus removed: `lib/mlsgrid.ts`, `components/listings/` (3 files),
+      `app/homes-for-sale/[id]/`, and every `IDXDisclaimer` render site
+- [x] **Live compliance defect fixed:** all 57 community pages were asserting
+      "Listings displayed are provided courtesy of the Realtracs MLS … © Realtracs …
+      Data last updated: <today>" while displaying no listings at all
+- [x] `/homes-for-sale` is now a plain concierge intake page — every genuine buyer lead
+      the site has produced came through its form, with no listings ever displayed
+- [x] `?city=` / `?area=` now prefills the form instead of being silently ignored
+- [ ] `listings_cache` table left in place, empty and unreferenced. Dropping it is
+      irreversible and buys nothing; drop it if you want the schema tidy.
+- [ ] `MLS_GRID_API_KEY` can be deleted from Vercel — nothing reads it.
+- [ ] `components/compliance/IDXDisclaimer.tsx` retained per CLAUDE.md (never delete from
+      `components/compliance/`). Whether an unused disclaimer stays on file is Stephen's
+      call as principal broker.
 
 ### Blocker 2 — Homepage Rebuilt Brokerage-First ✅ SHIPPED
 

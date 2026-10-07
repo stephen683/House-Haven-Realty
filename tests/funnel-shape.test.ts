@@ -11,7 +11,8 @@ const read = (p: string) => fs.readFileSync(path.join(process.cwd(), p), 'utf8')
 describe('the structured form is on the pages buyers land on', () => {
   for (const page of ['app/homes-for-sale/page.tsx', 'app/buyers/page.tsx']) {
     it(`${page} renders HomeSearchForm`, () => {
-      expect(read(page)).toContain('<HomeSearchForm />')
+      // /homes-for-sale passes a prefilled area; /buyers does not.
+      expect(read(page)).toMatch(/<HomeSearchForm(\s|\/)/)
     })
   }
 })

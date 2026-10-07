@@ -6,7 +6,6 @@ import { communities, communityBySlug } from '@/data/communities'
 import { blogPosts } from '@/data/blog'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
 import ContactForm from '@/components/forms/ContactForm'
-import IDXDisclaimer from '@/components/compliance/IDXDisclaimer'
 
 // Hero images by county — using Nashville/TN landscape photography
 const countyHeroImages: Record<string, string> = {
@@ -109,7 +108,7 @@ export default function CommunityPage({ params }: CommunityPageProps) {
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
             <Link
-              href={`/homes-for-sale?city=${encodeURIComponent(c.name)}`}
+              href={`/homes-for-sale?area=${encodeURIComponent(c.name)}`}
               className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-white text-househaven-navy font-semibold hover:bg-househaven-accent transition text-sm"
             >
               Search {c.name} homes
@@ -149,7 +148,7 @@ export default function CommunityPage({ params }: CommunityPageProps) {
               </h2>
             </div>
             <Link
-              href={`/homes-for-sale?city=${encodeURIComponent(c.name)}`}
+              href={`/homes-for-sale?area=${encodeURIComponent(c.name)}`}
               className="text-sm font-semibold text-househaven-navy hover:text-househaven-accent"
             >
               Search all {c.name} homes →
@@ -157,13 +156,10 @@ export default function CommunityPage({ params }: CommunityPageProps) {
           </div>
           <div className="rounded-lg border border-dashed border-black/10 bg-white p-10 text-center text-househaven-text-muted">
             <p>
-              Live MLS listings for {c.name} launch with our Phase 3 IDX integration.
-              Meanwhile, reach out and we&rsquo;ll send you hand-picked active listings the
-              same day.
+              We don&rsquo;t run a listing feed. Tell us what you want in {c.name} and an
+              agent sends hand-picked active listings the same day — resale, new
+              construction, or pre-market.
             </p>
-          </div>
-          <div className="mt-6">
-            <IDXDisclaimer />
           </div>
         </div>
       </section>

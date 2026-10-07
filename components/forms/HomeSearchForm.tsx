@@ -13,7 +13,7 @@ const TIMELINE_OPTIONS = [
   'Just learning the market',
 ]
 
-export default function HomeSearchForm() {
+export default function HomeSearchForm({ defaultArea = '' }: { defaultArea?: string }) {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'ok' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const formRef = useRef<HTMLFormElement>(null)
@@ -150,6 +150,7 @@ export default function HomeSearchForm() {
             id="hs-areas"
             name="areas"
             type="text"
+            defaultValue={defaultArea}
             list={placesId}
             autoComplete="off"
             placeholder="East Nashville, Franklin, anywhere in Williamson…"
